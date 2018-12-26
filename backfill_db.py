@@ -1,4 +1,4 @@
-import urllib.request, json 
+import urllib.request, json, re
 
 def generate_thread_IDs(query, author, subreddit):
     '''
@@ -14,6 +14,14 @@ def generate_thread_IDs(query, author, subreddit):
         for thread_data in threads:
             thread_ids.append(thread_data['id'])
     return thread_ids
+
+def extract_links(comment):
+    '''
+    Regular expression adapted from: https://www.w3resource.com/python-exercises/re/python-re-exercise-42.php
+    Uses regular expressions to extract Imgur and Dressed.so links from a given comment.
+    Returns an array of URLs. 
+    '''
+    return re.findall('http[s]?://(imgur|dressed.so|cdn.dressed.so|i.imgur.com)(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', comment)
 
 def generate_comments(thread_id):
     '''
