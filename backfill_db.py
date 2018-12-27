@@ -37,6 +37,14 @@ def extract_links(comment):
             links.add(res[0])
     
     return links
+
+def is_outfit_url(url):
+    '''
+    Determines if a given URL is an Imgur or Dressed.so url. 
+    Returns True if so, False otherwise.
+    '''
+    pass
+
 def generate_comments(thread_id):
     '''
     Given a thread ID, uses the Reddit API wrapper (PRAW) to access top-level comments and create Comment objects containing only necessary data.
