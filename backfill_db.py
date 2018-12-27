@@ -17,12 +17,26 @@ def generate_thread_IDs(query, author, subreddit):
 
 def extract_links(comment):
     '''
-    Regular expression adapted from: https://www.w3resource.com/python-exercises/re/python-re-exercise-42.php
-    Uses regular expressions to extract Imgur and Dressed.so links from a given comment.
-    Returns an array of URLs. 
+    Extracts links from a given comment.
+    Splits the comment twice. The function splits the comment once to check for URLs posted in plaintext, and once for URLs posted in Markdown.
+    Returns a set of URLs. 
     '''
-    return re.findall('http[s]?://(imgur|dressed.so|cdn.dressed.so|i.imgur.com)(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', comment)
+    # TODO: Find a more efficient way of extracting URLs in plaintext and Markdown.
 
+    links = set()
+
+    # Extraction of plaintext URLs.
+    for token in comment.split(" "):
+        if token.startswith('http') or token.startswith('https'):
+            links.add(token)
+
+    # Extraction of Markdown URLs.
+    for token in comment.split(']('):
+        if (token.startswith('http') or token.startswith('https')) and ')' in token:
+            res = token.split(')')
+            links.add(res[0])
+    
+    return links
 def generate_comments(thread_id):
     '''
     Given a thread ID, uses the Reddit API wrapper (PRAW) to access top-level comments and create Comment objects containing only necessary data.
