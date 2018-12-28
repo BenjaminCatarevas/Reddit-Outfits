@@ -1,4 +1,8 @@
-import urllib.request, json, re, tldextract, requests, config
+import urllib.request
+import json
+import re
+import requests
+import config
 from urllib.parse import urlparse
 
 def generate_thread_IDs(query: str, author: str, subreddit: str) -> list:
@@ -8,6 +12,7 @@ def generate_thread_IDs(query: str, author: str, subreddit: str) -> list:
     Uses the Pushshift API to easily retrieve historical thread data.
     Returns an array of thread IDs.
     '''
+
     thread_ids = set()
     # Query API for historical thread data.
     with urllib.request.urlopen(F"https://api.pushshift.io/reddit/search/submission/?q={query}&author={author}&subreddit={subreddit}&size=500") as url:
@@ -51,12 +56,43 @@ def extract_outfit_URLs(comment: str) -> list:
 
 def is_outfit_url(url: str) -> bool:
     '''
-    Determines if a given URL is an Imgur or Dressed.so url using tldextract.
+    Determines if a given URL is an Imgur or Dressed.so url using urlparse.
     Returns True if so, False otherwise.
     '''
-    parsed_url = tldextract.extract(url)
-    domain = parsed_url.domain.lower()
-    return domain == 'imgur' or domain == 'dressed'
+
+    parsed_url = urlparse(url)
+    host = parsed_url.netloc.lower()
+    return host == 'imgur.com' or host == 'dressed.so' or host == 'cdn.dressed.so' or host == 'i.imgur.com'
+
+def extract_images_album(album_URL: str) -> list:
+    '''
+    Extracts image links from an Imgur album.
+    Returns an array of image links.
+    '''
+
+    image_links = []
+
+    # Extract the album hash by parsing the URL.
+    album_hash = urlparse(album_URL).path[3:]
+
+    url = F'https://api.imgur.com/3/album/{album_hash}/images'
+    payload = {}
+    headers = {
+        'Authorization': F'Client-ID {config.imgur_client_id}'
+    }
+    response = requests.request('GET', url, headers = headers, data = payload, allow_redirects=False)
+    album_json = json.loads(response.text)['data']
+
+    # Invalid album.
+    if 'error' in album_json.keys():
+        print(album_json['error'])
+        return []
+
+    # Valid album.
+    for image in album_json:
+        image_links.append(image['link'])
+
+    return image_links
 
 def generate_comments(thread_id: str) -> list:
     '''
