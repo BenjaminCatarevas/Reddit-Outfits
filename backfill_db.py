@@ -39,15 +39,16 @@ def extract_links(comment: str) -> list:
     # Santitize URLs for any superfluous punctuation. 
     # Adapted from: https://stackoverflow.com/questions/52118382/removing-special-characters-punctuation-for-the-end-of-a-python-list-of-urls
     links = [re.sub('[^a-zA-Z0-9]+$','',link) for link in links]
-    
     return links
 
 def is_outfit_url(url: str) -> bool:
     '''
-    Determines if a given URL is an Imgur or Dressed.so url. 
+    Determines if a given URL is an Imgur or Dressed.so url using tldextract.
     Returns True if so, False otherwise.
     '''
-    pass
+    parsed_url = tldextract.extract(url)
+    domain = parsed_url.domain.lower()
+    return domain == 'imgur' or domain == 'dressed'
 
 def generate_comments(thread_id: str) -> list:
     '''
