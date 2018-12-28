@@ -1,4 +1,4 @@
-import urllib.request, json, re
+import urllib.request, json, re, tldextract
 
 def generate_thread_IDs(query: str, author: str, subreddit: str) -> list:
     '''
@@ -35,6 +35,10 @@ def extract_links(comment: str) -> list:
         if (token.startswith('http') or token.startswith('https')) and ')' in token:
             res = token.split(')')
             links.add(res[0])
+
+    # Santitize URLs for any superfluous punctuation. 
+    # Adapted from: https://stackoverflow.com/questions/52118382/removing-special-characters-punctuation-for-the-end-of-a-python-list-of-urls
+    links = [re.sub('[^a-zA-Z0-9]+$','',link) for link in links]
     
     return links
 
