@@ -23,7 +23,7 @@ def generate_thread_IDs(query: str, author: str, subreddit: str) -> list:
             thread_ids.add(thread_data['id'])
     return thread_ids
 
-def extract_outfit_URLs(comment: str) -> list:
+def extract_outfit_urls(comment: str) -> list:
     '''
     Extracts URLs from a given comment.
     Splits the comment twice. The function splits the comment once to check for URLs posted in plaintext, and once for URLs posted in Markdown.
@@ -33,26 +33,26 @@ def extract_outfit_URLs(comment: str) -> list:
     '''
     # TODO: Find a more efficient way of extracting URLs in plaintext and Markdown.
 
-    outfit_URLs = set()
+    outfit_urls = set()
 
     # Extraction of plaintext URLs.
     for token in comment.split(" "):
         if token.startswith('http') or token.startswith('https'):
-            outfit_URLs.add(token)
+            outfit_urls.add(token)
 
     # Extraction of Markdown URLs.
     for token in comment.split(']('):
         if (token.startswith('http') or token.startswith('https')) and ')' in token:
             res = token.split(')')
-            outfit_URLs.add(res[0])
+            outfit_urls.add(res[0])
 
     # Santitize URLs for any superfluous punctuation. 
     # Adapted from: https://stackoverflow.com/questions/52118382/removing-special-characters-punctuation-for-the-end-of-a-python-list-of-urls
-    outfit_URLs = [re.sub('[^a-zA-Z0-9]+$','',URL) for URL in outfit_URLs]
+    outfit_urls = [re.sub('[^a-zA-Z0-9]+$','',URL) for URL in outfit_urls]
 
     # Filter out URLs that are not Imgur or Dressed.so domains.
-    outfit_URLs = list(filter(lambda url: is_outfit_url(url), outfit_URLs))
-    return outfit_URLs
+    outfit_urls = list(filter(lambda url: is_outfit_url(url), outfit_urls))
+    return outfit_urls
 
 def is_outfit_url(url: str) -> bool:
     '''
