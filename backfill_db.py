@@ -7,12 +7,12 @@ def generate_thread_IDs(query: str, author: str, subreddit: str) -> list:
     Uses the Pushshift API to easily retrieve historical thread data.
     Returns an array of thread IDs.
     '''
-    thread_ids = []
+    thread_ids = set()
     with urllib.request.urlopen(F"https://api.pushshift.io/reddit/search/submission/?q={query}&author={author}&subreddit={subreddit}&size=500") as url:
         thread_data = json.loads(url.read().decode())
     for threads in thread_data.values():
         for thread_data in threads:
-            thread_ids.append(thread_data['id'])
+            thread_ids.add(thread_data['id'])
     return thread_ids
 
 def extract_outfit_links(comment: str) -> list:
