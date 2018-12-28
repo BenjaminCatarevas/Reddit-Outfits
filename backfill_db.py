@@ -8,8 +8,10 @@ def generate_thread_IDs(query: str, author: str, subreddit: str) -> list:
     Returns an array of thread IDs.
     '''
     thread_ids = set()
+    # Query API for historical thread data.
     with urllib.request.urlopen(F"https://api.pushshift.io/reddit/search/submission/?q={query}&author={author}&subreddit={subreddit}&size=500") as url:
         thread_data = json.loads(url.read().decode())
+    # Traverse each thread in the values part of the decoded JSON dictionary and add the ID of each thread to the set.
     for threads in thread_data.values():
         for thread_data in threads:
             thread_ids.add(thread_data['id'])
