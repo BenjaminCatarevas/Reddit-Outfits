@@ -1,6 +1,6 @@
 import urllib.request, json, re
 
-def generate_thread_IDs(query, author, subreddit):
+def generate_thread_IDs(query: str, author: str, subreddit: str) -> list:
     '''
     JSON reading adapted from: https://stackoverflow.com/questions/12965203/how-to-get-json-from-webpage-into-python-script
     Produces thread IDs for a given query with a specified author on a given subreddit, up to a maximum of 500.
@@ -15,7 +15,7 @@ def generate_thread_IDs(query, author, subreddit):
             thread_ids.append(thread_data['id'])
     return thread_ids
 
-def extract_links(comment):
+def extract_links(comment: str) -> list:
     '''
     Extracts links from a given comment.
     Splits the comment twice. The function splits the comment once to check for URLs posted in plaintext, and once for URLs posted in Markdown.
@@ -38,14 +38,14 @@ def extract_links(comment):
     
     return links
 
-def is_outfit_url(url):
+def is_outfit_url(url: str) -> bool:
     '''
     Determines if a given URL is an Imgur or Dressed.so url. 
     Returns True if so, False otherwise.
     '''
     pass
 
-def generate_comments(thread_id):
+def generate_comments(thread_id: str) -> list:
     '''
     Given a thread ID, uses the Reddit API wrapper (PRAW) to access top-level comments and create Comment objects containing only necessary data.
     Returns an array of Comment objects.
