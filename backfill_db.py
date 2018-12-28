@@ -64,7 +64,7 @@ def is_outfit_url(url: str) -> bool:
     host = parsed_url.netloc.lower()
     return host == 'imgur.com' or host == 'dressed.so' or host == 'cdn.dressed.so' or host == 'i.imgur.com'
 
-def extract_images_album(album_URL: str) -> list:
+def extract_images_album(album_url: str) -> list:
     '''
     Extracts image links from an Imgur album.
     Returns an array of image links.
@@ -73,7 +73,7 @@ def extract_images_album(album_URL: str) -> list:
     image_links = []
 
     # Extract the album hash by parsing the URL.
-    album_hash = urlparse(album_URL).path[3:]
+    album_hash = urlparse(album_url).path[3:]
 
     url = F'https://api.imgur.com/3/album/{album_hash}/images'
     payload = {}
