@@ -1,4 +1,5 @@
-import urllib.request, json, re, tldextract
+import urllib.request, json, re, tldextract, requests, config
+from urllib.parse import urlparse
 
 def generate_thread_IDs(query: str, author: str, subreddit: str) -> list:
     '''
@@ -17,36 +18,36 @@ def generate_thread_IDs(query: str, author: str, subreddit: str) -> list:
             thread_ids.add(thread_data['id'])
     return thread_ids
 
-def extract_outfit_links(comment: str) -> list:
+def extract_outfit_URLs(comment: str) -> list:
     '''
-    Extracts links from a given comment.
+    Extracts URLs from a given comment.
     Splits the comment twice. The function splits the comment once to check for URLs posted in plaintext, and once for URLs posted in Markdown.
     Returns a set of URLs. 
-    NOTE: This assumes that the comment has outfit links in plaintext or properly formatted Markdown. Outfit links in ill-formatted Markdown will be ignored.
+    NOTE: This assumes that the comment has outfit URLs in plaintext or properly formatted Markdown. Outfit URLs in ill-formatted Markdown will be ignored.
     But, there will be cron jobs or something similar to regularly update threads, and ideally will capture comments that are updated (such as with proper Markdown).
     '''
     # TODO: Find a more efficient way of extracting URLs in plaintext and Markdown.
 
-    outfit_links = set()
+    outfit_URLs = set()
 
     # Extraction of plaintext URLs.
     for token in comment.split(" "):
         if token.startswith('http') or token.startswith('https'):
-            outfit_links.add(token)
+            outfit_URLs.add(token)
 
     # Extraction of Markdown URLs.
     for token in comment.split(']('):
         if (token.startswith('http') or token.startswith('https')) and ')' in token:
             res = token.split(')')
-            outfit_links.add(res[0])
+            outfit_URLs.add(res[0])
 
     # Santitize URLs for any superfluous punctuation. 
     # Adapted from: https://stackoverflow.com/questions/52118382/removing-special-characters-punctuation-for-the-end-of-a-python-list-of-urls
-    outfit_links = [re.sub('[^a-zA-Z0-9]+$','',link) for link in outfit_links]
+    outfit_URLs = [re.sub('[^a-zA-Z0-9]+$','',URL) for URL in outfit_URLs]
 
     # Filter out URLs that are not Imgur or Dressed.so domains.
-    outfit_links = list(filter(lambda url: is_outfit_url(url), outfit_links))
-    return outfit_links
+    outfit_URLs = list(filter(lambda url: is_outfit_url(url), outfit_URLs))
+    return outfit_URLs
 
 def is_outfit_url(url: str) -> bool:
     '''
