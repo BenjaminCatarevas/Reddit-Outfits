@@ -1,5 +1,6 @@
 import unittest
 from backfill_db import extract_outfit_URLs
+from backfill_db import is_outfit_url
 
 class TestExtractOutfitURLs(unittest.TestCase):
 
@@ -60,6 +61,35 @@ class TestExtractOutfitURLs(unittest.TestCase):
     def test_extract_outfit_URLs_both_jpg_png(self):
         comment = 'Here are direct URLs to my outfits: [1](https://i.imgur.com/rj3926tj0ef.jpg), [2](https://imgur.com/tj39tj430gojef.png), [3](http://cdn.dressed.so/i/3j59t2jwe0f3643t.jpg), and [4](http://cdn.dressed.so/i/j323j60t34rf.png)'
         self.assertCountEqual(extract_outfit_URLs(comment), {'https://i.imgur.com/rj3926tj0ef.jpg', 'https://imgur.com/tj39tj430gojef.png', 'http://cdn.dressed.so/i/3j59t2jwe0f3643t.jpg', 'http://cdn.dressed.so/i/j323j60t34rf.png'})
+
+class TestIsOutfitURL(unittest.TestCase):
+    def setUp(self):
+        pass
+
+    # Returns True if the URL is an Imgur link.
+    def test_is_outfit_url_imgur(self):
+        url = 'https://imgur.com/a/326trwef'
+        self.assertEqual(is_outfit_url(url), True)
+
+    # Returns True if the URL is a Dressed.so link.
+    def test_is_outfit_url_dressed(self):
+        url = 'http://dressed.so/post/view/fh84th349tg4'
+        self.assertEqual(is_outfit_url(url), True)
+
+    # Returns True if the URL is a cdn.dressed.so link.
+    def test_is_outfit_url_i_imgur(self):
+        url = 'https://i.imgur.com/rj3926tj0ef.jpg'
+        self.assertEqual(is_outfit_url(url), True)
+
+    # Returns True if the URL is an i.imgur.com link.
+    def test_is_outfit_url_cdn_dressed(self):
+        url = 'http://cdn.dressed.so/i/3j953296tj30g.png'
+        self.assertEqual(is_outfit_url(url), True)
+    
+    # Returns False if the URL is not an Imgur or Dressed.so link.
+    def test_is_outfit_url_other(self):
+        url = 'https://instagram.com/wfn39qt4wg9ejqr3w'
+        self.assertEqual(is_outfit_url(url), False)
 
 if __name__ == '__main__':
     unittest.main()
