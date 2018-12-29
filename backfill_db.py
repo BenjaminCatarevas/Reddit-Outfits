@@ -64,18 +64,18 @@ def is_outfit_url(url: str) -> bool:
     host = parsed_url.netloc.lower()
     return host == 'imgur.com' or host == 'dressed.so' or host == 'cdn.dressed.so' or host == 'i.imgur.com'
 
-def extract_images_album(album_url: str) -> list:
+def extract_urls_from_imgur(imgur_url: str, url_type: str) -> list:
     '''
-    Extracts image links from an Imgur album.
+    Extracts image links from either an Imgur album or gallery, depending on url_type.
     Returns an array of image links.
     '''
 
     image_links = []
 
     # Extract the album hash by parsing the URL.
-    album_hash = urlparse(album_url).path[3:]
+    album_hash = urlparse(imgur_url).path[3:] if url_type == 'album' else urlparse(imgur_url).path[9:]
 
-    url = F'https://api.imgur.com/3/album/{album_hash}/images'
+    url = F'https://api.imgur.com/3/{url_type}/{album_hash}/images'
     payload = {}
     headers = {
         'Authorization': F'Client-ID {config.imgur_client_id}'
@@ -84,8 +84,8 @@ def extract_images_album(album_url: str) -> list:
     album_json = json.loads(response.text)['data']
 
     # Invalid album.
-    if 'error' in album_json.keys():
-        print(album_json['error'])
+    if 'error' in album_json:
+        print(F"Error: {album_json['error']}")
         return []
 
     # Valid album.
