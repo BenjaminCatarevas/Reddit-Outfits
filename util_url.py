@@ -54,7 +54,7 @@ def extract_urls_from_imgur(imgur_url: str, url_type: str) -> list:
 
     return image_urls
 
-def extract_outfit_urls(comment: str) -> list:
+def extract_outfit_urls(comment: str) -> set:
     '''
     Extracts URLs from a given comment.
     Splits the comment twice. The function splits the comment once to check for URLs posted in plaintext, and once for URLs posted in Markdown.
