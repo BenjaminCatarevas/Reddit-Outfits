@@ -2,6 +2,7 @@ import urllib.request
 import json
 import re
 import requests
+import praw
 import config
 from urllib.parse import urlparse
 
@@ -120,8 +121,34 @@ def type_of_imgur_url(imgur_url: str) -> dict:
 
 def generate_comments(thread_id: str) -> list:
     '''
-    Given a thread ID, uses the Reddit API wrapper (PRAW) to access top-level comments and create Comment objects containing only necessary data.
-    Returns an array of Comment objects.
+    Given a thread ID, uses the Reddit API wrapper (PRAW) to access top-level comments and create comment dictionaries containing only necessary data.
+    Returns an array of comment dictionaries.
+    Adapted from: https://praw.readthedocs.io/en/latest/tutorials/comments.html
+    '''
+
+    comments = []
+    reddit = praw.Reddit(
+        user_agent = 'Comment Extraction',
+        client_id = config.reddit_client_id,
+        client_secret = config.reddit_client_secret
+    )
+
+    # Obtain a CommentForest object.
+    thread_submission = reddit.submission(id=thread_id)
+
+    # In the event there are "load more comments" or "contine this thread, we replace those with the comments they are hiding.
+    thread_submission.comments.replace_more(limit=None)
+
+    # Traverse all of the comments.
+    for top_level_comment in thread_submission.comments:
+        comments.append(create_comment_dictionary(top_level_comment))
+    
+    return comments
+
+def create_comment_dictionary(comment) -> dict:
+    '''
+    Given a Comment object, creates a dictionary holding only relevant information.
+    Returns a dictionary.
     '''
     pass
 
