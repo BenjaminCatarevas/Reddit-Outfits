@@ -66,11 +66,11 @@ def is_outfit_url(url: str) -> bool:
 
 def extract_urls_from_imgur(imgur_url: str, url_type: str) -> list:
     '''
-    Extracts image links from either an Imgur album or gallery, depending on url_type.
-    Returns an array of image links.
+    Extracts image URLs from either an Imgur album or gallery, depending on url_type.
+    Returns an array of image URLs.
     '''
 
-    image_links = []
+    image_urls = []
 
     # Extract the album hash by parsing the URL.
     album_hash = urlparse(imgur_url).path[3:] if url_type == 'album' else urlparse(imgur_url).path[9:]
@@ -90,9 +90,33 @@ def extract_urls_from_imgur(imgur_url: str, url_type: str) -> list:
 
     # Valid album.
     for image in album_json:
-        image_links.append(image['link'])
+        image_urls.append(image['link'])
 
-    return image_links
+    return image_urls
+
+def type_of_imgur_url(imgur_url: str) -> dict:
+    '''
+    Given an Imgur URL, determines if the URL is an album, gallery, Imgur image, or single image (.png, .jpeg, .jpg)
+    Returns a dictionary where the first element is the type of URL, and the second element is the alphanumeric hash (if applicable).
+    Type is chosen from {'album', 'gallery', 'imgur_image', {'png', 'jpeg', 'jpg'}}.
+    '''
+    parsed_url_path = urlparse(imgur_url).path
+
+    # Album.
+    if parsed_url_path.startswith('/a/'):
+        return {'url_type': 'album', 'image_hash': parsed_url_path[3:]}
+    # Gallery.
+    elif parsed_url_path.startswith('/gallery/'):
+        return {'url_type': 'gallery', 'image_hash': parsed_url_path[9:]}
+    # Single image.
+    elif parsed_url_path.endswith(('.jpg', '.jpeg', '.png')):
+        # Regular expression adapted from: https://stackoverflow.com/questions/23259110/python-splitting-a-string-twice
+        # Split on / and . to get the alphanumeric hash, and isolate it. When displaying images, we will use one MIME type, namely .png.
+        return {'url_type': 'single_image', 'image_hash': re.split(r'[/.]', parsed_url_path)[1]}
+    # Imgur image.
+    else:
+        return {'url_type': 'imgur_image', 'image_hash': parsed_url_path[1:]}
+
 
 def generate_comments(thread_id: str) -> list:
     '''
