@@ -153,15 +153,33 @@ def create_comment_dictionary(comment) -> dict:
     comment = {
         'author': comment.author.name,
         'body': comment.body,
-        'time_created': comment.created_utc,
         'comment_id': comment.id,
-        'thread_id': comment.link_id,
         'comment_permalink': comment.permalink,
-        'score': comment.score,
+        'comment_score': comment.score,
         'subreddit': comment.subreddit.display_name,
         'subreddit_id': comment.subreddit_id,
+        'thread_id': comment.link_id,
+        'time_created': comment.created_utc
     }
+
     return comment
+
+def create_thread_dictionary(submission: str) -> dict:
+    '''
+    Given a Submission object, creates a dictionary holding only relevant information.
+    Returns a dictionary.
+    '''
+    thread = {
+        'number_of_comments': submission.num_comments,
+        'subreddit': submission.subreddit.display_name,
+        'time_created': submission.created_utc,
+        'thread_id': submission.id,
+        'thread_title': submission.title,
+        'thread_score': submission.score,
+        'thread_permalink': submission.permalink,
+    }
+
+    return thread
 
 def create_database():
     '''
