@@ -1,5 +1,5 @@
 import unittest
-from url_util import extract_outfit_urls, is_imgur_url, is_dressed_so_url, type_of_imgur_url
+from util_url import extract_outfit_urls, is_imgur_url, is_dressed_so_url, type_of_imgur_url
 
 class TestExtractOutfitURLs(unittest.TestCase):
 
