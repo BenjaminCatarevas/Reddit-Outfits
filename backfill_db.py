@@ -110,7 +110,7 @@ def type_of_imgur_url(imgur_url: str) -> dict:
     elif parsed_url_path.startswith('/gallery/'):
         return {'url_type': 'gallery', 'image_hash': parsed_url_path[9:]}
     # Single image.
-    elif parsed_url_path.endswith(('.jpg', '.jpeg', '.png')):
+    elif parsed_url_path.endswith(('.jpg', '.jpeg', '.png', '.gif', '.gifv')):
         # Regular expression adapted from: https://stackoverflow.com/questions/23259110/python-splitting-a-string-twice
         # Split on / and . to get the alphanumeric hash, and isolate it. When displaying images, we will use one MIME type, namely .png.
         return {'url_type': 'single_image', 'image_hash': re.split(r'[/.]', parsed_url_path)[1]}
