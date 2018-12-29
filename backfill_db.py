@@ -150,7 +150,18 @@ def create_comment_dictionary(comment) -> dict:
     Given a Comment object, creates a dictionary holding only relevant information.
     Returns a dictionary.
     '''
-    pass
+    comment = {
+        'author': comment.author.name,
+        'body': comment.body,
+        'time_created': comment.created_utc,
+        'comment_id': comment.id,
+        'thread_id': comment.link_id,
+        'comment_permalink': comment.permalink,
+        'score': comment.score,
+        'subreddit': comment.subreddit.display_name,
+        'subreddit_id': comment.subreddit_id,
+    }
+    return comment
 
 def create_database():
     '''
