@@ -52,18 +52,28 @@ def extract_outfit_urls(comment: str) -> list:
     outfit_urls = [re.sub('[^a-zA-Z0-9]+$','',URL) for URL in outfit_urls]
 
     # Filter out URLs that are not Imgur or Dressed.so domains.
-    outfit_urls = list(filter(lambda url: is_outfit_url(url), outfit_urls))
+    outfit_urls = list(filter(lambda url: is_imgur_url(url) or is_dressed_so_url(url), outfit_urls))
     return outfit_urls
 
-def is_outfit_url(url: str) -> bool:
+def is_imgur_url(url: str) -> bool:
     '''
-    Determines if a given URL is an Imgur or Dressed.so url using urlparse.
+    Determines if a given URL is an Imgur URL using urlparse.or Dressed.so url using urlparse.
     Returns True if so, False otherwise.
     '''
 
     parsed_url = urlparse(url)
     host = parsed_url.netloc.lower()
-    return host == 'imgur.com' or host == 'dressed.so' or host == 'cdn.dressed.so' or host == 'i.imgur.com'
+    return host == 'imgur.com' or host == 'i.imgur.com'
+
+def is_dressed_so_url(url: str) -> bool:
+    '''
+    Determines if a given URL is a Dressed.so URL using urlparse.
+    Returns True if so, False otherwise.
+    '''
+    
+    parsed_url = urlparse(url)
+    host = parsed_url.netloc.lower()
+    return host == 'dressed.so' or host == 'cdn.dressed.so'
 
 def extract_urls_from_imgur(imgur_url: str, url_type: str) -> list:
     '''
@@ -157,6 +167,7 @@ def create_comment_dictionary(comment) -> dict:
     Given a Comment object, creates a dictionary holding only relevant information.
     Returns a dictionary.
     '''
+
     comment = {
         'author': comment.author.name,
         'body': comment.body,
