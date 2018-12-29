@@ -5,7 +5,7 @@ import requests
 import config
 from urllib.parse import urlparse
 
-def generate_thread_IDs(query: str, author: str, subreddit: str) -> list:
+def generate_thread_IDs(query: str, author: str, subreddit: str) -> set:
     '''
     JSON reading adapted from: https://stackoverflow.com/questions/12965203/how-to-get-json-from-webpage-into-python-script
     Produces thread IDs for a given query with a specified author on a given subreddit, up to a maximum of 500.
