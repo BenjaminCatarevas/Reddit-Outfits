@@ -101,22 +101,29 @@ def type_of_imgur_url(imgur_url: str) -> dict:
     Returns a dictionary where the first element is the type of URL, and the second element is the alphanumeric hash (if applicable).
     Type is chosen from {'album', 'gallery', 'imgur_image', {'png', 'jpeg', 'jpg'}}.
     '''
-    parsed_url_path = urlparse(imgur_url).path
+    parsed_url = urlparse(imgur_url)
+    parsed_url_path = parsed_url.path
+    is_single_image = imgur_url.endswith(('.jpg', '.jpeg', '.png', '.gif', '.gifv'))
+    is_album = parsed_url_path.startswith('/a/')
+    is_gallery = parsed_url_path.startswith('/gallery/')
 
     # Album.
-    if parsed_url_path.startswith('/a/'):
+    if is_album and not is_single_image:
         return {'url_type': 'album', 'image_hash': parsed_url_path[3:]}
     # Gallery.
-    elif parsed_url_path.startswith('/gallery/'):
+    elif is_gallery and not is_single_image:
         return {'url_type': 'gallery', 'image_hash': parsed_url_path[9:]}
     # Single image.
-    elif parsed_url_path.endswith(('.jpg', '.jpeg', '.png', '.gif', '.gifv')):
+    elif is_single_image and not is_album and not is_gallery:
         # Regular expression adapted from: https://stackoverflow.com/questions/23259110/python-splitting-a-string-twice
         # Split on / and . to get the alphanumeric hash, and isolate it. When displaying images, we will use one MIME type, namely .png.
         return {'url_type': 'single_image', 'image_hash': re.split(r'[/.]', parsed_url_path)[1]}
-    # Imgur image.
-    else:
+    # Imgur image. Check to make sure it starts with imgur.com and it also does not end at / (as in: https://imgur.com/)
+    elif parsed_url.netloc == 'imgur.com' and imgur_url[-1] != '/' and not is_single_image and not is_album and not is_gallery:
         return {'url_type': 'imgur_image', 'image_hash': parsed_url_path[1:]}
+    # Invalid URL.
+    else:
+        return {'url_type': 'ERROR', 'image_hash': 'ERROR'}
 
 
 def generate_comments(thread_id: str) -> list:
