@@ -1,5 +1,5 @@
 import unittest
-from backfill_db import extract_outfit_urls, is_imgur_url, is_dressed_so_url, type_of_imgur_url
+from url_util import extract_outfit_urls, is_imgur_url, is_dressed_so_url, type_of_imgur_url
 
 class TestExtractOutfitURLs(unittest.TestCase):
 
@@ -117,7 +117,7 @@ class TestTypeOfImgurUrl(unittest.TestCase):
     # Returns True if the URL is an Imgur image.
     def test_type_of_imgur_url_imgur_image(self):
         url = 'https://imgur.com/395ue9fj3t'
-        self.assertDictEqual(type_of_imgur_url(url), {'url_type': 'imgur_image', 'image_hash': '395ue9fj3t'})
+        self.assertDictEqual(type_of_imgur_url(url), {'url_type': 'image', 'image_hash': '395ue9fj3t'})
 
     # Returns True if the URL is a single .jpg image.
     def test_type_of_imgur_url_single_jpg(self):
