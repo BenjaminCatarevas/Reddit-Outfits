@@ -83,7 +83,7 @@ def extract_outfit_urls_from_comment(comment: str) -> list:
             outfit_urls.add(token)
 
     # Santitize URLs for any superfluous punctuation. Some users have a period at the end of their image URLs, so we sanitize that.
-    # Adapted from: https://stackoverflow.com/questions/52118382/removing-special-characters-punctuation-for-the-end-of-a-python-list-of-urls
+    # Adapted from: https://stackoverflow.com/a/52118554
     outfit_urls = [re.sub('[^a-zA-Z0-9]+$','',URL) for URL in outfit_urls]
 
     # Filter out URLs that are not Imgur or Dressed.so domains (also turns the set into a list).
@@ -113,7 +113,7 @@ def create_imgur_url_info(imgur_url: str) -> dict:
         return {'url_type': 'gallery', 'imgur_hash': parsed_url_path[9:]}
     elif is_single_image and not is_album and not is_gallery:
         # Single image (e.g. ending in .jpg, .jpeg, or .png)
-        # Regular expression adapted from: https://stackoverflow.com/questions/23259110/python-splitting-a-string-twice
+        # Regular expression adapted from: https://stackoverflow.com/a/23259147
         # Split on / and . to get the alphanumeric hash, and isolate it. When displaying images, we will use one MIME type, namely .png.
         return {'url_type': 'single_image', 'imgur_hash': re.split(r'[/.]', parsed_url_path)[1]}
     elif parsed_url.netloc == 'imgur.com' and imgur_url[-1] != '/' and not is_single_image and not is_album and not is_gallery:
