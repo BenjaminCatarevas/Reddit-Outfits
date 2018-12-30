@@ -99,11 +99,11 @@ def create_comment_dictionary(comment) -> dict:
         'comment_id': comment.id,
         'comment_permalink': comment.permalink,
         'comment_score': comment.score,
+        'date_posted': comment.created_utc,
         'outfits': create_outfit_urls(comment.body),
         'subreddit': comment.subreddit.display_name,
         'subreddit_id': comment.subreddit_id,
-        'thread_id': comment.link_id,
-        'time_created': comment.created_utc
+        'thread_id': comment.link_id
     }
 
     return comment
