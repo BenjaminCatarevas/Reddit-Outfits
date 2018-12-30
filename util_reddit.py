@@ -47,7 +47,11 @@ def generate_comments(thread_id: str) -> list:
 
     # Traverse all of the comments.
     for top_level_comment in thread_submission.comments:
-        comments.append(create_comment_dictionary(top_level_comment))
+        # We only care about comments that have outfit URLs in them. All others, we ignore.
+        if len(create_outfit_urls(top_level_comment.body)) < 1:
+            continue
+        else:
+            comments.append(create_comment_dictionary(top_level_comment))
     
     return comments
 
