@@ -53,7 +53,7 @@ def extract_image_urls_from_imgur_url(imgur_url: str, imgur_hash: str, url_type:
         for image in album_json:
             image_urls.append(image['link'])
     else:
-        # Single JSON object (from /image// endpoint).
+        # Single JSON object (from /image/ endpoint).
         image_urls.append(album_json['link'])
 
     return image_urls
