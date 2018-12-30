@@ -122,6 +122,7 @@ def create_thread_dictionary(submission) -> dict:
     Given a Submission object, creates a dictionary holding only relevant information.
     Returns a dictionary.
     '''
+    
     thread = {
         'number_of_comments': submission.num_comments,
         'subreddit': submission.subreddit.display_name,
