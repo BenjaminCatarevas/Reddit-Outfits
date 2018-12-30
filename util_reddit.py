@@ -67,14 +67,14 @@ def create_outfit_urls(comment: str) -> list:
             # Determine what type of Imgur URL it is, and the hash of said Imgur URL.
             imgur_url_info = create_imgur_url_info(outfit_url)
             imgur_url_type = imgur_url_info['url_type']
-            imgur_image_hash = imgur_url_info['image_hash']
+            imgur_hash = imgur_url_info['imgur_hash']
 
-            if imgur_url_type != 'single_image' or imgur_url_type != 'ERROR':
+            if imgur_url_type != 'single_image' and imgur_url_type != 'ERROR':
                 # If it's an album or gallery, we need to explode the images in the URL.
-                outfit_urls += extract_image_urls_from_imgur_url(outfit_url, imgur_url_type)
+                outfit_urls += extract_image_urls_from_imgur_url(outfit_url, imgur_hash, imgur_url_type)
             elif imgur_url_type == 'single_image':
                 # If it's a single image (ending in .jpg, .jpeg, or .png), we can just use the hash.
-                outfit_urls += F'https://i.imgur.com/{imgur_image_hash}.png'
+                outfit_urls.append(F'https://i.imgur.com/{imgur_hash}.png')
             else:
                 # Invalid URL.
                 print("Invalid Imgur link.")
@@ -108,7 +108,7 @@ def create_comment_dictionary(comment) -> dict:
 
     return comment
 
-def create_thread_dictionary(submission: str) -> dict:
+def create_thread_dictionary(submission) -> dict:
     '''
     Given a Submission object, creates a dictionary holding only relevant information.
     Returns a dictionary.
