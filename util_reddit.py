@@ -4,6 +4,7 @@ import urllib.request
 from urllib.parse import urlparse
 import config
 from util_url import extract_outfit_urls_from_comment, is_imgur_url, is_dressed_so_url, create_imgur_url_info, extract_image_urls_from_imgur_url
+from datetime import datetime
 
 def generate_thread_ids(query: str, author: str, subreddit: str) -> set:
     '''
@@ -97,17 +98,21 @@ def create_comment_dictionary(comment) -> dict:
     Returns a dictionary.
     '''
 
+    # Convert the Unix Time timestamp from the Comment object into a list that has the date posted and time posted.
+    date_posted, time_posted = datetime.utcfromtimestamp(comment.created_utc).strftime('%Y-%m-%d %H:%M:%S').split(' ')
+
     comment = {
         'author': comment.author.name,
         'body': comment.body,
         'comment_id': comment.id,
         'comment_permalink': comment.permalink,
         'comment_score': comment.score,
-        'date_posted': comment.created_utc,
+        'date_posted': date_posted,
         'outfits': create_outfit_urls(comment.body),
         'subreddit': comment.subreddit.display_name,
         'subreddit_id': comment.subreddit_id,
-        'thread_id': comment.link_id
+        'thread_id': comment.link_id,
+        'time_posted': time_posted
     }
 
     return comment
