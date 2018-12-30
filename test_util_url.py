@@ -61,6 +61,11 @@ class TestExtractOutfitURLs(unittest.TestCase):
         comment = 'Here are direct URLs to my outfits: [1](https://i.imgur.com/rj3926tj0ef.jpg), [2](https://imgur.com/tj39tj430gojef.png), [3](http://cdn.dressed.so/i/3j59t2jwe0f3643t.jpg), and [4](http://cdn.dressed.so/i/j323j60t34rf.png)'
         self.assertCountEqual(extract_outfit_urls_from_comment(comment), {'https://i.imgur.com/rj3926tj0ef.jpg', 'https://imgur.com/tj39tj430gojef.png', 'http://cdn.dressed.so/i/3j59t2jwe0f3643t.jpg', 'http://cdn.dressed.so/i/j323j60t34rf.png'})
 
+    # Returns True if the comment contains improper Markdown.
+    def test_extract_outfit_urls_from_comment_improper_markdown(self):
+        comment = 'Here are direct URLs to my outfits: [1(https://i.imgur.com/3tiht8wfoaoj.jpg), 2](https://imgur.com/mr934tjw0fj.png), [3]http://cdn.dressed.so/i/39u649trfoje.jpg), and [4](http://cdn.dressed.so/i/3953tugwejfoajl.png'
+        self.assertCountEqual(extract_outfit_urls_from_comment(comment), {'https://i.imgur.com/3tiht8wfoaoj.jpg', 'https://imgur.com/mr934tjw0fj.png', 'http://cdn.dressed.so/i/39u649trfoje.jpg', 'http://cdn.dressed.so/i/3953tugwejfoajl.png'})
+
 class TestIsImgurURL(unittest.TestCase):
     def setUp(self):
         pass
