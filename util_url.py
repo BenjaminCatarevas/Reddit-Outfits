@@ -67,6 +67,8 @@ def extract_outfit_urls_from_comment(comment: str) -> list:
     But, there will be cron jobs or something similar to regularly update threads, and ideally will capture comments that are updated (such as with proper Markdown).
     '''
     # TODO: Find a more efficient way of extracting URLs in plaintext and Markdown.
+    # This is the current implementation due to either lack of knowledge or limitations of regular expressions.
+    # Finding a regular expression that both successfully parses strings for plaintext URLs and URLs in Markdown was unsuccessful.
 
     outfit_urls = set()
 
