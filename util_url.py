@@ -61,7 +61,7 @@ def extract_outfit_urls_from_comment(comment: str) -> list:
     '''
     Extracts URLs from a given comment.
     Splits the comment twice. The function splits the comment once to check for URLs posted in plaintext, and once for URLs posted in Markdown.
-    Returns a set of URLs. 
+    Returns a list of URLs. 
     NOTE: This assumes that the comment has outfit URLs in plaintext or properly formatted Markdown. Outfit URLs in ill-formatted Markdown will be ignored.
     But, there will be cron jobs or something similar to regularly update threads, and ideally will capture comments that are updated (such as with proper Markdown).
     '''
@@ -84,8 +84,7 @@ def extract_outfit_urls_from_comment(comment: str) -> list:
     # Adapted from: https://stackoverflow.com/questions/52118382/removing-special-characters-punctuation-for-the-end-of-a-python-list-of-urls
     outfit_urls = [re.sub('[^a-zA-Z0-9]+$','',URL) for URL in outfit_urls]
 
-    # Filter out URLs that are not Imgur or Dressed.so domains.
-
+    # Filter out URLs that are not Imgur or Dressed.so domains (also turns the set into a list).
     outfit_urls = [url for url in outfit_urls if is_imgur_url(url) or is_dressed_so_url(url)]
 
     return outfit_urls
