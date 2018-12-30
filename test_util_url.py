@@ -107,46 +107,46 @@ class TestCreateImgurUrlInfoUrl(unittest.TestCase):
     # Returns True if the URL is an Imgur album.
     def test_create_imgur_url_info_album(self):
         url = 'https://imgur.com/a/f35t34wrtge'
-        self.assertDictEqual(create_imgur_url_info(url), {'url_type': 'album', 'image_hash': 'f35t34wrtge'})
+        self.assertDictEqual(create_imgur_url_info(url), {'url_type': 'album', 'imgur_hash': 'f35t34wrtge'})
 
     # Returns True if the URL is an Imgur gallery.
     def test_create_imgur_url_info_gallery(self):
         url = 'https://imgur.com/gallery/t4wy3tfeh'
-        self.assertDictEqual(create_imgur_url_info(url), {'url_type': 'gallery', 'image_hash': 't4wy3tfeh'})
+        self.assertDictEqual(create_imgur_url_info(url), {'url_type': 'gallery', 'imgur_hash': 't4wy3tfeh'})
 
     # Returns True if the URL is an Imgur image.
     def test_create_imgur_url_info_imgur_image(self):
         url = 'https://imgur.com/395ue9fj3t'
-        self.assertDictEqual(create_imgur_url_info(url), {'url_type': 'image', 'image_hash': '395ue9fj3t'})
+        self.assertDictEqual(create_imgur_url_info(url), {'url_type': 'image', 'imgur_hash': '395ue9fj3t'})
 
     # Returns True if the URL is a single .jpg image.
     def test_create_imgur_url_info_single_jpg(self):
         url = 'https://imgur.com/a35t9jfe.jpg'
-        self.assertDictEqual(create_imgur_url_info(url), {'url_type': 'single_image', 'image_hash': 'a35t9jfe'})
+        self.assertDictEqual(create_imgur_url_info(url), {'url_type': 'single_image', 'imgur_hash': 'a35t9jfe'})
 
     # Returns True if the URL is a single .jpeg image.
     def test_create_imgur_url_info_single_jpeg(self):
         url = 'https://imgur.com/4ge0jt0f.jpeg'
-        self.assertDictEqual(create_imgur_url_info(url), {'url_type': 'single_image', 'image_hash': '4ge0jt0f'})
+        self.assertDictEqual(create_imgur_url_info(url), {'url_type': 'single_image', 'imgur_hash': '4ge0jt0f'})
 
     # Returns True if the URL is a single .png image.
     def test_create_imgur_url_info_single_png(self):
         url = 'https://imgur.com/34i6jt94g0tf.png'
-        self.assertDictEqual(create_imgur_url_info(url), {'url_type': 'single_image', 'image_hash': '34i6jt94g0tf'})
+        self.assertDictEqual(create_imgur_url_info(url), {'url_type': 'single_image', 'imgur_hash': '34i6jt94g0tf'})
 
     # Returns False if the URL is not an Imgur URL.
     def test_create_imgur_url_info_not_imgur(self):
         url = 'https://google.com'
-        self.assertDictEqual(create_imgur_url_info(url), {'url_type': 'ERROR', 'image_hash': 'ERROR'})
+        self.assertDictEqual(create_imgur_url_info(url), {'url_type': 'ERROR', 'imgur_hash': 'ERROR'})
 
     # Returns False if the URL is Imgur's homepage, imgur.com/.
     def test_create_imgur_url_info_invalid_imgur(self):
         url = 'https://imgur.com/'
-        self.assertDictEqual(create_imgur_url_info(url), {'url_type': 'ERROR', 'image_hash': 'ERROR'})
+        self.assertDictEqual(create_imgur_url_info(url), {'url_type': 'ERROR', 'imgur_hash': 'ERROR'})
 
     def test_create_imgur_url_info_invalid_combination(self):
         url = 'https://imgur.com/a/fgtejgt.jpg'
-        self.assertDictEqual(create_imgur_url_info(url), {'url_type': 'ERROR', 'image_hash': 'ERROR'})
+        self.assertDictEqual(create_imgur_url_info(url), {'url_type': 'ERROR', 'imgur_hash': 'ERROR'})
 
 if __name__ == '__main__':
     unittest.main()
