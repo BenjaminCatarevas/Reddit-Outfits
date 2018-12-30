@@ -72,18 +72,17 @@ def extract_outfit_urls_from_comment(comment: str) -> list:
 
     outfit_urls = set()
 
-    # Extraction of plaintext URLs.
+    # Remove Markdown.
+    # Approach adapted from: https://stackoverflow.com/a/44593228
+    for replacement in (('[', ' '), (']', ' '), ('(', ' '), (')', ' ')):
+        comment = comment.replace(*replacement)
+    
+    # Extract links.
     for token in comment.split():
         if token.startswith('http') or token.startswith('https'):
             outfit_urls.add(token)
 
-    # Extraction of Markdown URLs.
-    for token in comment.split(']('):
-        if (token.startswith('http') or token.startswith('https')) and ')' in token:
-            res = token.split(')')
-            outfit_urls.add(res[0])
-
-    # Santitize URLs for any superfluous punctuation. 
+    # Santitize URLs for any superfluous punctuation. Some users have a period at the end of their image URLs, so we sanitize that.
     # Adapted from: https://stackoverflow.com/questions/52118382/removing-special-characters-punctuation-for-the-end-of-a-python-list-of-urls
     outfit_urls = [re.sub('[^a-zA-Z0-9]+$','',URL) for URL in outfit_urls]
 
