@@ -63,12 +63,8 @@ def extract_outfit_urls_from_comment(comment: str) -> list:
     Extracts URLs from a given comment.
     Splits the comment twice. The function splits the comment once to check for URLs posted in plaintext, and once for URLs posted in Markdown.
     Returns a list of URLs. 
-    NOTE: This assumes that the comment has outfit URLs in plaintext or properly formatted Markdown. Outfit URLs in ill-formatted Markdown will be ignored.
-    But, there will be cron jobs or something similar to regularly update threads, and ideally will capture comments that are updated (such as with proper Markdown).
     '''
     # TODO: Find a more efficient way of extracting URLs in plaintext and Markdown.
-    # This is the current implementation due to either lack of knowledge or limitations of regular expressions.
-    # Finding a regular expression that both successfully parses strings for plaintext URLs and URLs in Markdown was unsuccessful.
 
     outfit_urls = set()
 
