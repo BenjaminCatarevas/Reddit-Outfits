@@ -98,7 +98,7 @@ def create_comment_dictionary(comment) -> dict:
     Returns a dictionary.
     '''
 
-    # Convert the Unix Time timestamp from the Comment object into a list that has the date posted and time posted.
+    # Convert the Unix Time timestamp from the Comment object into the date posted and time posted.
     date_posted, time_posted = datetime.utcfromtimestamp(comment.created_utc).strftime('%Y-%m-%d %H:%M:%S').split(' ')
 
     comment = {
@@ -122,15 +122,19 @@ def create_thread_dictionary(submission) -> dict:
     Given a Submission object, creates a dictionary holding only relevant information.
     Returns a dictionary.
     '''
+
+    # Convert the Unix Time timestamp from the Submission object into the date posted and time posted.
+    date_posted, time_posted = datetime.utcfromtimestamp(submission.created_utc).strftime('%Y-%m-%d %H:%M:%S').split(' ')
     
     thread = {
+        'date_posted': date_posted,
         'number_of_comments': submission.num_comments,
         'subreddit': submission.subreddit.display_name,
-        'time_created': submission.created_utc,
         'thread_id': submission.id,
         'thread_title': submission.title,
         'thread_score': submission.score,
         'thread_permalink': submission.permalink,
+        'time_posted': time_posted
     }
 
     return thread
