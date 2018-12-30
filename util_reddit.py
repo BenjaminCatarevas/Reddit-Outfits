@@ -3,7 +3,7 @@ import json
 import urllib.request
 from urllib.parse import urlparse
 import config
-from util_url import extract_outfit_urls_from_comment, is_imgur_url, is_dressed_so_url, create_imgur_url_info, extract_urls_from_imgur_url
+from util_url import extract_outfit_urls_from_comment, is_imgur_url, is_dressed_so_url, create_imgur_url_info, extract_image_urls_from_imgur_url
 
 def generate_thread_IDs(query: str, author: str, subreddit: str) -> set:
     '''
@@ -71,7 +71,7 @@ def create_outfit_urls(comment: str) -> list:
 
             if imgur_url_type != 'single_image' or imgur_url_type != 'ERROR':
                 # If it's an album or gallery, we need to explode the images in the URL.
-                outfit_urls += extract_urls_from_imgur_url(outfit_url, imgur_url_type)
+                outfit_urls += extract_image_urls_from_imgur_url(outfit_url, imgur_url_type)
             elif imgur_url_type == 'single_image':
                 # If it's a single image (ending in .jpg, .jpeg, or .png), we can just use the hash.
                 outfit_urls += F'https://i.imgur.com/{imgur_image_hash}.png'
