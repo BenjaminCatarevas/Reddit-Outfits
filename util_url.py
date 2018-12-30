@@ -24,7 +24,7 @@ def is_dressed_so_url(url: str) -> bool:
     host = parsed_url.netloc.lower()
     return host == 'dressed.so' or host == 'cdn.dressed.so'
 
-def extract_image_urls_from_imgur_url(imgur_url: str, url_type: str) -> list:
+def extract_image_urls_from_imgur_url(imgur_url: str, imgur_hash: str, url_type: str) -> list:
     '''
     Extracts image URLs from either an Imgur album, image, or gallery, depending on url_type.
     Returns a list of image URLs.
@@ -32,11 +32,8 @@ def extract_image_urls_from_imgur_url(imgur_url: str, url_type: str) -> list:
 
     image_urls = []
 
-    # Extract the album hash by parsing the URL.
-    album_hash = urlparse(imgur_url).path[3:] if url_type == 'album' else urlparse(imgur_url).path[9:]
-
     # Construct the API endpoint URL to ping to receive information about the URL.
-    url = F'https://api.imgur.com/3/{url_type}/{album_hash}/images'
+    url = F'https://api.imgur.com/3/{url_type}/{imgur_hash}/images'
     payload = {}
     headers = {
         'Authorization': F'Client-ID {config.imgur_client_id}'
@@ -50,8 +47,13 @@ def extract_image_urls_from_imgur_url(imgur_url: str, url_type: str) -> list:
         return []
 
     # Valid album.
-    for image in album_json:
-        image_urls.append(image['link'])
+    if url_type == 'gallery' or url_type == 'album':
+        # The returned JSON is in an array for albums and galleries, while it's a single JSON object for a single image.
+        for image in album_json:
+            image_urls.append(image['link'])
+    else:
+        # Single JSON object (from /image endpoint).
+        image_urls.append(album_json['link'])
 
     return image_urls
 
@@ -68,7 +70,7 @@ def extract_outfit_urls_from_comment(comment: str) -> set:
     outfit_urls = set()
 
     # Extraction of plaintext URLs.
-    for token in comment.split(" "):
+    for token in comment.split():
         if token.startswith('http') or token.startswith('https'):
             outfit_urls.add(token)
 
@@ -83,7 +85,9 @@ def extract_outfit_urls_from_comment(comment: str) -> set:
     outfit_urls = [re.sub('[^a-zA-Z0-9]+$','',URL) for URL in outfit_urls]
 
     # Filter out URLs that are not Imgur or Dressed.so domains.
-    outfit_urls = list(filter(lambda url: is_imgur_url(url) or is_dressed_so_url(url), outfit_urls))
+
+    outfit_urls = [url for url in outfit_urls if is_imgur_url(url) or is_dressed_so_url(url)]
+
     return outfit_urls
 
 def create_imgur_url_info(imgur_url: str) -> dict:
@@ -102,18 +106,18 @@ def create_imgur_url_info(imgur_url: str) -> dict:
 
     if is_album and not is_single_image:
         # Album.
-        return {'url_type': 'album', 'image_hash': parsed_url_path[3:]}
+        return {'url_type': 'album', 'imgur_hash': parsed_url_path[3:]}
     elif is_gallery and not is_single_image:
         # Gallery.
-        return {'url_type': 'gallery', 'image_hash': parsed_url_path[9:]}
+        return {'url_type': 'gallery', 'imgur_hash': parsed_url_path[9:]}
     elif is_single_image and not is_album and not is_gallery:
         # Single image (e.g. ending in .jpg, .jpeg, or .png)
         # Regular expression adapted from: https://stackoverflow.com/questions/23259110/python-splitting-a-string-twice
         # Split on / and . to get the alphanumeric hash, and isolate it. When displaying images, we will use one MIME type, namely .png.
-        return {'url_type': 'single_image', 'image_hash': re.split(r'[/.]', parsed_url_path)[1]}
+        return {'url_type': 'single_image', 'imgur_hash': re.split(r'[/.]', parsed_url_path)[1]}
     elif parsed_url.netloc == 'imgur.com' and imgur_url[-1] != '/' and not is_single_image and not is_album and not is_gallery:
         # Imgur image. Check to make sure it starts with imgur.com and it also does not end at / (as in: https://imgur.com/)
-        return {'url_type': 'image', 'image_hash': parsed_url_path[1:]}
+        return {'url_type': 'image', 'imgur_hash': parsed_url_path[1:]}
     else:
         # Invalid URL.
-        return {'url_type': 'ERROR', 'image_hash': 'ERROR'}
+        return {'url_type': 'ERROR', 'imgur_hash': 'ERROR'}
