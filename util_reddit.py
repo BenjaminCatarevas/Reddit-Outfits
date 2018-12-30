@@ -5,12 +5,12 @@ from urllib.parse import urlparse
 import config
 from util_url import extract_outfit_urls_from_comment, is_imgur_url, is_dressed_so_url, create_imgur_url_info, extract_image_urls_from_imgur_url
 
-def generate_thread_IDs(query: str, author: str, subreddit: str) -> set:
+def generate_thread_ids(query: str, author: str, subreddit: str) -> set:
     '''
     JSON reading adapted from: https://stackoverflow.com/questions/12965203/how-to-get-json-from-webpage-into-python-script
     Produces thread IDs for a given query with a specified author on a given subreddit, up to a maximum of 500.
     Uses the Pushshift API to easily retrieve historical thread data.
-    Returns an array of thread IDs.
+    Returns a set of thread IDs.
     '''
 
     thread_ids = set()
