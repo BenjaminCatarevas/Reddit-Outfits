@@ -48,11 +48,12 @@ def extract_image_urls_from_imgur_url(imgur_url: str, imgur_hash: str, url_type:
 
     # Valid album.
     if url_type == 'gallery' or url_type == 'album':
+        # From /album/ and /gallery/ endpoint
         # The returned JSON is in an array for albums and galleries, while it's a single JSON object for a single image.
         for image in album_json:
             image_urls.append(image['link'])
     else:
-        # Single JSON object (from /image endpoint).
+        # Single JSON object (from /image// endpoint).
         image_urls.append(album_json['link'])
 
     return image_urls
