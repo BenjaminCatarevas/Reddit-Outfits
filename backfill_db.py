@@ -1,6 +1,5 @@
 from util_reddit import generate_historical_thread_ids, generate_comments_from_thread, create_thread_dictionary
 import psycopg2
-import psycopg2.extensions
 
 def update_thread(thread_id: str):
     '''
@@ -25,8 +24,8 @@ def generate_add_comment() -> str:
 
     # Create the statement for inserting comment information into the comment table.
     insert_comment = """
-        INSERT INTO comment (author, body, comment_id, comment_permalink, date_posted, subreddit, subreddit_id, thread_id, time_posted)
-        VALUES(%(author)s, %(body)s, %(comment_id)s, %(comment_permalink)s, %(date_posted)s, %(subreddit)s, %(subreddit_id)s, %(thread_id)s, %(time_posted)s);
+        INSERT INTO comment (author_name, body, comment_id, comment_permalink, date_posted, subreddit, subreddit_id, thread_id, time_posted)
+        VALUES(%(author_name)s, %(body)s, %(comment_id)s, %(comment_permalink)s, %(date_posted)s, %(subreddit)s, %(subreddit_id)s, %(thread_id)s, %(time_posted)s);
     """
 
     return insert_comment
@@ -39,7 +38,7 @@ def generate_add_thread() -> str:
 
     # Create the statement for inserting thread information into the thread table.
     insert_thread = """
-        INSERT INTO comment (date_posted, number_of_comments, subreddit, thread_id, thread_title, thread_score, thread_permalink, time_posted)
+        INSERT INTO thread (date_posted, number_of_comments, subreddit, thread_id, thread_title, thread_score, thread_permalink, time_posted)
         VALUES(%(date_posted)s, %(number_of_comments)s, %(subreddit)s, %(thread_id)s, %(thread_title)s, %(thread_score)s, %(thread_permalink)s, %(time_posted)s);
     """
 
@@ -49,20 +48,11 @@ def generate_add_author() -> str:
     '''
     Constructs a SQL statement to add an author to the author table.
     '''
-    pass
-
-def generate_add_outfit() -> str:
-    '''
-    Constructs a SQL statement to add an outfit to the outfit table.
-    '''
-
-def author_exists(self, author_name: str) -> bool:
-    '''
-    Given an author's name, determines if it exists in the author table.
-    Returns True if so, False otherwise.
-    Adapted from: https://stackoverflow.com/a/20449101
-    '''
-    cur.execute("SELECT * FROM author WHERE author = %s", (author_name,))
+    # Create the statement for inserting thread information into the thread table.
+    insert_thread = """
+        INSERT INTO author (aggregate_score, author_name, average_score, num_posts)
+        VALUES(%(date_posted)s, %(number_of_comments)s, %(subreddit)s, %(thread_id)s, %(thread_title)s, %(thread_score)s, %(thread_permalink)s, %(time_posted)s);
+    """
 
 def process_thread(thread_id: str):
     '''
@@ -76,9 +66,28 @@ def process_thread(thread_id: str):
     # Connect to the database.
     conn = psycopg2.connect("dbname=reddit_outfits user=redditoufits")
 
-    # Open a cursor to perform database operations.
+    # Open a cursor to perform database operations that has the added functionality of checking if a row exists.
     cur = conn.cursor()
+
+    # Add thread information.
+    cur.execute(generate_add_thread, thread_information)
 
     # Add relevant information from each comment into respective tables.
     for comment in comments:
         cur.execute(generate_add_comment, comment)
+        
+        # if author does not exist, INSERT INTO
+        # else, UPDATE TABLE
+
+        # Add each outfit that the user posted into the outfit table.
+        for outfit in comment.outfits:
+            cur.execute("""
+                INSERT INTO outfit (author_name, comment_id, outfit_url, thread_id)
+                VALUES(%s, %s, %s, %s);
+            """,
+            (comment['author_name'], comment['comment_id'], outfit, comment['thread_id']))
+
+    '''
+    cur.execute("SELECT * FROM author WHERE author_name = %s", (author_name,))
+    return cur.fetchone() is not None
+    '''
