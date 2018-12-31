@@ -71,10 +71,8 @@ def create_outfit_urls(comment: str) -> list:
     for outfit_url in raw_outfit_urls:
         if is_imgur_url(outfit_url):
             # Determine what type of Imgur URL it is, and the hash of said Imgur URL.
-            imgur_url_info = create_imgur_url_info(outfit_url)
-            imgur_url_type = imgur_url_info['url_type']
-            imgur_hash = imgur_url_info['imgur_hash']
-
+            imgur_url_type, imgur_hash = create_imgur_url_info(outfit_url)
+            
             if imgur_url_type != 'single_image' and imgur_url_type != 'ERROR':
                 # If it's an album or gallery, we need to explode the images in the URL.
                 outfit_urls += extract_image_urls_from_imgur_url(outfit_url, imgur_hash, imgur_url_type)
