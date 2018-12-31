@@ -7,7 +7,7 @@ import config
 from util_url import extract_outfit_urls_from_comment, is_imgur_url, is_dressed_so_url, is_reddit_url, create_imgur_url_info, extract_image_urls_from_imgur_url
 from datetime import datetime
 
-def generate_historical_thread_ids(query: str, author: str, subreddit: str) -> set:
+def generate_historical_thread_ids(query: str, author_name: str, subreddit: str) -> set:
     '''
     JSON reading adapted from: https://stackoverflow.com/questions/12965203/how-to-get-json-from-webpage-into-python-script
     Produces thread IDs for a given query with a specified author on a given subreddit, up to a maximum of 500.
@@ -17,7 +17,7 @@ def generate_historical_thread_ids(query: str, author: str, subreddit: str) -> s
 
     historical_thread_ids = set()
     # Query API for historical thread data.
-    with urllib.request.urlopen(F"https://api.pushshift.io/reddit/search/submission/?q={query}&author={author}&subreddit={subreddit}&size=500") as url:
+    with urllib.request.urlopen(F"https://api.pushshift.io/reddit/search/submission/?q={query}&author={author_name}&subreddit={subreddit}&size=500") as url:
         thread_data = json.loads(url.read().decode())
 
     # Traverse each thread in the values part of the decoded JSON dictionary and add the ID of each thread to the set.
@@ -29,9 +29,9 @@ def generate_historical_thread_ids(query: str, author: str, subreddit: str) -> s
 
 def generate_comments_from_thread(thread_id: str) -> list:
     '''
+    Adapted from: https://praw.readthedocs.io/en/latest/tutorials/comments.html
     Given a thread ID, uses the Reddit API wrapper (PRAW) to access top-level comments and create comment dictionaries containing only necessary data.
     Returns an array of comment dictionaries.
-    Adapted from: https://praw.readthedocs.io/en/latest/tutorials/comments.html
     '''
 
     comments = []
@@ -115,7 +115,7 @@ def create_comment_dictionary(comment) -> dict:
     date_posted, time_posted = datetime.utcfromtimestamp(comment.created_utc).strftime('%Y-%m-%d %H:%M:%S').split(' ')
 
     comment = {
-        'author': comment.author.name,
+        'author_name': comment.author.name,
         'body': comment.body,
         'comment_id': comment.id,
         'comment_permalink': comment.permalink,
