@@ -24,6 +24,16 @@ def is_dressed_so_url(url: str) -> bool:
     host = parsed_url.netloc.lower()
     return host == 'dressed.so' or host == 'cdn.dressed.so'
 
+def is_reddit_url(url: str) -> bool:
+    '''
+    Determines if a given URL is a i.redd.it URL using urlparse.
+    Returns True if so, False otherwise.
+    '''
+
+    parsed_url = urlparse(url)
+    host = parsed_url.netloc.lower()
+    return host == 'i.redd.it'
+
 def extract_image_urls_from_imgur_url(imgur_url: str, imgur_hash: str, url_type: str) -> list:
     '''
     Extracts image URLs from either an Imgur album, image, or gallery, depending on url_type.
