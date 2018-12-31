@@ -1,5 +1,5 @@
 import unittest
-from util_url import extract_outfit_urls_from_comment, is_imgur_url, is_dressed_so_url, create_imgur_url_info
+from util_url import extract_outfit_urls_from_comment, is_imgur_url, is_dressed_so_url, is_reddit_url, create_imgur_url_info
 
 class TestExtractOutfitURLs(unittest.TestCase):
 
@@ -101,8 +101,22 @@ class TestIsDressedSoUrl(unittest.TestCase):
     
     # Returns False if the URL is not an Imgur or Dressed.so link.
     def test_is_dressed_so_url_other(self):
-        url = 'https://instagram.com/wfn39qt4wg9ejqr3w'
+        url = 'https://instagram.com/4jy50t3efjw'
         self.assertEqual(is_dressed_so_url(url), False)
+
+class TestIsRedditUrl(unittest.TestCase):
+    def setUp(self):
+        pass
+
+    # Returns True if the URL is an i.redd.it URL.
+    def test_is_reddit_url_reddit(self):
+        url = 'https://i.redd.it/3tw9fh3t94ge.jpg'
+        self.assertEqual(is_reddit_url(url), True)
+    
+    # Returns False if the URL is not an i.redd.it URL.
+    def test_is_reddit_url_other(self):
+        url = 'https://instagram.com/fgjefw0'
+        self.assertEqual(is_reddit_url(url), False)
 
 class TestCreateImgurUrlInfoUrl(unittest.TestCase):
     
