@@ -95,6 +95,14 @@ def create_outfit_urls(comment: str) -> list:
                 parsed_outfit_url = urlparse(outfit_url)
                 outfit_hash = re.split('[./]', parsed_outfit_url.path)[1]
                 outfit_urls.append(F'http://cdn.dressed.so/i/{outfit_hash}.png')
+        elif is_reddit_url(outfit_url):
+            # i.redd.it URL
+            parsed_outfit_url = urlparse(outfit_url)
+            outfit_hash = re.split('[./]', parsed_outfit_url.path)[1]
+            outfit_urls.append(F'https://i.redd.it/{outfit_hash}.png')
+        else:
+            # Invalid outfit URL.
+            continue
                 
     return outfit_urls
 
