@@ -27,7 +27,7 @@ def generate_historical_thread_ids(query: str, author: str, subreddit: str) -> s
             
     return historical_thread_ids
 
-def generate_comments(thread_id: str) -> list:
+def generate_comments_from_thread(thread_id: str) -> list:
     '''
     Given a thread ID, uses the Reddit API wrapper (PRAW) to access top-level comments and create comment dictionaries containing only necessary data.
     Returns an array of comment dictionaries.
