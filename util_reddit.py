@@ -83,25 +83,24 @@ def create_outfit_urls(comment: str) -> list:
                 outfit_urls.append(F'https://i.imgur.com/{imgur_hash}.png')
             else:
                 # Invalid URL.
-                print("Invalid Imgur link.")
+                print("Invalid Imgur URL.")
         elif is_dressed_so_url(outfit_url):
-            # Dressed.so link. We use an else statement because we already filter in the extract_outfit_urls_from_comment function.
-            if outfit_url.startswith('dressed.so'):
+            # Dressed.so URL. We use an else statement because we already filter in the extract_outfit_urls_from_comment function.
+            if outfit_url.startswith('http://dressed.so'):
                 parsed_outfit_url = urlparse(outfit_url)
                 outfit_hash = parsed_outfit_url.path.split('/')[3]
                 outfit_urls.append(F'http://cdn.dressed.so/i/{outfit_hash}.png')
+            elif outfit_url.startswith('http://cdn.dressed.so'):
+                # Outfit URL starts with cdn.dressed.so, so we can add the URL as is, as it links directly to an image.
+                outfit_urls.append(outfit_url)
             else:
-                # Outfit URL starts with cdn.dressed.so, so we just split to get the image hash.
-                parsed_outfit_url = urlparse(outfit_url)
-                outfit_hash = re.split('[./]', parsed_outfit_url.path)[1]
-                outfit_urls.append(F'http://cdn.dressed.so/i/{outfit_hash}.png')
+                print("Invalid Dressed.so URL.")
         elif is_reddit_url(outfit_url):
-            # i.redd.it URL
-            parsed_outfit_url = urlparse(outfit_url)
-            outfit_hash = re.split('[./]', parsed_outfit_url.path)[1]
-            outfit_urls.append(F'https://i.redd.it/{outfit_hash}.png')
+            # i.redd.it URL. We can add the URL as is, as it links directly to an image.
+            outfit_urls.append(outfit_url)
         else:
             # Invalid outfit URL.
+            print("Invalid outfit URL.")
             continue
                 
     return outfit_urls
