@@ -1,9 +1,10 @@
 import praw
 import json
 import urllib.request
+import re
 from urllib.parse import urlparse
 import config
-from util_url import extract_outfit_urls_from_comment, is_imgur_url, is_dressed_so_url, create_imgur_url_info, extract_image_urls_from_imgur_url
+from util_url import extract_outfit_urls_from_comment, is_imgur_url, is_dressed_so_url, is_reddit_url, create_imgur_url_info, extract_image_urls_from_imgur_url
 from datetime import datetime
 
 def generate_thread_ids(query: str, author: str, subreddit: str) -> set:
@@ -83,11 +84,16 @@ def create_outfit_urls(comment: str) -> list:
             else:
                 # Invalid URL.
                 print("Invalid Imgur link.")
-        else:
+        elif is_dressed_so_url(outfit_url):
             # Dressed.so link. We use an else statement because we already filter in the extract_outfit_urls_from_comment function.
             if outfit_url.startswith('dressed.so'):
                 parsed_outfit_url = urlparse(outfit_url)
                 outfit_hash = parsed_outfit_url.path.split('/')[3]
+                outfit_urls.append(F'http://cdn.dressed.so/i/{outfit_hash}.png')
+            else:
+                # Outfit URL starts with cdn.dressed.so, so we just split to get the image hash.
+                parsed_outfit_url = urlparse(outfit_url)
+                outfit_hash = re.split('[./]', parsed_outfit_url.path)[1]
                 outfit_urls.append(F'http://cdn.dressed.so/i/{outfit_hash}.png')
                 
     return outfit_urls
