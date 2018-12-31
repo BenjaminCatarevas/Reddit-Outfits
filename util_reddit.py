@@ -7,7 +7,7 @@ import config
 from util_url import extract_outfit_urls_from_comment, is_imgur_url, is_dressed_so_url, is_reddit_url, create_imgur_url_info, extract_image_urls_from_imgur_url
 from datetime import datetime
 
-def generate_thread_ids(query: str, author: str, subreddit: str) -> set:
+def generate_historical_thread_ids(query: str, author: str, subreddit: str) -> set:
     '''
     JSON reading adapted from: https://stackoverflow.com/questions/12965203/how-to-get-json-from-webpage-into-python-script
     Produces thread IDs for a given query with a specified author on a given subreddit, up to a maximum of 500.
@@ -72,7 +72,7 @@ def create_outfit_urls(comment: str) -> list:
         if is_imgur_url(outfit_url):
             # Determine what type of Imgur URL it is, and the hash of said Imgur URL.
             imgur_url_type, imgur_hash = create_imgur_url_info(outfit_url)
-            
+
             if imgur_url_type != 'single_image' and imgur_url_type != 'ERROR':
                 # If it's an album or gallery, we need to explode the images in the URL.
                 outfit_urls += extract_image_urls_from_imgur_url(outfit_url, imgur_hash, imgur_url_type)
