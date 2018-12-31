@@ -62,7 +62,7 @@ def create_outfit_urls(comment: str) -> list:
     Given a comment, constructs a list of each Imgur or Dressed.so URL in single-image format (i.e. in .png format)
     Returns a list of outfit URLs ending in .png
     '''
-
+    
     outfit_urls = []
 
     # Raw because some Imgur URLs may have multiple images (e.g. albums, galleries), so we need to explode those URLs.
@@ -128,23 +128,31 @@ def create_comment_dictionary(comment) -> dict:
 
     return comment
 
-def create_thread_dictionary(submission) -> dict:
+def create_thread_dictionary(thread_id: str) -> dict:
     '''
     Given a Submission object, creates a dictionary holding only relevant information.
     Returns a dictionary.
     '''
 
+    reddit = praw.Reddit(
+        user_agent = 'Thread Information Extraction',
+        client_id = config.reddit_client_id,
+        client_secret = config.reddit_client_secret
+    )
+
+    thread_submission = reddit.submission(id=thread_id)
+
     # Convert the Unix Time timestamp from the Submission object into the date posted and time posted.
-    date_posted, time_posted = datetime.utcfromtimestamp(submission.created_utc).strftime('%Y-%m-%d %H:%M:%S').split(' ')
+    date_posted, time_posted = datetime.utcfromtimestamp(thread_submission.created_utc).strftime('%Y-%m-%d %H:%M:%S').split(' ')
     
     thread = {
         'date_posted': date_posted,
-        'number_of_comments': submission.num_comments,
-        'subreddit': submission.subreddit.display_name,
-        'thread_id': submission.id,
-        'thread_title': submission.title,
-        'thread_score': submission.score,
-        'thread_permalink': submission.permalink,
+        'number_of_comments': thread_submission.num_comments,
+        'subreddit': thread_submission.subreddit.display_name,
+        'thread_id': thread_submission.id,
+        'thread_title': thread_submission.title,
+        'thread_score': thread_submission.score,
+        'thread_permalink': thread_submission.permalink,
         'time_posted': time_posted
     }
 
