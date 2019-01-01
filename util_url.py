@@ -49,22 +49,22 @@ def extract_image_urls_from_imgur_url(imgur_url: str, imgur_hash: str, url_type:
         'Authorization': F'Client-ID {config.imgur_client_id}'
     }
     response = requests.request('GET', url, headers = headers, data = payload, allow_redirects=False)
-    album_json = json.loads(response.text)['data']
+    image_json = json.loads(response.text)['data']
 
     # Invalid album.
-    if 'error' in album_json:
-        print(F"Error: {album_json['error']}")
+    if 'error' in image_json:
+        print(F"Error: {image_json['error']}")
         return []
 
     # Valid album.
     if url_type == 'gallery' or url_type == 'album':
         # From /album/ and /gallery/ endpoint
         # The returned JSON is in an array for albums and galleries, while it's a single JSON object for a single image.
-        for image in album_json:
+        for image in image_json:
             image_urls.append(image['link'])
     else:
         # Single JSON object (from /image/ endpoint).
-        image_urls.append(album_json['link'])
+        image_urls.append(image_json['link'])
 
     return image_urls
 
@@ -122,7 +122,7 @@ def create_imgur_url_info(imgur_url: str) -> dict:
         # Regular expression adapted from: https://stackoverflow.com/a/23259147
         # Split on / and . to get the alphanumeric hash, and isolate it. When displaying images, we will use one MIME type, namely .png.
         return {'url_type': 'single_image', 'imgur_hash': re.split(r'[/.]', parsed_url_path)[1]}
-    elif parsed_url.netloc == 'imgur.com' and imgur_url[-1] != '/' and not is_single_image and not is_album and not is_gallery:
+    elif parsed_url.netloc == 'imgur.com' and parsed_url.path != '/' and not is_single_image and not is_album and not is_gallery:
         # Imgur image. Check to make sure it starts with imgur.com and it also does not end at / (as in: https://imgur.com/)
         return {'url_type': 'image', 'imgur_hash': parsed_url_path[1:]}
     else:
