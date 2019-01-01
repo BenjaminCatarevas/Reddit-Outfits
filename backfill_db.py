@@ -31,8 +31,8 @@ def process_thread(thread_id: str):
 
     # Create the statement for inserting comment information into the comment table.
     insert_comment = """
-        INSERT INTO comment (author_name, body, comment_id, comment_permalink, date_posted, subreddit, subreddit_id, thread_id, time_posted)
-        VALUES(%(author_name)s, %(body)s, %(comment_id)s, %(comment_permalink)s, %(date_posted)s, %(subreddit)s, %(subreddit_id)s, %(thread_id)s, %(time_posted)s);
+        INSERT INTO comment (author_name, body, comment_id, comment_permalink, comment_score, date_posted, subreddit, subreddit_id, thread_id, time_posted)
+        VALUES(%(author_name)s, %(body)s, %(comment_id)s, %(comment_permalink)s, %(comment_score)s, %(date_posted)s, %(subreddit)s, %(subreddit_id)s, %(thread_id)s, %(time_posted)s);
     """
 
     # Create the statement for inserting outfit information into the outfit table.
@@ -55,7 +55,32 @@ def process_thread(thread_id: str):
             num_comments = num_comments + 1
         WHERE author = %s
     """
-    
+
+    # Create the statement for updating the subreddit information in the subreddit table.
+    update_subreddit = """
+        UPDATE subreddit
+        SET num_threads = num_threads + 1
+        WHERE subreddit = %s
+    """
+
+    # Create the statement for checking if an entry exists.
+    thread_exists_query = """
+        SELECT EXISTS (
+            SELECT 1
+            FROM thread
+            WHERE thread_id = %s
+        )
+    """
+
+    # Create the statement for checking if an entry exists.
+    author_exists_query = """
+        SELECT EXISTS (
+            SELECT 1
+            FROM author
+            WHERE author_name = %s
+        )
+    """
+
     # Generate comments and thread information.
     comments = generate_comments_from_thread(thread_id)
     thread_information = create_thread_dictionary(thread_id)
@@ -66,29 +91,48 @@ def process_thread(thread_id: str):
     # Open a cursor to perform database operations that has the added functionality of checking if a row exists.
     cur = conn.cursor()
 
+    # Check if we have already processed the thread.
+    cur.execute(thread_exists_query, (thread_id,))
+    processed_thread = cur.fetchone()[0]
+
+    # If we have already processed the thread, we simply move onto the next thread or ignore the current thread_id.
+    if processed_thread:
+        return
+
+    # Update the subreddit information as we are processing a new thread.
+    cur.execute(update_subreddit, (thread_information['subreddit'],))
+    conn.commit()
+
     # Add thread information.
     cur.execute(insert_thread, thread_information)
+    conn.commit()
 
     # Add relevant information from each comment into respective tables.
+    # Start with the table that does not have any foreign keys (i.e. top-down) when adding information.
+    # The order is subreddit, thread, author, comment, outfit.
     for comment in comments:
-        cur.execute(insert_comment, comment)
-
-        # Add each outfit that the user posted into the outfit table.
-        for outfit in comment.outfits:
-            # Add outfit.
-            cur.execute(insert_outfit, (comment['author_name'], comment['comment_id'], outfit, comment['thread_id']))
-
         # Check if author exists.
-        cur.execute("SELECT * FROM author WHERE author_name = %s", (comment['author_name'],))
-        author_exists = cur.fetchone() is not None
+        cur.execute(author_exists_query, (comment['author_name'],))
+        author_exists = cur.fetchone()[0]
         
         if author_exists:
             # Author exists, update information based on current comment.
-            cur.execute(update_author, (comment['aggregate_score'], comment['author_name']))
+            cur.execute(update_author, (comment['aggregate_score'], comment['author_name'],))
+            conn.commit()
         else:
             # Author does not exist, add new entry.
-            cur.execute(insert_author, (comment['comment_score'], comment['author_name'], comment['comment_score'], 1))
+            cur.execute(insert_author, (comment['comment_score'], comment['author_name'], comment['comment_score'], 1,))
+            conn.commit()
 
-    conn.commit()
+        # Add comment information.
+        cur.execute(insert_comment, comment)
+        conn.commit()
+
+        # Add each outfit that the user posted into the outfit table.
+        for outfit in comment['outfits']:
+            # Add outfit.
+            cur.execute(insert_outfit, (comment['author_name'], comment['comment_id'], outfit, comment['thread_id'],))
+            conn.commit()
+
     cur.close()
     conn.close()
