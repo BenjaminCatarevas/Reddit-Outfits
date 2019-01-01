@@ -124,7 +124,7 @@ def create_comment_dictionary(comment) -> dict:
         'outfits': create_outfit_urls(comment.body),
         'subreddit': comment.subreddit.display_name,
         'subreddit_id': comment.subreddit_id,
-        'thread_id': comment.link_id,
+        'thread_id': comment.submission.id,
         'time_posted': time_posted
     }
 
