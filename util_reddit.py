@@ -149,8 +149,9 @@ def create_thread_dictionary(thread_id: str) -> dict:
     
     thread = {
         'date_posted': date_posted,
-        'number_of_comments': thread_submission.num_comments,
+        'num_top_level_comments': thread_submission.num_comments,
         'subreddit': thread_submission.subreddit.display_name,
+        'subreddit_id': thread_submission.subreddit_id,
         'thread_id': thread_submission.id,
         'thread_title': thread_submission.title,
         'thread_score': thread_submission.score,
