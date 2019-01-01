@@ -44,16 +44,6 @@ def generate_add_thread() -> str:
 
     return insert_thread
 
-def generate_add_author() -> str:
-    '''
-    Constructs a SQL statement to add an author to the author table.
-    '''
-    # Create the statement for inserting thread information into the thread table.
-    insert_thread = """
-        INSERT INTO author (aggregate_score, author_name, average_score, num_posts)
-        VALUES(%(date_posted)s, %(number_of_comments)s, %(subreddit)s, %(thread_id)s, %(thread_title)s, %(thread_score)s, %(thread_permalink)s, %(time_posted)s);
-    """
-
 def process_thread(thread_id: str):
     '''
     Given a thread ID, retrieves all of the top-level comments and processes them.
@@ -70,24 +60,39 @@ def process_thread(thread_id: str):
     cur = conn.cursor()
 
     # Add thread information.
-    cur.execute(generate_add_thread, thread_information)
+    cur.execute(generate_add_thread(), thread_information)
 
     # Add relevant information from each comment into respective tables.
     for comment in comments:
-        cur.execute(generate_add_comment, comment)
-        
-        # if author does not exist, INSERT INTO
-        # else, UPDATE TABLE
+        cur.execute(generate_add_comment(), comment)
 
         # Add each outfit that the user posted into the outfit table.
         for outfit in comment.outfits:
+            # Add outfit.
             cur.execute("""
                 INSERT INTO outfit (author_name, comment_id, outfit_url, thread_id)
                 VALUES(%s, %s, %s, %s);
             """,
             (comment['author_name'], comment['comment_id'], outfit, comment['thread_id']))
 
-    '''
-    cur.execute("SELECT * FROM author WHERE author_name = %s", (author_name,))
-    return cur.fetchone() is not None
-    '''
+        # Check if author exists.
+        cur.execute("SELECT * FROM author WHERE author_name = %s", (comment['author_name'],))
+        author_exists = cur.fetchone() is not None
+        
+        if author_exists:
+            # Author exists, update information based on current comment.
+            cur.execute("""
+                UPDATE author
+                SET aggregate_score = aggregate_score + %s,
+                    average_score = average_score / num_comments,
+                    num_comments = num_comments + 1
+                WHERE author = %s
+            """,
+            (comment['aggregate_score'], comment['author_name']))
+        else:
+            # Author does not exist, add new entry.
+            cur.execute("""
+                INSERT INTO author (aggregate_score, author_name, average_score, num_comments)
+                VALUES(%s, %s, %s, %s);
+            """,
+            (0, comment['author_name'], 0, 1))
