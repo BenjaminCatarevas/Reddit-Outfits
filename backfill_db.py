@@ -4,11 +4,12 @@ import psycopg2
 def update_thread(thread_id: str):
     '''
     Given a thread ID, checks if any comments have changed or any new comments are added.
+    Check if the date posted of the thread is less than two weeks old, comparing against the current date.
     Called once the database is backfilled.
     '''
     pass
 
-def generate_new_thread_ids() -> list:
+def generate_new_thread_ids(query: str, author_name: str, subreddit: str) -> list:
     '''
     Generates thread IDs that have not been processed using PRAW search functionality.
     Checks against thread table to see if thread has been processed.
