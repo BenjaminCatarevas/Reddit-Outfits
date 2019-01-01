@@ -121,7 +121,7 @@ def create_imgur_url_info(imgur_url: str) -> dict:
         # Single image (e.g. ending in .jpg, .jpeg, or .png)
         # Regular expression adapted from: https://stackoverflow.com/a/23259147
         # Split on / and . to get the alphanumeric hash, and isolate it. When displaying images, we will use one MIME type, namely .png.
-        return {'url_type': 'single_image', 'imgur_hash': re.split(r'[/.]', parsed_url_path)[1]}
+        return {'url_type': 'image', 'imgur_hash': re.split(r'[/.]', parsed_url_path)[1]}
     elif parsed_url.netloc == 'imgur.com' and parsed_url.path != '/' and not is_single_image and not is_album and not is_gallery:
         # Imgur image. Check to make sure it starts with imgur.com and it also does not end at / (as in: https://imgur.com/)
         return {'url_type': 'image', 'imgur_hash': parsed_url_path[1:]}
