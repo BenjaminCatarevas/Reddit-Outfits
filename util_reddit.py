@@ -49,55 +49,58 @@ def generate_comments_from_thread(thread_id: str) -> list:
 
     # Traverse all of the comments.
     for top_level_comment in thread_submission.comments:
-        # We only care about comments that have outfit URLs in them. All others, we ignore.
-        if len(create_outfit_urls(top_level_comment.body)) < 1:
-            continue
-        else:
-            comments.append(create_comment_dictionary(top_level_comment))
+        # We only care about comments that have outfit URLs in them and are not deleted by users. All others (such as a comment with no links), we ignore.
+        if not len(create_outfit_urls(top_level_comment.body)) < 1:
+                comments.append(create_comment_dictionary(top_level_comment))
     
     return comments
 
 def create_outfit_urls(comment: str) -> list:
     '''
-    Given a comment, constructs a list of each Imgur or Dressed.so URL in single-image format (i.e. in .png format)
-    Returns a list of outfit URLs ending in .png
+    Given a comment, constructs a list of each Imgur or Dressed.so URL from a comment ending in .jpg, .png, or .jpeg.
+    Returns a list of outfit URLs.
     '''
     
     outfit_urls = []
 
-    # Raw because some Imgur URLs may have multiple images (e.g. albums, galleries), so we need to explode those URLs.
+    # Extract all of the image links from the given comment.
+    # We call it raw because some Imgur URLs may have multiple images (e.g. albums, galleries), so we need to explode those URLs.
     raw_outfit_urls = extract_outfit_urls_from_comment(comment)
 
-    for outfit_url in raw_outfit_urls:
-        if is_imgur_url(outfit_url):
+    # Analyze each outfit URL and process accordingly.
+    for raw_outfit_url in raw_outfit_urls:
+        parsed_raw_outfit_url = urlparse(raw_outfit_url)
+        if is_imgur_url(raw_outfit_url):
             # Determine what type of Imgur URL it is, and the hash of said Imgur URL.
-            imgur_url_info = create_imgur_url_info(outfit_url)
+            imgur_url_info = create_imgur_url_info(raw_outfit_url)
             imgur_url_type = imgur_url_info['url_type']
             imgur_hash = imgur_url_info['imgur_hash']
             
+            # Album or gallery, so we need to extract each image from the album or gallery.
             if imgur_url_type != 'single_image' and imgur_url_type != 'ERROR':
-                # If it's an album or gallery, we need to explode the images in the URL.
-                outfit_urls += extract_image_urls_from_imgur_url(outfit_url, imgur_hash, imgur_url_type)
-            elif imgur_url_type == 'single_image':
-                # If it's a single image (ending in .jpg, .jpeg, or .png), we can just use the hash.
-                outfit_urls.append(F'https://i.imgur.com/{imgur_hash}.png')
+                outfit_urls += extract_image_urls_from_imgur_url(raw_outfit_url, imgur_hash, imgur_url_type)
+            elif imgur_url_type == 'single_image' or imgur_url_type == 'image':
+                # If it's a single image (ending in .jpg, .jpeg, or .png) or an Imgur image, we can just use the hash.
+                # But only append if image is still valid.
+                # We call extract_image_urls_from_imgur_url because that'll query the API. Doing so will determine if the image is still alive.
+                # If it isn't, it'll just append an empty list. Else, it'll append the outfit URL.
+                outfit_urls += extract_image_urls_from_imgur_url(raw_outfit_url, imgur_hash, 'image')
             else:
                 # Invalid URL.
-                print("Invalid Imgur URL.")
-        elif is_dressed_so_url(outfit_url):
+                print(F"Invalid Imgur URL: {raw_outfit_url}")
+        elif is_dressed_so_url(raw_outfit_url):
             # Dressed.so URL. We use an else statement because we already filter in the extract_outfit_urls_from_comment function.
-            if outfit_url.startswith('http://dressed.so'):
-                parsed_outfit_url = urlparse(outfit_url)
-                outfit_hash = parsed_outfit_url.path.split('/')[3]
+            if raw_outfit_url.startswith('http://dressed.so'):
+                outfit_hash = parsed_raw_outfit_url.path.split('/')[3]
                 outfit_urls.append(F'http://cdn.dressed.so/i/{outfit_hash}.png')
-            elif outfit_url.startswith('http://cdn.dressed.so'):
+            elif raw_outfit_url.startswith('http://cdn.dressed.so'):
                 # Outfit URL starts with cdn.dressed.so, so we can add the URL as is, as it links directly to an image.
-                outfit_urls.append(outfit_url)
+                outfit_urls.append(raw_outfit_url)
             else:
                 print("Invalid Dressed.so URL.")
-        elif is_reddit_url(outfit_url):
+        elif is_reddit_url(raw_outfit_url):
             # i.redd.it URL. We can add the URL as is, as it links directly to an image.
-            outfit_urls.append(outfit_url)
+            outfit_urls.append(raw_outfit_url)
         else:
             # Invalid outfit URL.
             print("Invalid outfit URL.")
@@ -115,7 +118,7 @@ def create_comment_dictionary(comment) -> dict:
     date_posted, time_posted = datetime.utcfromtimestamp(comment.created_utc).strftime('%Y-%m-%d %H:%M:%S').split(' ')
 
     comment = {
-        'author_name': comment.author.name,
+        'author_name': comment.author.name if comment.author is not None else '[deleted]',
         'body': comment.body,
         'comment_id': comment.id,
         'comment_permalink': comment.permalink,
