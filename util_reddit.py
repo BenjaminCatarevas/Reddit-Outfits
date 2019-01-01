@@ -84,7 +84,7 @@ def create_outfit_urls(comment: str) -> list:
                 # But only append if image is still valid.
                 # We call extract_image_urls_from_imgur_url because that'll query the API. Doing so will determine if the image is still alive.
                 # If it isn't, it'll just append an empty list. Else, it'll append the outfit URL.
-                outfit_urls += extract_image_urls_from_imgur_url(raw_outfit_url, imgur_hash, 'image')
+                outfit_urls += extract_image_urls_from_imgur_url(raw_outfit_url, imgur_hash, imgur_url_type)
             else:
                 # Invalid URL.
                 print(F"Invalid Imgur URL: {raw_outfit_url}")
