@@ -79,7 +79,7 @@ def create_outfit_urls(comment: str) -> list:
             # Album or gallery, so we need to extract each image from the album or gallery.
             if imgur_url_type != 'single_image' and imgur_url_type != 'ERROR':
                 outfit_urls += extract_image_urls_from_imgur_url(raw_outfit_url, imgur_hash, imgur_url_type)
-            elif imgur_url_type == 'single_image' or imgur_url_type == 'image':
+            elif imgur_url_type == 'image':
                 # If it's a single image (ending in .jpg, .jpeg, or .png) or an Imgur image, we can just use the hash.
                 # But only append if image is still valid.
                 # We call extract_image_urls_from_imgur_url because that'll query the API. Doing so will determine if the image is still alive.
