@@ -1,5 +1,28 @@
-from util_reddit import generate_historical_thread_ids, generate_comments_from_thread, create_thread_dictionary
+from util_reddit import generate_comments_from_thread, create_thread_dictionary
 import psycopg2
+import urllib.request
+import json
+
+def generate_historical_thread_ids(query: str, author_name: str, subreddit: str) -> set:
+    '''
+    JSON reading adapted from: https://stackoverflow.com/questions/12965203/how-to-get-json-from-webpage-into-python-script
+    Produces thread IDs for a given query with a specified author on a given subreddit, up to a maximum of 500.
+    Uses the Pushshift API to easily retrieve historical thread data.
+    Returns a set of thread IDs.
+    NOTE: Use authors of AutoModerator and MFAModerator for MFA.
+    '''
+
+    historical_thread_ids = set()
+    # Query API for historical thread data.
+    with urllib.request.urlopen(F"https://api.pushshift.io/reddit/search/submission/?q={query}&author={author_name}&subreddit={subreddit}&size=500") as url:
+        thread_data = json.loads(url.read().decode())
+
+    # Traverse each thread in the values part of the decoded JSON dictionary and add the ID of each thread to the set.
+    for threads in thread_data.values():
+        for thread_data in threads:
+            historical_thread_ids.add(thread_data['id'])
+            
+    return historical_thread_ids
 
 def update_thread(thread_id: str):
     '''

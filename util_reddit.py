@@ -7,26 +7,6 @@ import config
 from util_url import extract_outfit_urls_from_comment, is_imgur_url, is_dressed_so_url, is_reddit_url, create_imgur_url_info, extract_image_urls_from_imgur_url
 from datetime import datetime
 
-def generate_historical_thread_ids(query: str, author_name: str, subreddit: str) -> set:
-    '''
-    JSON reading adapted from: https://stackoverflow.com/questions/12965203/how-to-get-json-from-webpage-into-python-script
-    Produces thread IDs for a given query with a specified author on a given subreddit, up to a maximum of 500.
-    Uses the Pushshift API to easily retrieve historical thread data.
-    Returns a set of thread IDs.
-    '''
-
-    historical_thread_ids = set()
-    # Query API for historical thread data.
-    with urllib.request.urlopen(F"https://api.pushshift.io/reddit/search/submission/?q={query}&author={author_name}&subreddit={subreddit}&size=500") as url:
-        thread_data = json.loads(url.read().decode())
-
-    # Traverse each thread in the values part of the decoded JSON dictionary and add the ID of each thread to the set.
-    for threads in thread_data.values():
-        for thread_data in threads:
-            historical_thread_ids.add(thread_data['id'])
-            
-    return historical_thread_ids
-
 def generate_comments_from_thread(thread_id: str) -> list:
     '''
     Adapted from: https://praw.readthedocs.io/en/latest/tutorials/comments.html
