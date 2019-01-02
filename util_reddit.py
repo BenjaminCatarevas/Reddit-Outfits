@@ -5,7 +5,6 @@ import re
 from urllib.parse import urlparse
 import config
 from util_url import extract_outfit_urls_from_comment, is_imgur_url, is_dressed_so_url, is_reddit_url, create_imgur_url_info, extract_image_urls_from_imgur_url
-from datetime import datetime
 
 def generate_comments_from_thread(thread_id: str) -> list:
     '''
@@ -94,21 +93,17 @@ def create_comment_dictionary(comment) -> dict:
     Returns a dictionary.
     '''
 
-    # Convert the Unix Time timestamp from the Comment object into the date posted and time posted.
-    date_posted, time_posted = datetime.utcfromtimestamp(comment.created_utc).strftime('%Y-%m-%d %H:%M:%S').split(' ')
-
     comment = {
         'author_name': comment.author.name if comment.author is not None else '[deleted]',
         'body': comment.body,
         'comment_id': comment.id,
         'comment_permalink': comment.permalink,
         'comment_score': comment.score,
-        'date_posted': date_posted,
         'outfits': create_outfit_urls(comment.body),
         'subreddit': comment.subreddit.display_name,
         'subreddit_id': comment.subreddit_id,
         'thread_id': comment.submission.id,
-        'time_posted': time_posted
+        'timestamp': comment.created_utc
     }
 
     return comment
@@ -126,12 +121,8 @@ def create_thread_dictionary(thread_id: str) -> dict:
     )
 
     thread_submission = reddit.submission(id=thread_id)
-
-    # Convert the Unix Time timestamp from the Submission object into the date posted and time posted.
-    date_posted, time_posted = datetime.utcfromtimestamp(thread_submission.created_utc).strftime('%Y-%m-%d %H:%M:%S').split(' ')
     
     thread = {
-        'date_posted': date_posted,
         'num_top_level_comments': thread_submission.num_comments,
         'subreddit': thread_submission.subreddit.display_name,
         'subreddit_id': thread_submission.subreddit_id,
@@ -139,7 +130,7 @@ def create_thread_dictionary(thread_id: str) -> dict:
         'thread_title': thread_submission.title,
         'thread_score': thread_submission.score,
         'thread_permalink': thread_submission.permalink,
-        'time_posted': time_posted
+        'timestamp': thread_submission.created_utc
     }
 
     return thread
