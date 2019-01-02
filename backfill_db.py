@@ -49,14 +49,14 @@ def process_thread(thread_id: str):
     # We use named parameters because psycopg2 uses a dictionary to map named parameters to values in PostgreSQL.
     # It is also worth noting that even if a dictionary has extra keys, psycopg2 will simply ignore those and look only for the named parameters.
     insert_thread = """
-        INSERT INTO thread (date_posted, num_top_level_comments, subreddit, subreddit_id, thread_id, thread_title, thread_score, thread_permalink, time_posted)
-        VALUES(%(date_posted)s, %(num_top_level_comments)s, %(subreddit)s, %(subreddit_id)s, %(thread_id)s, %(thread_title)s, %(thread_score)s, %(thread_permalink)s, %(time_posted)s);
+        INSERT INTO thread (num_top_level_comments, subreddit, subreddit_id, thread_id, thread_title, thread_score, thread_permalink, timestamp)
+        VALUES(%(num_top_level_comments)s, %(subreddit)s, %(subreddit_id)s, %(thread_id)s, %(thread_title)s, %(thread_score)s, %(thread_permalink)s, %(timestamp)s);
     """
 
     # Create the statement for inserting comment information into the comment table.
     insert_comment = """
-        INSERT INTO comment (author_name, body, comment_id, comment_permalink, comment_score, date_posted, subreddit, subreddit_id, thread_id, time_posted)
-        VALUES(%(author_name)s, %(body)s, %(comment_id)s, %(comment_permalink)s, %(comment_score)s, %(date_posted)s, %(subreddit)s, %(subreddit_id)s, %(thread_id)s, %(time_posted)s);
+        INSERT INTO comment (author_name, body, comment_id, comment_permalink, comment_score, subreddit, subreddit_id, thread_id, timestamp)
+        VALUES(%(author_name)s, %(body)s, %(comment_id)s, %(comment_permalink)s, %(comment_score)s, %(subreddit)s, %(subreddit_id)s, %(thread_id)s, %(timestamp)s);
     """
 
     # Create the statement for inserting outfit information into the outfit table.
