@@ -32,7 +32,7 @@ def update_thread(thread_id: str):
     '''
     pass
 
-def select_threads_for_updates():
+def select_threads_for_updates(cur):
     '''
     Selects all threads that are less than two weeks old, and calls update_thread on each one to check for new scores and edits to comments.
     '''
@@ -43,6 +43,11 @@ def select_threads_for_updates():
         WHERE timestamp < NOW() - INTERVAL '14 days'
     """
 
+    cur.execute(select_threads)
+
+    for record in cur:
+        update_thread(record)
+    
 
 def generate_new_thread_ids(query: str, author_name: str, subreddit: str) -> list:
     '''
