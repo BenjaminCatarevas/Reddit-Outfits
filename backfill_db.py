@@ -32,6 +32,18 @@ def update_thread(thread_id: str):
     '''
     pass
 
+def select_threads_for_updates():
+    '''
+    Selects all threads that are less than two weeks old, and calls update_thread on each one to check for new scores and edits to comments.
+    '''
+
+    select_threads = """
+        SELECT *
+        FROM thread
+        WHERE timestamp < NOW() - INTERVAL '14 days'
+    """
+
+
 def generate_new_thread_ids(query: str, author_name: str, subreddit: str) -> list:
     '''
     Generates thread IDs that have not been processed using PRAW search functionality.
