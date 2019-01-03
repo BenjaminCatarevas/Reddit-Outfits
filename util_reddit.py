@@ -71,7 +71,7 @@ def create_outfit_urls(comment: str) -> list:
             # Dressed.so URL. We use an else statement because we already filter in the extract_outfit_urls_from_comment function.
             if raw_outfit_url.startswith('http://dressed.so'):
                 outfit_hash = parsed_raw_outfit_url.path.split('/')[3]
-                outfit_urls.append(F'http://cdn.dressed.so/i/{outfit_hash}.png')
+                outfit_urls.append(F'http://cdn.dressed.so/i/{outfit_hash}l.png')
             elif raw_outfit_url.startswith('http://cdn.dressed.so'):
                 # Outfit URL starts with cdn.dressed.so, so we can add the URL as is, as it links directly to an image.
                 outfit_urls.append(raw_outfit_url)
