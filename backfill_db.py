@@ -32,7 +32,18 @@ def update_thread(thread_id: str):
     Check if the date posted of the thread is less than two weeks old, comparing against the current date.
     Called once the database is backfilled.
     '''
-    pass
+
+    reddit = praw.Reddit(
+        user_agent = 'Comment Extraction',
+        client_id = config.reddit_client_id,
+        client_secret = config.reddit_client_secret
+    )
+
+    # Obtain a CommentForest object.
+    thread_submission = reddit.submission(id=thread_id)
+
+    # In the event there are "load more comments" or "continue this thread, we replace those with the comments they are hiding.
+    thread_submission.comments.replace_more(limit=None)
 
 def select_threads_for_updates(cur):
     '''
