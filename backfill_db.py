@@ -62,7 +62,36 @@ def select_threads_for_updates(cur):
     for record in cur:
         update_thread(record)
     
+def author_exists(author_name: str) -> bool:
+    '''
+    Given the name of an author, determines if the author exists in the author table of the database.
+    Returns True if the author has an entry, False otherwise.
+    '''
 
+    # Connect to the database.
+    conn = psycopg2.connect("dbname=reddit_outfits user=redditoutfits")
+
+    # Open a cursor to perform database operations that has the added functionality of checking if a row exists.
+    cur = conn.cursor()
+
+    # Create the statement for checking if an entry exists.
+    author_exists_query = """
+        SELECT EXISTS (
+            SELECT 1
+            FROM author
+            WHERE author_name = %s
+        )
+    """
+
+    # Check if author exists.
+    cur.execute(author_exists_query, (author_name,))
+
+    # Close cursor and connection.
+    cur.close()
+    conn.close()
+    
+    return cur.fetchone()[0]
+    
 def process_thread(thread_id: str):
     '''
     Given a thread ID, retrieves all of the top-level comments and processes them.
@@ -119,15 +148,6 @@ def process_thread(thread_id: str):
         )
     """
 
-    # Create the statement for checking if an entry exists.
-    author_exists_query = """
-        SELECT EXISTS (
-            SELECT 1
-            FROM author
-            WHERE author_name = %s
-        )
-    """
-
     # Generate comments and thread information.
     comments = generate_comments_from_thread(thread_id)
     thread_information = create_thread_dictionary(thread_id)
@@ -159,8 +179,7 @@ def process_thread(thread_id: str):
     # The order is subreddit, thread, author, comment, outfit.
     for comment in comments:
         # Check if author exists.
-        cur.execute(author_exists_query, (comment['author_name'],))
-        author_exists = cur.fetchone()[0]
+        author_exists = author_exists(comment['author_name'])
         
         if author_exists:
             # Author exists, update information based on current comment.
