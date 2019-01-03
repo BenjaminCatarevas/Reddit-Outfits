@@ -55,18 +55,13 @@ def create_outfit_urls(comment: str) -> list:
             imgur_url_type = imgur_url_info['url_type']
             imgur_hash = imgur_url_info['imgur_hash']
             
-            # Album or gallery, so we need to extract each image from the album or gallery.
-            if imgur_url_type != 'single_image' and imgur_url_type != 'ERROR':
-                outfit_urls += extract_image_urls_from_imgur_url(raw_outfit_url, imgur_hash, imgur_url_type)
-            elif imgur_url_type == 'image':
-                # If it's a single image (ending in .jpg, .jpeg, or .png) or an Imgur image, we can just use the hash.
-                # But only append if image is still valid.
-                # We call extract_image_urls_from_imgur_url because that'll query the API. Doing so will determine if the image is still alive.
-                # If it isn't, it'll just append an empty list. Else, it'll append the outfit URL.
-                outfit_urls += extract_image_urls_from_imgur_url(raw_outfit_url, imgur_hash, imgur_url_type)
-            else:
-                # Invalid URL.
+            # Not a valid URL, so just return an empty list.
+            if imgur_url_type == 'ERROR':
                 print(F"Invalid Imgur URL: {raw_outfit_url}")
+                return []
+            else:
+                # Process the Imgur URL.
+                outfit_urls += extract_image_urls_from_imgur_url(raw_outfit_url, imgur_hash, imgur_url_type)
         elif is_dressed_so_url(raw_outfit_url):
             # Dressed.so URL. We use an else statement because we already filter in the extract_outfit_urls_from_comment function.
             if raw_outfit_url.startswith('http://dressed.so'):
