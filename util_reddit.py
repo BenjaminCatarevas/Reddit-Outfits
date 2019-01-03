@@ -23,7 +23,7 @@ def generate_comments_from_thread(thread_id: str) -> list:
     # Obtain a CommentForest object.
     thread_submission = reddit.submission(id=thread_id)
 
-    # In the event there are "load more comments" or "contine this thread, we replace those with the comments they are hiding.
+    # In the event there are "load more comments" or "continue this thread, we replace those with the comments they are hiding.
     thread_submission.comments.replace_more(limit=None)
 
     # Traverse all of the comments.
