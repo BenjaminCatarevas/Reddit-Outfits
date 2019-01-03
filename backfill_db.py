@@ -5,26 +5,27 @@ import json
 import praw
 import config
 
-def generate_historical_thread_ids(query: str, author_name: str, subreddit: str) -> set:
+def generate_thread_ids(query: str, author_name: str, subreddit: str, size: int = 25) -> set:
     '''
     JSON reading adapted from: https://stackoverflow.com/questions/12965203/how-to-get-json-from-webpage-into-python-script
-    Produces thread IDs for a given query with a specified author on a given subreddit, up to a maximum of 500.
-    Uses the Pushshift API to easily retrieve historical thread data.
+    Produces thread IDs for a given query with a specified author on a given subreddit, with a given size (default 25)
+    Uses the Pushshift API to easily retrieve thread data.
     Returns a set of thread IDs.
     NOTE: Use authors of AutoModerator and MFAModerator for MFA.
     '''
 
-    historical_thread_ids = set()
+    thread_ids = set()
     # Query API for historical thread data.
-    with urllib.request.urlopen(F"https://api.pushshift.io/reddit/search/submission/?q={query}&author={author_name}&subreddit={subreddit}&size=500") as url:
+    with urllib.request.urlopen(F"https://api.pushshift.io/reddit/search/submission/?q={query}&author={author_name}&subreddit={subreddit}&size={size}") as url:
         thread_data = json.loads(url.read().decode())
 
     # Traverse each thread in the values part of the decoded JSON dictionary and add the ID of each thread to the set.
+    # We can't use the thread itself or use the Pushshift API to analyze comments because they are not updated as often (but worth exploring in the future for updating purposes).
     for threads in thread_data.values():
         for thread_data in threads:
-            historical_thread_ids.add(thread_data['id'])
+            thread_ids.add(thread_data['id'])
             
-    return historical_thread_ids
+    return thread_ids
 
 def update_thread(thread_id: str):
     '''
@@ -61,14 +62,6 @@ def select_threads_for_updates(cur):
     for record in cur:
         update_thread(record)
     
-
-def generate_new_thread_ids(query: str, author_name: str, subreddit: str) -> list:
-    '''
-    Generates thread IDs that have not been processed using PRAW search functionality.
-    Checks against thread table to see if thread has been processed.
-    Called once the database is backfilled.
-    '''
-    pass
 
 def process_thread(thread_id: str):
     '''
