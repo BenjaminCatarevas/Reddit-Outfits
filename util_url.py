@@ -111,19 +111,20 @@ def create_imgur_url_info(imgur_url: str) -> dict:
     is_album = parsed_url_path.startswith('/a/')
     is_gallery = parsed_url_path.startswith('/gallery/')
 
-    if is_album and not is_single_image:
+    if is_album:
         # Album.
         return {'url_type': 'album', 'imgur_hash': parsed_url_path[3:]}
-    elif is_gallery and not is_single_image:
+    elif is_gallery:
         # Gallery.
         return {'url_type': 'gallery', 'imgur_hash': parsed_url_path[9:]}
-    elif is_single_image and not is_album and not is_gallery:
+    elif is_single_image:
         # Single image (e.g. ending in .jpg, .jpeg, or .png)
         # Regular expression adapted from: https://stackoverflow.com/a/23259147
         # Split on / and . to get the alphanumeric hash, and isolate it. When displaying images, we will use one MIME type, namely .png.
         return {'url_type': 'image', 'imgur_hash': re.split(r'[/.]', parsed_url_path)[1]}
     elif parsed_url.netloc == 'imgur.com' and parsed_url.path != '/' and not is_single_image and not is_album and not is_gallery:
         # Imgur image. Check to make sure it starts with imgur.com and it also does not end at / (as in: https://imgur.com/)
+        # Imgur URLs such as https://imgur.com/3t4tt4
         return {'url_type': 'image', 'imgur_hash': parsed_url_path[1:]}
     else:
         # Invalid URL.
