@@ -2,6 +2,8 @@ from util_reddit import generate_comments_from_thread, create_thread_dictionary
 import psycopg2
 import urllib.request
 import json
+import praw
+import config
 
 def generate_historical_thread_ids(query: str, author_name: str, subreddit: str) -> set:
     '''
@@ -78,8 +80,8 @@ def process_thread(thread_id: str):
 
     # Create the statement for inserting outfit information into the outfit table.
     insert_outfit = """
-        INSERT INTO outfit (author_name, comment_id, outfit_url, thread_id)
-        VALUES(%s, %s, %s, %s);
+        INSERT INTO outfit (author_name, comment_id, outfit_url, thread_id, timestamp)
+        VALUES(%s, %s, %s, %s, %s);
     """
 
     # Create the statement for inserting author information into the author table.
@@ -172,7 +174,7 @@ def process_thread(thread_id: str):
         # Add each outfit that the user posted into the outfit table.
         for outfit in comment['outfits']:
             # Add outfit.
-            cur.execute(insert_outfit, (comment['author_name'], comment['comment_id'], outfit, comment['thread_id'],))
+            cur.execute(insert_outfit, (comment['author_name'], comment['comment_id'], outfit, comment['thread_id'], comment['timestamp'],))
             conn.commit()
 
     cur.close()
