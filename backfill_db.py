@@ -92,6 +92,36 @@ def author_exists(author_name: str) -> bool:
     
     return cur.fetchone()[0]
     
+def thread_exists(thread_id: str) -> bool:
+    '''
+    Given the ID of a thread, determines if the thread exists in the thread table of the database.
+    Returns True if the thread exists, False otherwise.
+    '''
+
+    # Connect to the database.
+    conn = psycopg2.connect("dbname=reddit_outfits user=redditoutfits")
+
+    # Open a cursor to perform database operations that has the added functionality of checking if a row exists.
+    cur = conn.cursor()
+
+    # Create the statement for checking if an entry exists.
+    thread_exists_query = """
+        SELECT EXISTS (
+            SELECT 1
+            FROM thread
+            WHERE thread_id = %s
+        )
+    """
+
+    # Check if thread has been process.
+    cur.execute(thread_exists_query, (thread_id,))
+
+    # Close cursor and connection.
+    cur.close()
+    conn.close()
+    
+    return cur.fetchone()[0]
+
 def process_thread(thread_id: str):
     '''
     Given a thread ID, retrieves all of the top-level comments and processes them.
@@ -139,15 +169,6 @@ def process_thread(thread_id: str):
         WHERE subreddit = %s
     """
 
-    # Create the statement for checking if an entry exists.
-    thread_exists_query = """
-        SELECT EXISTS (
-            SELECT 1
-            FROM thread
-            WHERE thread_id = %s
-        )
-    """
-
     # Generate comments and thread information.
     comments = generate_comments_from_thread(thread_id)
     thread_information = create_thread_dictionary(thread_id)
@@ -159,11 +180,10 @@ def process_thread(thread_id: str):
     cur = conn.cursor()
 
     # Check if we have already processed the thread.
-    cur.execute(thread_exists_query, (thread_id,))
-    processed_thread = cur.fetchone()[0]
+    does_thread_exists = thread_exists(thread_id)
 
-    # If we have already processed the thread, we simply move onto the next thread or ignore the current thread_id.
-    if processed_thread:
+    # If the thread exists, we have already processed the current thread, so we simply move onto the next thread.
+    if does_thread_exists:
         return
 
     # Update the subreddit information as we are processing a new thread.
@@ -179,9 +199,9 @@ def process_thread(thread_id: str):
     # The order is subreddit, thread, author, comment, outfit.
     for comment in comments:
         # Check if author exists.
-        author_exists = author_exists(comment['author_name'])
+        does_author_exists = author_exists(comment['author_name'])
         
-        if author_exists:
+        if does_author_exists:
             # Author exists, update information based on current comment.
             cur.execute(update_author, (comment['aggregate_score'], comment['author_name'],))
             conn.commit()
