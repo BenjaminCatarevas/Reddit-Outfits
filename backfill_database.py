@@ -23,3 +23,5 @@ insert_threads(malefashionadvice_thread_ids_automoderator, database)
 insert_threads(malefashionadvice_thread_ids_mfamoderator, database)
 insert_threads(femalefashionadvice_thread_ids_automoderator, database)
 insert_threads(streetwear_thread_ids_automoderator, database)
+
+database.close()

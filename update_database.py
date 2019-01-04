@@ -37,3 +37,5 @@ streetwear_threads_to_update = database.select_threads_to_update('streetwear')
 update_threads(malefashionadvice_threads_to_update, database)
 update_threads(femalefashionadvice_threads_to_update, database)
 update_threads(streetwear_threads_to_update, database)
+
+database.close()

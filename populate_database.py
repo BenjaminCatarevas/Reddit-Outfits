@@ -25,3 +25,5 @@ streetwear_thread_ids = generate_thread_ids('WDYWT author:AutoModerator', 'AutoM
 process_threads(malefashionadvice_thread_ids, database)
 process_threads(femalefashionadvice_thread_ids, database)
 process_threads(streetwear_thread_ids, database)
+
+database.close()
