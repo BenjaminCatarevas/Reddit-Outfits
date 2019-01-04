@@ -97,7 +97,7 @@ def extract_outfit_urls_from_comment(comment: str) -> list:
 
     return outfit_urls
 
-def create_imgur_url_info(imgur_url: str) -> dict:
+def generate_imgur_url_info(imgur_url: str) -> dict:
     '''
     Given an Imgur URL, determines if the URL is an album, gallery, Imgur image, or single image (.png, .jpeg, .jpg)
     Returns a dictionary where the first element is the type of URL, and the second element is the alphanumeric hash (if applicable).

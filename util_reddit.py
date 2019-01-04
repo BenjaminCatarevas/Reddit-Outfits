@@ -4,7 +4,7 @@ import urllib.request
 import re
 from urllib.parse import urlparse
 import config
-from util_url import extract_outfit_urls_from_comment, is_imgur_url, is_dressed_so_url, is_reddit_url, create_imgur_url_info, extract_image_urls_from_imgur_url
+from util_url import extract_outfit_urls_from_comment, is_imgur_url, is_dressed_so_url, is_reddit_url, generate_imgur_url_info, extract_image_urls_from_imgur_url
 
 def generate_comments_from_thread(thread_id: str) -> list:
     '''
@@ -51,7 +51,7 @@ def create_outfit_urls(comment: str) -> set:
         parsed_raw_outfit_url = urlparse(raw_outfit_url)
         if is_imgur_url(raw_outfit_url):
             # Determine what type of Imgur URL it is, and the hash of said Imgur URL.
-            imgur_url_info = create_imgur_url_info(raw_outfit_url)
+            imgur_url_info = generate_imgur_url_info(raw_outfit_url)
             imgur_url_type = imgur_url_info['url_type']
             imgur_hash = imgur_url_info['imgur_hash']
             
