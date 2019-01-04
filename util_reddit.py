@@ -119,7 +119,8 @@ def generate_thread_dictionary(thread_id: str) -> dict:
     thread_submission = reddit.submission(id=thread_id)
     
     thread = {
-        'num_top_level_comments': thread_submission.num_comments,
+        'num_top_level_comments': len(thread_submission.comments),
+        'num_comments': thread_submission.num_comments,
         'subreddit': thread_submission.subreddit.display_name,
         'subreddit_id': thread_submission.subreddit_id,
         'thread_id': thread_submission.id,
