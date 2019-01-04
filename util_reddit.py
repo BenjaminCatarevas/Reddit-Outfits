@@ -34,7 +34,7 @@ def generate_comments_from_thread(thread_id: str) -> list:
     
     return comments
 
-def create_outfit_urls(comment: str) -> list:
+def create_outfit_urls(comment: str) -> set:
     '''
     Given a comment, constructs a list of each Imgur or Dressed.so URL from a comment ending in .jpg, .png, or .jpeg.
     Returns a list of outfit URLs.
@@ -79,8 +79,9 @@ def create_outfit_urls(comment: str) -> list:
             # Invalid outfit URL.
             print("Invalid outfit URL.")
             continue
-                
-    return outfit_urls
+
+    # We cast the list into a set to avoid duplicates.
+    return set(outfit_urls)
 
 def create_comment_dictionary(comment) -> dict:
     '''
