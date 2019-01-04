@@ -226,6 +226,3 @@ class RedditOutfitsDatabase:
 
         self.cur.close()
         self.conn.close()
-
-db = RedditOutfitsDatabase('reddit_outfits', 'redditoutfits')
-db.process_thread('aax2d7')
