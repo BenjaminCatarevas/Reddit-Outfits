@@ -6,6 +6,28 @@ from urllib.parse import urlparse
 import config
 from util_url import extract_outfit_urls_from_comment, is_imgur_url, is_dressed_so_url, is_reddit_url, generate_imgur_url_info, extract_image_urls_from_imgur_url
 
+def generate_thread_ids(query: str, author_name: str, subreddit: str, size: int = 25) -> set:
+    '''
+    JSON reading adapted from: https://stackoverflow.com/questions/12965203/how-to-get-json-from-webpage-into-python-script
+    Produces thread IDs for a given query with a specified author on a given subreddit, with a given size (default 25)
+    Uses the Pushshift API to easily retrieve thread data.
+    Returns a set of thread IDs.
+    NOTE: Use authors of AutoModerator and MFAModerator for MFA.
+    '''
+
+    thread_ids = set()
+    # Query API for historical thread data.
+    with urllib.request.urlopen(F"https://api.pushshift.io/reddit/search/submission/?q={query}&author={author_name}&subreddit={subreddit}&size={size}") as url:
+        thread_data = json.loads(url.read().decode())
+
+    # Traverse each thread in the values part of the decoded JSON dictionary and add the ID of each thread to the set.
+    # We can't use the thread itself or use the Pushshift API to analyze comments because they are not updated as often (but worth exploring in the future for updating purposes).
+    for threads in thread_data.values():
+        for thread_data in threads:
+            thread_ids.add(thread_data['id'])
+            
+    return thread_ids
+
 def generate_comments_from_thread(thread_id: str) -> list:
     '''
     Adapted from: https://praw.readthedocs.io/en/latest/tutorials/comments.html
