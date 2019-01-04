@@ -18,6 +18,7 @@ malefashionadvice_thread_ids_mfamoderator = generate_thread_ids('WAYWT', 'MFAMod
 femalefashionadvice_thread_ids_automoderator = generate_thread_ids('WAYWT', 'AutoModerator', 'femalefashionadvice', 500)
 streetwear_thread_ids_automoderator = generate_thread_ids('WDYWT', 'AutoModerator', 'streetwear', 500)
 
+# Backfill threads for each subreddit.
 insert_threads(malefashionadvice_thread_ids_automoderator, database)
 insert_threads(malefashionadvice_thread_ids_mfamoderator, database)
 insert_threads(femalefashionadvice_thread_ids_automoderator, database)
