@@ -103,7 +103,7 @@ def create_comment_dictionary(comment) -> dict:
 
     return comment
 
-def create_thread_dictionary(thread_id: str) -> dict:
+def generate_thread_dictionary(thread_id: str) -> dict:
     '''
     Given a Submission object, creates a dictionary holding only relevant information.
     Returns a dictionary.
