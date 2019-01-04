@@ -12,7 +12,6 @@ def generate_thread_ids(query: str, author_name: str, subreddit: str, size: int 
     Produces thread IDs for a given query with a specified author on a given subreddit, with a given size (default 25)
     Uses the Pushshift API to easily retrieve thread data.
     Returns a set of thread IDs.
-    NOTE: Use authors of AutoModerator and MFAModerator for MFA.
     '''
 
     thread_ids = set()
