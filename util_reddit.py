@@ -57,7 +57,7 @@ def generate_comments_from_thread(thread_id: str) -> list:
 
     # Traverse all of the comments.
     for top_level_comment in thread_submission.comments:
-        # We only care about comments that have outfit URLs in them and are not deleted by users. All others (such as a comment with no links), we ignore.
+        # We only care about comments that have outfit URLs in them. All others (such as a comment with no links), we ignore.
         if not len(create_outfit_urls(top_level_comment.body)) < 1:
                 comments.append(create_comment_dictionary(top_level_comment))
     
