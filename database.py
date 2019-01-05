@@ -1,12 +1,11 @@
 import psycopg2
 from util_reddit import generate_comments_from_thread, generate_thread_dictionary
-import config
 
 class RedditOutfitsDatabase:
     
-    def __init__(self, dbname: str, user: str):
+    def __init__(self, dbname: str, user: str, password: str):
         # Connect to the database.
-        self.conn = psycopg2.connect(F'dbname={dbname} user={user}')
+        self.conn = psycopg2.connect(dbname=dbname, user=user, password=password)
 
         # Open a cursor to perform database operations.
         self.cur = self.conn.cursor()
@@ -180,14 +179,26 @@ class RedditOutfitsDatabase:
         Returns a list
         '''
 
-        select_images = """
+        select_all_outfits_query = """
             SELECT *
             FROM outfits
         """
 
-        self.cur.execute(select_images)
+        self.cur.execute(select_all_outfits_query)
 
         return list(self.cur)
+
+    def delete_outfit(self, outfit_url: str):
+        '''
+        Given an outfit's URL, deletes it from the database.
+        '''
+
+        delete_outfit_query = """
+            DELETE FROM outfit
+            WHERE outfit_url = %s
+        """
+
+        self.cur.execute(delete_outfit_query, (outfit_url,))
 
     def process_thread(self, thread_id: str):
         '''
