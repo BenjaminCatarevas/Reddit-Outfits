@@ -2,7 +2,6 @@ import config
 from database import RedditOutfitsDatabase
 from util_reddit import generate_thread_ids
 
-
 '''
 This script is ran according to Malefashionadvice's, Femalefashionadvice's, and Streetwear's weekly thread(s) schedules.
 '''
