@@ -1,5 +1,6 @@
 from database import RedditOutfitsDatabase
 from util_reddit import generate_thread_ids
+import config
 
 '''
 This script is ran according to Malefashionadvice's, Femalefashionadvice's, and Streetwear's weekly thread(s) schedules.
@@ -14,7 +15,7 @@ def process_threads(thread_ids: list, database):
         database.process_thread(thread_id)
 
 # Establish a connection to the database.
-database = RedditOutfitsDatabase('reddit_outfits', 'redditoutfits')
+database = RedditOutfitsDatabase('reddit_outfits', 'redditoutfits', config.redditoutfits_password)
 
 # Retrieve most recent 25 thread IDs.
 malefashionadvice_thread_ids = generate_thread_ids('author:AutoModerator WAYWT', 'AutoModerator', 'malefashionadvice')

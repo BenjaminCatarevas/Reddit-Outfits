@@ -26,7 +26,7 @@ def update_threads(threads: list, database):
         thread_submission.comments.replace_more(limit=None)
 
 # Establish a connection to the database.
-database = RedditOutfitsDatabase('reddit_outfits', 'redditoutfits')
+database = RedditOutfitsDatabase('reddit_outfits', 'redditoutfits', config.redditoutfits_password)
 
 # Retrieve threads that need to be updated.
 malefashionadvice_threads_to_update = database.select_threads_to_update('malefashionadvice')

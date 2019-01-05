@@ -4,13 +4,14 @@ This script will be called once and will be used to backfill the database for al
 
 from database import RedditOutfitsDatabase
 from util_reddit import generate_thread_ids
+import config
 
 def insert_threads(thread_ids, database):
     for thread_id in thread_ids:
         database.process_thread(thread_id)
 
 # Establish a connection to the database.
-database = RedditOutfitsDatabase('reddit_outfits', 'redditoutfits')
+database = RedditOutfitsDatabase('reddit_outfits', 'redditoutfits', config.redditoutfits_password)
 
 # Generate thread IDs for all subreddits.
 malefashionadvice_thread_ids_automoderator = generate_thread_ids('WAYWT', 'AutoModerator', 'malefashionadvice', 500)
