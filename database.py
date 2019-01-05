@@ -63,7 +63,7 @@ class RedditOutfitsDatabase:
 
         return self.cur.fetchone()[0]
 
-    def update_subreddit(self, thread_information: str):
+    def update_subreddit(self, thread_information: dict):
         '''
         Given information about a thread, updates the record of the subreddit of the thread.
         '''
@@ -191,6 +191,52 @@ class RedditOutfitsDatabase:
         """
 
         self.cur.execute(delete_outfit_query, (outfit_url,))
+
+    def select_comment(self, comment_id: str):
+        '''
+        Given a comment ID, returns the corresponding comment record from the database.
+        '''
+
+        select_comment_query = """
+            SELECT 1
+            FROM comment
+            WHERE comment_id = %s
+        """
+
+        self.cur.execute(select_comment_query, (comment_id,))
+
+        return list(self.cur)
+
+    def update_comment(self, comment_id: str, body: str, comment_score: str):
+        '''
+        Given a comment ID, updates the body of the comment and comment score for the corresponding comment.
+        '''
+
+        update_comment_query = """
+            UPDATE comment
+            SET body = %s
+                comment_score = %s
+            WHERE author = %s
+        """
+
+        self.cur.execute(update_comment_query, (body, comment_score, comment_id,))
+        self.conn.commit()
+
+    def update_thread(self, thread_id: str, num_top_level_comments: int, thread_score: int, num_total_comments: int):
+        '''
+        Given a thread ID, updates the number of top level comments, thread score, and number of total comments for the corresponding thread.
+        '''
+
+        update_thread_query = """
+            UPDATE thread
+            SET num_top_level_comments = %s
+                thread_score = %s
+                num_total_comments = %s
+            WHERE thread_id = %s
+        """
+
+        self.cur.execute(update_thread_query, (num_top_level_comments, thread_score, num_total_comments, thread_id,))
+        self.conn.commit()
 
     def process_thread(self, thread_id: str):
         '''
