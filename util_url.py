@@ -43,7 +43,7 @@ def extract_image_urls_from_imgur_url(imgur_url: str, imgur_hash: str, url_type:
 
     image_urls = []
 
-    # Construct the API endpoint URL to ping to receive information about the URL.
+    # Construct the Imgur API endpoint URL to ping and receive information about the URL.
     url = F'https://api.imgur.com/3/{url_type}/{imgur_hash}/images'
     payload = {}
     headers = {
@@ -57,14 +57,13 @@ def extract_image_urls_from_imgur_url(imgur_url: str, imgur_hash: str, url_type:
         print(F"Error: {image_json['error']}")
         return []
 
-    # Valid Imgur URL.
     if url_type == 'gallery' or url_type == 'album':
         # From /album/ and /gallery/ endpoint
         # The returned JSON is in an array for albums and galleries, while it's a single JSON object for a single image.
         for image in image_json:
             image_urls.append(image['link'])
     else:
-        # Single JSON object (from /image/ endpoint).
+        # Single JSON object (from /image/ endpoint), so we access it directly.
         image_urls.append(image_json['link'])
 
     return image_urls
@@ -75,18 +74,17 @@ def extract_outfit_urls_from_comment(comment: str) -> list:
     Splits the comment twice. The function splits the comment once to check for URLs posted in plaintext, and once for URLs posted in Markdown.
     Returns a list of URLs. 
     '''
-    # TODO: Find a more efficient way of extracting URLs in plaintext and Markdown.
 
     outfit_urls = set()
 
-    # Remove Markdown.
+    # Remove Markdown for easier tokenizing.
     # Approach adapted from: https://stackoverflow.com/a/44593228
     for replacement in (('[', ' '), (']', ' '), ('(', ' '), (')', ' ')):
         comment = comment.replace(*replacement)
     
-    # Extract links.
+    # Links that don't start with http or https are considered invalid.
     for token in comment.split():
-        if token.startswith('http') or token.startswith('https'):
+        if token.lower().startswith('http') or token.lower().startswith('https'):
             outfit_urls.add(token)
 
     # Santitize URLs for any superfluous punctuation. Some users have a period at the end of their image URLs, so we sanitize that.
@@ -114,22 +112,19 @@ def generate_imgur_url_info(imgur_url: str) -> dict:
     is_gallery = parsed_url_path.startswith('/gallery/')
 
     if is_album:
-        # Album.
         return {'url_type': 'album', 'imgur_hash': parsed_url_path[3:]}
     elif is_gallery:
-        # Gallery.
         return {'url_type': 'gallery', 'imgur_hash': parsed_url_path[9:]}
     elif is_single_image:
-        # Single image (e.g. ending in .jpg, .jpeg, or .png)
-        # Regular expression adapted from: https://stackoverflow.com/a/23259147
-        # Split on / and . to get the alphanumeric hash, and isolate it. When displaying images, we will use one MIME type, namely .png.
+        # A single image is one that links directly to a file e.g. ending in .jpg, .jpeg, or .png.
+        # Regular expression for hash parsing adapted from: https://stackoverflow.com/a/23259147
+        # Split on / and . to get the alphanumeric hash, and isolate it.
         return {'url_type': 'image', 'imgur_hash': re.split(r'[/.]', parsed_url_path)[1]}
     elif parsed_url.netloc == 'imgur.com' and parsed_url.path != '/' and not is_single_image and not is_album and not is_gallery:
         # Imgur image. Check to make sure it starts with imgur.com and it also does not end at / (as in: https://imgur.com/)
-        # Imgur URLs such as https://imgur.com/3t4tt4
+        # Imgur URLs such as https://imgur.com/3t4tt4.
         return {'url_type': 'image', 'imgur_hash': parsed_url_path[1:]}
     else:
-        # Invalid URL.
         return {'url_type': 'ERROR', 'imgur_hash': 'ERROR'}
 
 def is_url_down(url: str) -> bool:
@@ -140,8 +135,8 @@ def is_url_down(url: str) -> bool:
     '''
 
     if is_imgur_url(url):
-        # NOTE: We need to ping the Imgur API because an Imgur URL that isn't up anymore simply goes to Imgur's 404 page.
-        # Since the 404 page is considered up, we need to ping the API and look for an error message in the JSON from the response.
+        # We need to ping the Imgur API because an Imgur URL that isn't up anymore simply goes to Imgur's 404 page.
+        # Imgur's 404 page is considered "up" and returns a status code of 200, whch is why we need to ping the API and look for an error message in the JSON from the response.
 
         # Determine what type of Imgur URL it is, and the hash of said Imgur URL.
         imgur_url_info = generate_imgur_url_info(url)
@@ -163,9 +158,9 @@ def is_url_down(url: str) -> bool:
     else:
         # i.redd.it or cdn.dressed.so
 
-        if not url.startswith('http'):
+        if not url.lower().startswith('http'):
             # The URL must start with http(s) to make a successful HEAD request.
-            # We append http because dressed.so does not use HTTPS
+            # We append http because dressed.so does not use HTTPS, and HTTP works for i.redd.it URLs.
             url = 'http' + url
 
         # Approach adapted from: https://stackoverflow.com/a/15743618

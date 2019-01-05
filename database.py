@@ -1,14 +1,12 @@
 import psycopg2
 from util_reddit import generate_comments_from_thread
-from util_reddit import generate_thread_dictionary
+from util_reddit import generate_thread_information_from_thread
 
 class RedditOutfitsDatabase:
     
     def __init__(self, dbname: str, user: str, password: str):
-        # Connect to the database.
         self.conn = psycopg2.connect(dbname=dbname, user=user, password=password)
 
-        # Open a cursor to perform database operations.
         self.cur = self.conn.cursor()
 
     def thread_exists(self, thread_id: str) -> bool:
@@ -17,7 +15,6 @@ class RedditOutfitsDatabase:
         Returns True if so, False otherwise.
         '''
 
-        # Create the statement for checking if the thread ID exists.
         thread_exists_query = """
             SELECT EXISTS (
                 SELECT 1
@@ -36,7 +33,6 @@ class RedditOutfitsDatabase:
         Returns True if so, False otherwise.
         '''
 
-        # Create the statement for checking if the author exists.
         author_exists_query = """
             SELECT EXISTS (
                 SELECT 1
@@ -55,7 +51,6 @@ class RedditOutfitsDatabase:
         Returns True if so, False otherwise.
         '''
 
-        # Create the statement for checking if the outfit exists.
         outfit_exists_query = """
             SELECT EXISTS (
                 SELECT 1
@@ -73,7 +68,6 @@ class RedditOutfitsDatabase:
         Given information about a thread, updates the record of the subreddit of the thread.
         '''
 
-        # Create the statement for updating subreddit information in the subreddit table.
         update_subreddit = """
             UPDATE subreddit
             SET num_threads = num_threads + 1
@@ -88,7 +82,6 @@ class RedditOutfitsDatabase:
         Given information about a comment, updates the record of the author of the comment.
         '''
 
-        # Create the statement for updating author information in the author table.
         update_author = """
             UPDATE author
             SET num_comments = num_comments + 1
@@ -103,7 +96,6 @@ class RedditOutfitsDatabase:
         Given information about a thread, inserts a new record for the thread.
         '''
 
-        # Create the statement for inserting thread information into the thread table.
         # We use named parameters because psycopg2 uses a dictionary to map named parameters to values in PostgreSQL.
         # It is also worth noting that even if a dictionary has extra keys, psycopg2 will simply ignore those and look only for the named parameters.
         insert_thread = """
@@ -134,7 +126,6 @@ class RedditOutfitsDatabase:
         Given information about a comment, inserts a new record for the comment.
         '''
 
-        # Create the statement for inserting comment information into the comment table.
         insert_comment = """
             INSERT INTO comment (author_name, body, comment_id, comment_permalink, comment_score, subreddit, subreddit_id, thread_id, timestamp)
             VALUES(%(author_name)s, %(body)s, %(comment_id)s, %(comment_permalink)s, %(comment_score)s, %(subreddit)s, %(subreddit_id)s, %(thread_id)s, %(timestamp)s);
@@ -148,7 +139,6 @@ class RedditOutfitsDatabase:
         Given information about a comment and an outfit URL, inserts a new record for the outfit with relevant information from the comment.
         '''
 
-        # Create the statement for inserting outfit information into the outfit table.
         insert_outfit = """
             INSERT INTO outfit (author_name, comment_id, outfit_url, thread_id, timestamp)
             VALUES(%s, %s, %s, %s, %s);
@@ -214,18 +204,15 @@ class RedditOutfitsDatabase:
         if thread_exists:
             return
 
-        # Generate the comments and thread information for processing.
         comments = generate_comments_from_thread(thread_id)
-        thread_information = generate_thread_dictionary(thread_id)
+        thread_information = generate_thread_information_from_thread(thread_id)
 
-        # Update the record with the subreddit corresponding to the thread we are processing.
         self.update_subreddit(thread_information)
 
-        # Insert a record for the current thread.
         self.insert_thread(thread_information)
 
         # Add relevant information from each comment into respective tables.
-        # Start with the table that does not have any foreign keys (i.e. top-down) when adding information.
+        # Start with the table that does not have any foreign keys or constraints(i.e. top-down) when adding information.
         # The order is subreddit, thread, author, comment, outfit.
         for comment in comments:
             author_exists = self.author_exists(comment['author_name'])
@@ -236,10 +223,8 @@ class RedditOutfitsDatabase:
             else:
                 self.insert_author(comment)
 
-            # Insert the information about the comment.
             self.insert_comment(comment)
 
-            # Insert a record for each outfit from the current comment.
             for outfit in comment['outfits']:
                 outfit_exists = self.outfit_exists(outfit)
 

@@ -22,6 +22,7 @@ def generate_thread_ids(query: str, author_name: str, subreddit: str, size: int 
     '''
 
     thread_ids = set()
+
     # Query API for historical thread data.
     with urllib.request.urlopen(F"https://api.pushshift.io/reddit/search/submission/?q={query}&author={author_name}&subreddit={subreddit}&size={size}") as url:
         thread_data = json.loads(url.read().decode())
@@ -51,7 +52,7 @@ def generate_comments_from_thread(thread_id: str) -> list:
     # Obtain a CommentForest object.
     thread_submission = reddit.submission(id=thread_id)
 
-    # In the event there are "load more comments" or "continue this thread, we replace those with the comments they are hiding.
+    # In the event there are "load more comments" or "continue this thread," we replace those with the comments they are hiding.
     thread_submission.comments.replace_more(limit=None)
 
     # Traverse all of the comments.
@@ -74,9 +75,9 @@ def create_outfit_urls(comment: str) -> set:
     # We call it raw because some Imgur URLs may have multiple images (e.g. albums, galleries), so we need to explode those URLs.
     raw_outfit_urls = extract_outfit_urls_from_comment(comment)
 
-    # Analyze each outfit URL and process accordingly.
     for raw_outfit_url in raw_outfit_urls:
         parsed_raw_outfit_url = urlparse(raw_outfit_url)
+
         if is_imgur_url(raw_outfit_url):
             # Determine what type of Imgur URL it is, and the hash of said Imgur URL.
             imgur_url_info = generate_imgur_url_info(raw_outfit_url)
@@ -88,11 +89,12 @@ def create_outfit_urls(comment: str) -> set:
                 print(F"Invalid Imgur URL: {raw_outfit_url}")
                 return []
             else:
-                # Process the Imgur URL.
+                # Process the Imgur URL no matter the type.
                 outfit_urls += extract_image_urls_from_imgur_url(raw_outfit_url, imgur_hash, imgur_url_type)
+
         elif is_dressed_so_url(raw_outfit_url):
-            # Dressed.so URL. We use an else statement because we already filter in the extract_outfit_urls_from_comment function.
             if raw_outfit_url.startswith('http://dressed.so'):
+                # Parse the URL for the hash of the image before adding to the list.
                 outfit_hash = parsed_raw_outfit_url.path.split('/')[3]
                 outfit_urls.append(F'http://cdn.dressed.so/i/{outfit_hash}l.png')
             elif raw_outfit_url.startswith('http://cdn.dressed.so'):
@@ -132,7 +134,7 @@ def create_comment_dictionary(comment) -> dict:
 
     return comment
 
-def generate_thread_dictionary(thread_id: str) -> dict:
+def generate_thread_information_from_thread(thread_id: str) -> dict:
     '''
     Given a Submission object, creates a dictionary holding only relevant information.
     Returns a dictionary.

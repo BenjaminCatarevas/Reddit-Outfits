@@ -24,7 +24,7 @@ def update_threads(threads: list, database):
         # The element at index 1 is the thread ID of each thread record.
         thread_submission = reddit.submission(id=thread[1])
 
-        # In the event there are "load more comments" or "continue this thread, we replace those with the comments they are hiding.
+        # In the event there are "load more comments" or "continue this thread,"" we replace those with the comments they are hiding.
         thread_submission.comments.replace_more(limit=None)
 
 # Establish a connection to the database.
