@@ -174,6 +174,21 @@ class RedditOutfitsDatabase:
         # The Cursor object is an iterator, so we can cast it to a list to obtian every value in the iterator.
         return list(self.cur)
 
+    def select_all_outfits(self) -> list:
+        '''
+        Selects all images from the outfits database.
+        Returns a list
+        '''
+
+        select_images = """
+            SELECT *
+            FROM outfits
+        """
+
+        self.cur.execute(select_images)
+
+        return list(self.cur)
+
     def process_thread(self, thread_id: str):
         '''
         Given a thread ID, retrieves all of the top-level comments and processes them.
