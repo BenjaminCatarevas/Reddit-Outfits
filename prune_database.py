@@ -15,6 +15,6 @@ outfits = database.select_all_outfits()
 for outfit in outfits:
     # We index using the second element because that is where the outfit URL is stored.
     if is_url_down(outfit[2]):
-        database.delete_image(outfit[2])
+        database.delete_outfit(outfit[2])
 
 database.close()
