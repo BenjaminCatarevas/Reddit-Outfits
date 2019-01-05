@@ -1,4 +1,5 @@
 import psycopg2
+import psycopg2.extras
 from util_reddit import generate_comments_from_thread
 from util_reddit import generate_thread_information_from_thread
 
@@ -7,7 +8,7 @@ class RedditOutfitsDatabase:
     def __init__(self, dbname: str, user: str, password: str):
         self.conn = psycopg2.connect(dbname=dbname, user=user, password=password)
 
-        self.cur = self.conn.cursor()
+        self.cur = self.conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
     def thread_exists(self, thread_id: str) -> bool:
         '''
