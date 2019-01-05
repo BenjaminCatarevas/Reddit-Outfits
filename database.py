@@ -160,13 +160,14 @@ class RedditOutfitsDatabase:
     def select_threads_to_update(self, subreddit: str) -> list:
         '''
         Selects all threads that are less than two weeks old.
+        Query adapted from: https://stackoverflow.com/a/17998598 and https://stackoverflow.com/a/17998488
         Returns a list.
         '''
 
         select_threads = """
             SELECT *
             FROM thread
-            WHERE timestamp < NOW() - INTERVAL '14 days' AND subreddit = %s
+            WHERE timestamp > EXTRACT(epoch from NOW() - INTERVAL '14 DAY') AND subreddit = %s
         """
 
         self.cur.execute(select_threads, (subreddit,))
