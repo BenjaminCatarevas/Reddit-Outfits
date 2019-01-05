@@ -1,6 +1,8 @@
-from database import RedditOutfitsDatabase
-import config
 import praw
+
+import config
+from database import RedditOutfitsDatabase
+
 
 '''
 This script is ran once every hour on all subreddits.

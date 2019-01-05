@@ -1,10 +1,10 @@
+import config
+from database import RedditOutfitsDatabase
+from util_reddit import generate_thread_ids
+
 '''
 This script will be called once and will be used to backfill the database for all subreddits.
 '''
-
-from database import RedditOutfitsDatabase
-from util_reddit import generate_thread_ids
-import config
 
 def insert_threads(thread_ids, database):
     for thread_id in thread_ids:

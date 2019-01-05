@@ -1,6 +1,7 @@
-from database import RedditOutfitsDatabase
 import config
+from database import RedditOutfitsDatabase
 from util_url import is_url_down
+
 '''
 This script is ran once a month, checking each outfit to see if it is still up/alive.
 '''

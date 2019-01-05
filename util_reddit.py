@@ -1,10 +1,17 @@
-import praw
 import json
-import urllib.request
 import re
+import urllib.request
 from urllib.parse import urlparse
+
+import praw
+
 import config
-from util_url import extract_outfit_urls_from_comment, is_imgur_url, is_dressed_so_url, is_reddit_url, generate_imgur_url_info, extract_image_urls_from_imgur_url
+from util_url import extract_image_urls_from_imgur_url
+from util_url import extract_outfit_urls_from_comment
+from util_url import generate_imgur_url_info
+from util_url import is_dressed_so_url
+from util_url import is_imgur_url
+from util_url import is_reddit_url
 
 def generate_thread_ids(query: str, author_name: str, subreddit: str, size: int = 25) -> set:
     '''

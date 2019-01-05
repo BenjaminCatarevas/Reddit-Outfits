@@ -1,5 +1,9 @@
 import unittest
-from util_url import extract_outfit_urls_from_comment, is_imgur_url, is_dressed_so_url, is_reddit_url, generate_imgur_url_info
+from util_url import generate_imgur_url_info
+from util_url import is_dressed_so_url
+from util_url import is_imgur_url
+from util_url import is_reddit_url
+
 
 class TestExtractOutfitURLs(unittest.TestCase):
 

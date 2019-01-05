@@ -1,5 +1,6 @@
 import psycopg2
-from util_reddit import generate_comments_from_thread, generate_thread_dictionary
+from util_reddit import generate_comments_from_thread
+from util_reddit import generate_thread_dictionary
 
 class RedditOutfitsDatabase:
     

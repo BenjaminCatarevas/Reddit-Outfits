@@ -1,8 +1,9 @@
-from urllib.parse import urlparse
-import config
 import json
 import re
 import requests
+from urllib.parse import urlparse
+
+import config
 
 def is_imgur_url(url: str) -> bool:
     '''
@@ -92,8 +93,9 @@ def extract_outfit_urls_from_comment(comment: str) -> list:
     # Adapted from: https://stackoverflow.com/a/52118554
     outfit_urls = [re.sub('[^a-zA-Z0-9]+$','',URL) for URL in outfit_urls]
 
-    # Filter out URLs that are not Imgur or Dressed.so domains (also turns the set into a list).
-    outfit_urls = [url for url in outfit_urls if is_imgur_url(url) or is_dressed_so_url(url) or is_reddit_url(url)]
+    # Filter out URLs that are not Imgur, Dressed.so, or redd.it domains (also turns the set into a list).
+    # Also check if the URL is up or not. If not, ignore.
+    outfit_urls = [url for url in outfit_urls if (is_imgur_url(url) or is_dressed_so_url(url) or is_reddit_url(url))]
 
     return outfit_urls
 
