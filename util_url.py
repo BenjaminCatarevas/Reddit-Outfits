@@ -129,3 +129,45 @@ def generate_imgur_url_info(imgur_url: str) -> dict:
     else:
         # Invalid URL.
         return {'url_type': 'ERROR', 'imgur_hash': 'ERROR'}
+
+def is_url_down(url: str) -> bool:
+    '''
+    Given a URL, determines if the given URL is down.
+    Returns True if URL is down, False otherwise.
+    Function adapted from: https://stackoverflow.com/a/15743618
+    '''
+
+    if is_imgur_url(url):
+        # NOTE: We need to ping the Imgur API because an Imgur URL that isn't up anymore simply goes to Imgur's 404 page.
+        # Since the 404 page is considered up, we need to ping the API and look for an error message in the JSON from the response.
+
+        # Determine what type of Imgur URL it is, and the hash of said Imgur URL.
+        imgur_url_info = generate_imgur_url_info(url)
+        imgur_url_type = imgur_url_info['url_type']
+        imgur_hash = imgur_url_info['imgur_hash']
+
+        # Prepare the URL to ping the Imgur API with.
+        url = F'https://api.imgur.com/3/{imgur_url_type}/{imgur_hash}/images'
+
+        payload = {}
+        headers = {
+            'Authorization': F'Client-ID {config.imgur_client_id}'
+        }
+        response = requests.request('GET', url, headers = headers, data = payload, allow_redirects=False)
+        image_json = json.loads(response.text)['data']
+
+        return 'error' in image_json
+
+    else:
+        # i.redd.it or cdn.dressed.so
+
+        if not url.startswith('http'):
+            # The URL must start with http(s) to make a successful HEAD request.
+            # We append http because dressed.so does not use HTTPS
+            url = 'http' + url
+
+        # Approach adapted from: https://stackoverflow.com/a/15743618
+        r = requests.head(url)
+
+        # cdn.dressed.so returns 403 if there is no image found at the URL.
+        return r.status_code == 404 or r.status_code == 403
