@@ -10,6 +10,110 @@ class RedditOutfitsDatabase:
 
         self.cur = self.conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
+    def close(self):
+        '''
+        Close the database connection and cursor.
+        '''
+
+        self.cur.close()
+        self.conn.close()
+
+    def process_thread(self, thread_id: str):
+        '''
+        Given a thread ID, retrieves all of the top-level comments and processes them.
+        This function is called for new threads only. 
+        '''
+
+        # If the thread exists, we have already processed it, so we do nothing.
+        thread_exists = self.thread_exists(thread_id)
+
+        if thread_exists:
+            return
+
+        comments = generate_comments_from_thread(thread_id)
+        thread_information = generate_thread_information_from_thread(thread_id)
+
+        self.update_subreddit(thread_information)
+
+        self.insert_thread(thread_information)
+
+        # Add relevant information from each comment into respective tables.
+        # Start with the table that does not have any foreign keys or constraints(i.e. top-down) when adding information.
+        # The order is subreddit, thread, author, comment, outfit.
+        for comment in comments:
+            author_exists = self.author_exists(comment['author_name'])
+
+            # If the author exists, update their information. Otherwise insert a new entry.
+            if author_exists:
+                self.update_author(comment)
+            else:
+                self.insert_author(comment)
+
+            self.insert_comment(comment)
+
+            for outfit in comment['outfits']:
+                outfit_exists = self.outfit_exists(outfit)
+
+                # Only insert if the user did not submit a duplicate outfit and/or split an album into individual images.
+                if not outfit_exists:
+                    self.insert_outfit(comment, outfit)
+
+    def insert_thread(self, thread_information: dict):
+        '''
+        Given information about a thread, inserts a new record for the thread.
+        '''
+
+        # We use named parameters because psycopg2 uses a dictionary to map named parameters to values in PostgreSQL.
+        # It is also worth noting that even if a dictionary has extra keys, psycopg2 will simply ignore those and look only for the named parameters.
+        insert_thread = """
+            INSERT INTO thread (num_top_level_comments, num_total_comments, subreddit, subreddit_id, thread_id, thread_title, thread_score, thread_permalink, timestamp)
+            VALUES(%(num_top_level_comments)s, %(num_total_comments)s, %(subreddit)s, %(subreddit_id)s, %(thread_id)s, %(thread_title)s, %(thread_score)s, %(thread_permalink)s, %(timestamp)s);
+        """
+
+        self.cur.execute(insert_thread, thread_information)
+        self.conn.commit()
+
+
+    def insert_author(self, comment: dict):
+        '''
+        Given information about a comment, inserts a new record for the author associated with the comment.
+        '''
+
+        # Since it is a new record, the aggregate score and average score are the same, and the author has only posted once.
+        insert_author = """
+            INSERT INTO author (author_name, num_comments)
+            VALUES(%(author_name)s, 1);
+        """
+
+        self.cur.execute(insert_author, comment)
+        self.conn.commit()
+
+    def insert_comment(self, comment: dict):
+        '''
+        Given information about a comment, inserts a new record for the comment.
+        '''
+
+        insert_comment = """
+            INSERT INTO comment (author_name, body, comment_id, comment_permalink, comment_score, subreddit, subreddit_id, thread_id, timestamp)
+            VALUES(%(author_name)s, %(body)s, %(comment_id)s, %(comment_permalink)s, %(comment_score)s, %(subreddit)s, %(subreddit_id)s, %(thread_id)s, %(timestamp)s);
+        """
+
+        self.cur.execute(insert_comment, comment)
+        self.conn.commit()
+
+    def insert_outfit(self, comment: dict, outfit_url: str):
+        '''
+        Given information about a comment and an outfit URL, inserts a new record for the outfit with relevant information from the comment.
+        '''
+
+        insert_outfit = """
+            INSERT INTO outfit (author_name, comment_id, outfit_url, thread_id, timestamp)
+            VALUES(%s, %s, %s, %s, %s);
+        """
+
+        self.cur.execute(insert_outfit, (comment['author_name'], comment['comment_id'], outfit_url, comment['thread_id'], comment['timestamp']))
+        self.conn.commit()
+
     def thread_exists(self, thread_id: str) -> bool:
         '''
         Given a thread ID, determines whether the thread is in the thread table.
@@ -91,62 +195,6 @@ class RedditOutfitsDatabase:
 
         self.cur.execute(update_author, comment)
         self.conn.commit()
-
-    def insert_thread(self, thread_information: dict):
-        '''
-        Given information about a thread, inserts a new record for the thread.
-        '''
-
-        # We use named parameters because psycopg2 uses a dictionary to map named parameters to values in PostgreSQL.
-        # It is also worth noting that even if a dictionary has extra keys, psycopg2 will simply ignore those and look only for the named parameters.
-        insert_thread = """
-            INSERT INTO thread (num_top_level_comments, num_total_comments, subreddit, subreddit_id, thread_id, thread_title, thread_score, thread_permalink, timestamp)
-            VALUES(%(num_top_level_comments)s, %(num_total_comments)s, %(subreddit)s, %(subreddit_id)s, %(thread_id)s, %(thread_title)s, %(thread_score)s, %(thread_permalink)s, %(timestamp)s);
-        """
-
-        self.cur.execute(insert_thread, thread_information)
-        self.conn.commit()
-
-
-    def insert_author(self, comment: dict):
-        '''
-        Given information about a comment, inserts a new record for the author associated with the comment.
-        '''
-
-        # Since it is a new record, the aggregate score and average score are the same, and the author has only posted once.
-        insert_author = """
-            INSERT INTO author (author_name, num_comments)
-            VALUES(%(author_name)s, 1);
-        """
-
-        self.cur.execute(insert_author, comment)
-        self.conn.commit()
-
-    def insert_comment(self, comment: dict):
-        '''
-        Given information about a comment, inserts a new record for the comment.
-        '''
-
-        insert_comment = """
-            INSERT INTO comment (author_name, body, comment_id, comment_permalink, comment_score, subreddit, subreddit_id, thread_id, timestamp)
-            VALUES(%(author_name)s, %(body)s, %(comment_id)s, %(comment_permalink)s, %(comment_score)s, %(subreddit)s, %(subreddit_id)s, %(thread_id)s, %(timestamp)s);
-        """
-
-        self.cur.execute(insert_comment, comment)
-        self.conn.commit()
-
-    def insert_outfit(self, comment: dict, outfit_url: str):
-        '''
-        Given information about a comment and an outfit URL, inserts a new record for the outfit with relevant information from the comment.
-        '''
-
-        insert_outfit = """
-            INSERT INTO outfit (author_name, comment_id, outfit_url, thread_id, timestamp)
-            VALUES(%s, %s, %s, %s, %s);
-        """
-
-        self.cur.execute(insert_outfit, (comment['author_name'], comment['comment_id'], outfit_url, comment['thread_id'], comment['timestamp']))
-        self.conn.commit()
     
     def select_threads_to_update(self, subreddit: str) -> list:
         '''
@@ -180,18 +228,6 @@ class RedditOutfitsDatabase:
         self.cur.execute(select_all_outfits_query)
 
         return list(self.cur)
-
-    def delete_outfit(self, outfit_url: str):
-        '''
-        Given an outfit's URL, deletes it from the database.
-        '''
-
-        delete_outfit_query = """
-            DELETE FROM outfit
-            WHERE outfit_url = %s
-        """
-
-        self.cur.execute(delete_outfit_query, (outfit_url,))
 
     def select_comment(self, comment_id: str):
         '''
@@ -239,50 +275,14 @@ class RedditOutfitsDatabase:
         self.cur.execute(update_thread_query, (num_top_level_comments, thread_score, num_total_comments, thread_id,))
         self.conn.commit()
 
-    def process_thread(self, thread_id: str):
+    def delete_outfit(self, outfit_url: str):
         '''
-        Given a thread ID, retrieves all of the top-level comments and processes them.
-        This function is called for new threads only. 
-        '''
-
-        # If the thread exists, we have already processed it, so we do nothing.
-        thread_exists = self.thread_exists(thread_id)
-
-        if thread_exists:
-            return
-
-        comments = generate_comments_from_thread(thread_id)
-        thread_information = generate_thread_information_from_thread(thread_id)
-
-        self.update_subreddit(thread_information)
-
-        self.insert_thread(thread_information)
-
-        # Add relevant information from each comment into respective tables.
-        # Start with the table that does not have any foreign keys or constraints(i.e. top-down) when adding information.
-        # The order is subreddit, thread, author, comment, outfit.
-        for comment in comments:
-            author_exists = self.author_exists(comment['author_name'])
-
-            # If the author exists, update their information. Otherwise insert a new entry.
-            if author_exists:
-                self.update_author(comment)
-            else:
-                self.insert_author(comment)
-
-            self.insert_comment(comment)
-
-            for outfit in comment['outfits']:
-                outfit_exists = self.outfit_exists(outfit)
-
-                # Only insert if the user did not submit a duplicate outfit and/or split an album into individual images.
-                if not outfit_exists:
-                    self.insert_outfit(comment, outfit)
-        
-    def close(self):
-        '''
-        Close the database connection and cursor.
+        Given an outfit's URL, deletes it from the database.
         '''
 
-        self.cur.close()
-        self.conn.close()
+        delete_outfit_query = """
+            DELETE FROM outfit
+            WHERE outfit_url = %s
+        """
+
+        self.cur.execute(delete_outfit_query, (outfit_url,))
