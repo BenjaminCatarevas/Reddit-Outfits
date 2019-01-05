@@ -51,12 +51,12 @@ def extract_image_urls_from_imgur_url(imgur_url: str, imgur_hash: str, url_type:
     response = requests.request('GET', url, headers = headers, data = payload, allow_redirects=False)
     image_json = json.loads(response.text)['data']
 
-    # Invalid album.
+    # Invalid Imgur URL.
     if 'error' in image_json:
         print(F"Error: {image_json['error']}")
         return []
 
-    # Valid album.
+    # Valid Imgur URL.
     if url_type == 'gallery' or url_type == 'album':
         # From /album/ and /gallery/ endpoint
         # The returned JSON is in an array for albums and galleries, while it's a single JSON object for a single image.
@@ -93,7 +93,7 @@ def extract_outfit_urls_from_comment(comment: str) -> list:
     outfit_urls = [re.sub('[^a-zA-Z0-9]+$','',URL) for URL in outfit_urls]
 
     # Filter out URLs that are not Imgur or Dressed.so domains (also turns the set into a list).
-    outfit_urls = [url for url in outfit_urls if is_imgur_url(url) or is_dressed_so_url(url)]
+    outfit_urls = [url for url in outfit_urls if is_imgur_url(url) or is_dressed_so_url(url) or is_reddit_url(url)]
 
     return outfit_urls
 
