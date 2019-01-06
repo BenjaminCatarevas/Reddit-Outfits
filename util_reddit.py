@@ -123,7 +123,7 @@ def create_comment_dictionary(comment) -> dict:
         'author_name': comment.author.name if comment.author is not None else '[deleted]',
         'body': comment.body,
         'comment_id': comment.id,
-        'comment_permalink': comment.permalink,
+        'comment_permalink': 'https://reddit.com' + comment.permalink,
         'comment_score': comment.score,
         'outfits': create_outfit_urls(comment.body),
         'subreddit': comment.subreddit.display_name,
@@ -156,7 +156,7 @@ def generate_thread_information_from_thread(thread_id: str) -> dict:
         'thread_id': thread_submission.id,
         'thread_title': thread_submission.title,
         'thread_score': thread_submission.score,
-        'thread_permalink': thread_submission.permalink,
+        'thread_permalink': 'https://reddit.com' + thread_submission.permalink,
         'timestamp': thread_submission.created_utc
     }
 
