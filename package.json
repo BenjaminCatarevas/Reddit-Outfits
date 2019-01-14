@@ -1,0 +1,22 @@
+{
+  "name": "reddit-outfits",
+  "version": "1.0.0",
+  "description": "redditoutfits.com",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BenjaminCatarevas/redditoutfits.com.git"
+  },
+  "author": "Benjamin Catarevas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BenjaminCatarevas/redditoutfits.com/issues"
+  },
+  "homepage": "https://github.com/BenjaminCatarevas/redditoutfits.com#readme",
+  "dependencies": {
+    "pg-promise": "^8.5.4"
+  }
+}
