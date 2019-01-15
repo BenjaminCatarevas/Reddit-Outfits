@@ -19,6 +19,7 @@
   "dependencies": {
     "express": "^4.16.4",
     "moment": "^2.23.0",
-    "pg-promise": "^8.5.4"
+    "pg-promise": "^8.5.4",
+    "serve-favicon": "^2.5.0"
   }
 }
