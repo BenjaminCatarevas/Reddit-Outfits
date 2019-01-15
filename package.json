@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/BenjaminCatarevas/redditoutfits.com#readme",
   "dependencies": {
+    "express": "^4.16.4",
     "pg-promise": "^8.5.4"
   }
 }
