@@ -1,24 +1,24 @@
 {
   "name": "reddit-outfits",
-  "version": "1.0.0",
-  "description": "redditoutfits.com",
-  "main": "app.js",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./bin/www"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BenjaminCatarevas/redditoutfits.com.git"
+    "url": "git+https://github.com/BenjaminCatarevas/reddit-outfits.git"
   },
   "author": "Benjamin Catarevas",
-  "license": "ISC",
   "bugs": {
-    "url": "https://github.com/BenjaminCatarevas/redditoutfits.com/issues"
+    "url": "https://github.com/BenjaminCatarevas/reddit-outfits/issues"
   },
-  "homepage": "https://github.com/BenjaminCatarevas/redditoutfits.com#readme",
   "dependencies": {
-    "express": "^4.16.4",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "~4.16.0",
     "moment": "^2.23.0",
+    "morgan": "~1.9.0",
     "pg-promise": "^8.5.4",
     "serve-favicon": "^2.5.0"
   }
