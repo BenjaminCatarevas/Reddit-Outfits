@@ -7,6 +7,7 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Reddit Outfits' });
 });
 
-router.get('/user/:author_name', db.getUserOutfits);
+router.get('/u/:author_name', db.getOutfitsByUser);
+router.get('/r/:subreddit', db.getThreadsBySubreddit);
 
 module.exports = router;
