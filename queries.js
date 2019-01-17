@@ -19,9 +19,8 @@ const config = {
 
 const db = pgp(config);
 
-// Query functions
-function getUserOutfits(req, res, next) {
-    console.log(req.params);
+/* Query functions */
+function getOutfitsByUser(req, res, next) {
     let author_name = req.params.author_name;
     db.any('SELECT * FROM outfit WHERE author_name = $1', author_name)
         .then(function (data) {
@@ -37,6 +36,23 @@ function getUserOutfits(req, res, next) {
         });
 }
 
+function getThreadsBySubreddit(req, res, next) {
+    let subreddit = req.params.subreddit;
+    db.any('SELECT * FROM thread WHERE subreddit = $1', subreddit)
+        .then(function (data) {
+            res.status(200)
+                .json({
+                    status: 'success',
+                    data: data,
+                    message: `Retrieved all threads from ${subreddit}`
+                });
+        })
+        .catch(function (err) {
+            return next(err);
+        });
+}
+
 module.exports = {
-    getUserOutfits: getUserOutfits
+    getOutfitsByUser: getOutfitsByUser,
+    getThreadsBySubreddit: getThreadsBySubreddit
 }
