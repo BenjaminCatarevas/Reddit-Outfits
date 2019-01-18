@@ -126,7 +126,7 @@ def create_comment_dictionary(comment) -> dict:
         'comment_permalink': 'https://reddit.com' + comment.permalink,
         'comment_score': comment.score,
         'outfits': create_outfit_urls(comment.body),
-        'subreddit': comment.subreddit.display_name,
+        'subreddit': comment.subreddit.display_name.lower(),
         'subreddit_id': comment.subreddit_id,
         'thread_id': comment.submission.id,
         'timestamp': comment.created_utc

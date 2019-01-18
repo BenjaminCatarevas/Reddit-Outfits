@@ -107,11 +107,11 @@ class RedditOutfitsDatabase:
         '''
 
         insert_outfit = """
-            INSERT INTO outfit (author_name, comment_id, outfit_url, thread_id, timestamp)
-            VALUES(%s, %s, %s, %s, %s);
+            INSERT INTO outfit (author_name, comment_id, outfit_url, subreddit, thread_id, timestamp)
+            VALUES(%s, %s, %s, %s, %s, %s);
         """
 
-        self.cur.execute(insert_outfit, (comment['author_name'], comment['comment_id'], outfit_url, comment['thread_id'], comment['timestamp']))
+        self.cur.execute(insert_outfit, (comment['author_name'], comment['comment_id'], outfit_url, comment['subreddit'], comment['thread_id'], comment['timestamp']))
         self.conn.commit()
 
     def thread_exists(self, thread_id: str) -> bool:
