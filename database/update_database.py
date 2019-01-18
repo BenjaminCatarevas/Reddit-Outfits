@@ -39,11 +39,15 @@ def update_threads(threads_to_update: list, database):
         new_thread_comments = new_thread.comments.replace_more(limit=None)
 
         for new_comment in new_thread_comments:
+            # The ID is the same, so we can just query the database for the comment ID and treat the record as the old comment.
             old_comment = database.select_comment(new_comment.id)
 
             # Update comment information.
             if change_in_comment(old_comment, new_comment):
                 database.update_comment(old_comment['comment_id'], new_comment.body, new_comment.score)
+
+            # Delete all old outfits in case the user replaces their outfits.
+            database.delete_outfits_by_comment_id(old_comment['comment_id'])
 
             # Update outfits for a given comment if new ones are added later on.
             # This can happen if for instance a user posts an outfit they've already posted once before, then realize it and update their comment.
