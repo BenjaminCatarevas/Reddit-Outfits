@@ -26,13 +26,16 @@ function getOutfitsByUser(req, res, next) {
         .then(function (data) {
             res.status(200)
                 .json({
-                    status: 'success',
+                    success: true,
                     data: data,
                     message: `Retrieved outfits of user ${author_name}`
                 });
         })
         .catch(function (err) {
-            return next(err);
+            res.json({
+                success: false,
+                error: err.message || err
+            });
         });
 }
 
@@ -42,14 +45,22 @@ function getThreadsBySubreddit(req, res, next) {
         .then(function (data) {
             res.status(200)
                 .json({
-                    status: 'success',
+                    success: true,
                     data: data,
                     message: `Retrieved all threads from ${subreddit}`
                 });
         })
         .catch(function (err) {
-            return next(err);
+            res.json({
+                success: false,
+                error: err.message || err
+            });
         });
+}
+
+function getOutfitsByThreadId(req, res, next) {
+    // Use the thread ID member variable from the thread component on the front-end (with React)
+
 }
 
 module.exports = {
