@@ -9,5 +9,7 @@ router.get('/', function(req, res, next) {
 
 router.get('/u/:author_name', db.getOutfitsByUser);
 router.get('/r/:subreddit', db.getThreadsBySubreddit);
+router.get('/r/:subreddit/threadId', db.getOutfitsByThreadId);
+//router.get('/r/:subreddit/datePosted', db.getOutfitsByDatePosted);
 
 module.exports = router;
