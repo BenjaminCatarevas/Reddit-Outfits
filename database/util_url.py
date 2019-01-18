@@ -84,8 +84,10 @@ def extract_outfit_urls_from_comment(comment: str) -> list:
     
     # Links that don't start with http or https are considered invalid.
     for token in comment.split():
-        if token.lower().startswith('http') or token.lower().startswith('https'):
-            outfit_urls.add(token)
+        if not token.lower().startswith('http://') or not token.lower().startswith('https://'):
+            # We append http:// because dressed.so URLs only use HTTP, not HTTPS
+            # All other URLs that we consider valid can change from HTTP to HTTPS.
+            outfit_urls.add('http://' + token)
 
     # Santitize URLs for any superfluous punctuation. Some users have a period at the end of their image URLs, so we sanitize that.
     # Adapted from: https://stackoverflow.com/a/52118554
@@ -134,12 +136,12 @@ def is_url_down(url: str) -> bool:
     Function adapted from: https://stackoverflow.com/a/15743618
     '''
 
-    if not url[:4].lower().startswith('http') or not url[:5].lower().startswith('https'):
-        # The URL must start with http(s) to make a successful HEAD request.
-        # We append http because dressed.so does not use HTTPS, and HTTP works for imgur and i.redd.it URLs.
+    if not url.lower().startswith('http://') or not url.lower().startswith('https://'):
+        # The URL must start with http(s):// to make a successful HEAD request.
+        # We append http:// because dressed.so does not use HTTPS, and HTTP works for imgur and i.redd.it URLs.
         # NOTE: we use .startswith() because there is the chance, though incredibly low, that the string 'http' could appear in the URL in other places.
         # Using .startswith() ensures that we only check the necessary locations.
-        url = 'http' + url
+        url = 'http://' + url
 
     # Approach adapted from: https://stackoverflow.com/a/15743618
     r = requests.head(url)
