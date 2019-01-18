@@ -8,10 +8,10 @@ from util_url import extract_outfit_urls_from_comment
 This script is ran once every hour on all subreddits.
 '''
 
-def change_in_thread(old_thread: set, new_thread: dict):
+def change_in_thread(old_thread: set, new_thread: dict) -> bool:
     return old_thread['num_top_level_comments'] != len(new_thread.comments) or old_thread['thread_score'] != new_thread.score or old_thread['num_total_comments'] != new_thread.num_comments
 
-def change_in_comment(old_comment: set, new_comment: dict):
+def change_in_comment(old_comment: set, new_comment: dict) -> bool:
     return old_comment['body'] != new_comment.body or old_comment['comment_score'] != new_comment.score
 
 def update_threads(threads_to_update: list, database):
