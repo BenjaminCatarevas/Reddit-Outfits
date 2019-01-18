@@ -60,10 +60,27 @@ function getThreadsBySubreddit(req, res, next) {
 
 function getOutfitsByThreadId(req, res, next) {
     // Use the thread ID member variable from the thread component on the front-end (with React)
-
+    let subreddit = req.params.subreddit;
+    let threadId = req.params.threadId;
+    db.any('SELECT * FROM outfit WHERE subreddit = $1 AND thread_id = $2')
+        .then(function (data) {
+            res.status(200)
+                .json({
+                    success: true,
+                    data: data,
+                    message: `Retrieved all outfits from thread ${threadId} of subreddit ${subreddit}`
+                });
+        })
+        .catch(function (err) {
+            res.json({
+                success: false,
+                error: err.messgae || err
+            });
+        });
 }
 
 module.exports = {
     getOutfitsByUser: getOutfitsByUser,
-    getThreadsBySubreddit: getThreadsBySubreddit
+    getThreadsBySubreddit: getThreadsBySubreddit,
+    getOutfitsByThreadId: getOutfitsByThreadId
 }
