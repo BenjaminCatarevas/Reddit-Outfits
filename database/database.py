@@ -275,14 +275,26 @@ class RedditOutfitsDatabase:
         self.cur.execute(update_thread_query, (num_top_level_comments, thread_score, num_total_comments, thread_id,))
         self.conn.commit()
 
-    def delete_outfit(self, outfit_url: str):
+    def delete_outfit_by_url(self, outfit_url: str):
         '''
         Given an outfit's URL, deletes it from the database.
         '''
 
-        delete_outfit_query = """
+        delete_outfit_by_url_query = """
             DELETE FROM outfit
             WHERE outfit_url = %s
         """
 
-        self.cur.execute(delete_outfit_query, (outfit_url,))
+        self.cur.execute(delete_outfit_by_url_query, (outfit_url,))
+
+    def delete_outfits_by_comment_id(self, comment_id: str):
+        '''
+        Given a comment ID, deletes any outfits associated with it.
+        '''
+
+        delete_outfit_by_comment_id_query = """
+            DELETE FROM outfit
+            WHERE comment_id = %s
+        """
+
+        self.cur.execute(delete_outfit_by_comment_id_query, (comment_id,))
