@@ -47,6 +47,7 @@ def update_threads(threads_to_update: list, database):
 
             # Update outfits for a given comment if new ones are added later on.
             # This can happen if for instance a user posts an outfit they've already posted once before, then realize it and update their comment.
+            # Note that we check if an outfit is already posted in the database with the outfit_exists function. If so, we ignore it in the insert_outfit function.
             new_outfits = extract_outfit_urls_from_comment(new_comment.body)
 
             for new_outfit in new_outfits:
