@@ -134,37 +134,17 @@ def is_url_down(url: str) -> bool:
     Function adapted from: https://stackoverflow.com/a/15743618
     '''
 
-    if is_imgur_url(url):
-        # We need to ping the Imgur API because an Imgur URL that isn't up anymore simply goes to Imgur's 404 page.
-        # Imgur's 404 page is considered "up" and returns a status code of 200, whch is why we need to ping the API and look for an error message in the JSON from the response.
+    if not url[:4].lower().startswith('http') or not url[:5].lower().startswith('https'):
+        # The URL must start with http(s) to make a successful HEAD request.
+        # We append http because dressed.so does not use HTTPS, and HTTP works for imgur and i.redd.it URLs.
+        # NOTE: we use .startswith() because there is the chance, though incredibly low, that the string 'http' could appear in the URL in other places.
+        # Using .startswith() ensures that we only check the necessary locations.
+        url = 'http' + url
 
-        # Determine what type of Imgur URL it is, and the hash of said Imgur URL.
-        imgur_url_info = generate_imgur_url_info(url)
-        imgur_url_type = imgur_url_info['url_type']
-        imgur_hash = imgur_url_info['imgur_hash']
+    # Approach adapted from: https://stackoverflow.com/a/15743618
+    r = requests.head(url)
 
-        # Prepare the URL to ping the Imgur API with.
-        url = F'https://api.imgur.com/3/{imgur_url_type}/{imgur_hash}/images'
-
-        payload = {}
-        headers = {
-            'Authorization': F'Client-ID {config.imgur_client_id}'
-        }
-        response = requests.request('GET', url, headers = headers, data = payload, allow_redirects=False)
-        image_json = json.loads(response.text)['data']
-
-        return 'error' in image_json
-
-    else:
-        # i.redd.it or cdn.dressed.so
-
-        if not url.lower().startswith('http'):
-            # The URL must start with http(s) to make a successful HEAD request.
-            # We append http because dressed.so does not use HTTPS, and HTTP works for i.redd.it URLs.
-            url = 'http' + url
-
-        # Approach adapted from: https://stackoverflow.com/a/15743618
-        r = requests.head(url)
-
-        # cdn.dressed.so returns 403 if there is no image found at the URL.
-        return r.status_code == 404 or r.status_code == 403
+    # cdn.dressed.so returns 403 if there is no image found at the URL.
+    # i.imgur.com returns 302 if image is not found.
+    # imgur.com and i.redd.it returns 404 if image is not found.
+    return r.status_code in (403, 302, 404)
