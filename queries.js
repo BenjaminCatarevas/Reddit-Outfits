@@ -22,8 +22,8 @@ const db = pgp(config);
 
 /* Query functions */
 function getOutfitsByUser(req, res, next) {
-    let author_name = req.params.author_name;
-    db.any('SELECT * FROM outfit WHERE author_name = $1', author_name)
+    let authorName = req.params.author_name;
+    db.any('SELECT * FROM outfit WHERE author_name = $1', authorName)
         .then(data => {
             // Create a JSON object to organize outfits by their comment ID.
             // We do this because outfits are stored as individual URLs, and are not inherently grouped by a comment.
@@ -43,7 +43,7 @@ function getOutfitsByUser(req, res, next) {
                 .json({
                     success: true,
                     data: outfitsByCommentId,
-                    message: `Retrieved outfits of user ${author_name}`
+                    message: `Retrieved outfits of user ${authorName}`
                 });
         })
         .catch(err => {
