@@ -5,7 +5,8 @@ from database import RedditOutfitsDatabase
 from util_url import extract_outfit_urls_from_comment
 
 '''
-This script is ran once every hour on all subreddits.
+This script is ran once every hour on all subreddits to update threads as new comments are made.
+It only updates threads that are two weeks or less old.
 '''
 
 def change_in_thread(old_thread: set, new_thread: dict) -> bool:
