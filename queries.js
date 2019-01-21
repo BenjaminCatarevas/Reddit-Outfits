@@ -23,7 +23,7 @@ const db = pgp(config);
 function getOutfitsByUser(req, res, next) {
     let authorName = req.params.author_name;
     db.any('SELECT * FROM outfit WHERE author_name = $1', authorName)
-        .then(data => {
+        .then((data) => {
             // Create a JSON object to organize outfits by their comment ID.
             // We do this because outfits are stored as individual URLs, and are not inherently grouped by a comment.
             let outfitsByCommentId = {};
@@ -45,7 +45,7 @@ function getOutfitsByUser(req, res, next) {
                     message: `Retrieved all outfits of user ${authorName}`
                 });
         })
-        .catch(err => {
+        .catch((err) => {
             res.json({
                 success: false,
                 error: err.message || err
@@ -56,7 +56,7 @@ function getOutfitsByUser(req, res, next) {
 function getThreadsBySubreddit(req, res, next) {
     let subreddit = req.params.subreddit;
     db.any('SELECT * FROM thread WHERE subreddit = $1', subreddit)
-        .then(data => {
+        .then((data) => {
             res.status(200)
                 .json({
                     success: true,
@@ -64,7 +64,7 @@ function getThreadsBySubreddit(req, res, next) {
                     message: `Retrieved all threads from ${subreddit}`
                 });
         })
-        .catch(err => {
+        .catch((err) => {
             res.json({
                 success: false,
                 error: err.message || err
@@ -77,7 +77,7 @@ function getOutfitsOfThreadByThreadId(req, res, next) {
     let subreddit = req.params.subreddit;
     let threadId = req.params.threadId;
     db.any('SELECT * FROM outfit WHERE subreddit = $1 AND thread_id = $2', [subreddit, threadId])
-        .then(data => {
+        .then((data) => {
             res.status(200)
                 .json({
                     success: true,
@@ -85,7 +85,7 @@ function getOutfitsOfThreadByThreadId(req, res, next) {
                     message: `Retrieved all outfits from thread ${threadId} of subreddit ${subreddit}`
                 });
         })
-        .catch(err => {
+        .catch((err) => {
             res.json({
                 success: false,
                 error: err.messgae || err
@@ -104,7 +104,7 @@ function filterUserOutfitsByDate(req, res, next) {
     console.log(fromDateTimestamp);
     console.log(toDateTimestamp);
     db.any('SELECT * FROM outfit WHERE author_name = $1 AND timestamp >= $2 AND timestamp <= $3', [authorName, fromDateTimestamp, toDateTimestamp])
-        .then(data => {
+        .then((data) => {
             res.status(200)
                     .json({
                         success: true,
@@ -112,7 +112,7 @@ function filterUserOutfitsByDate(req, res, next) {
                         message: `Retrieved outfits from ${authorName} within the date range from ${fromDate} to ${toDate}`
                     });
         })
-        .catch(err => {
+        .catch((err) => {
             res.json({
                 success: false,
                 error: err.message || err
