@@ -1,6 +1,5 @@
 const promise = require('bluebird');
 const configInfo = require('./config');
-const moment = require('moment');
 
 // pg-promise initialization options;
 const initOptions = {
@@ -43,7 +42,7 @@ function getOutfitsByUser(req, res, next) {
                 .json({
                     success: true,
                     data: outfitsByCommentId,
-                    message: `Retrieved outfits of user ${authorName}`
+                    message: `Retrieved all outfits of user ${authorName}`
                 });
         })
         .catch(err => {
@@ -94,8 +93,36 @@ function getOutfitsOfThreadByThreadId(req, res, next) {
         });
 }
 
+function filterUserOutfitsByDate(req, res, next) {
+    let authorName = req.params.author_name;
+    // Because the Calendar HTML element sends dates as YYYY/MM/DD, we need to encode and decode as needed.
+    // The / character messes up routing.
+    let fromDate = decodeURIComponent(req.params.from);
+    let toDate = decodeURIComponent(req.params.to);
+    let fromDateTimestamp = new Date(fromDate).getTime() / 1000;
+    let toDateTimestamp = new Date(toDate).getTime() / 1000;
+    console.log(fromDateTimestamp);
+    console.log(toDateTimestamp);
+    db.any('SELECT * FROM outfit WHERE author_name = $1 AND timestamp >= $2 AND timestamp <= $3', [authorName, fromDateTimestamp, toDateTimestamp])
+        .then(data => {
+            res.status(200)
+                    .json({
+                        success: true,
+                        data: data,
+                        message: `Retrieved outfits from ${authorName} within the date range from ${fromDate} to ${toDate}`
+                    });
+        })
+        .catch(err => {
+            res.json({
+                success: false,
+                error: err.message || err
+            });
+        });
+}
+
 module.exports = {
     getOutfitsByUser: getOutfitsByUser,
     getThreadsBySubreddit: getThreadsBySubreddit,
     getOutfitsOfThreadByThreadId: getOutfitsOfThreadByThreadId,
+    filterUserOutfitsByDate: filterUserOutfitsByDate,
 }
