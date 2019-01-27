@@ -1,10 +1,23 @@
 {
   "name": "reddit-outfits",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.1.0",
+  "dependencies": {
+    "bluebird": "^3.5.3",
+    "cookie-parser": "^1.4.3",
+    "debug": "^4.1.1",
+    "express": "^4.16.4",
+    "morgan": "^1.9.1",
+    "pg-promise": "^8.5.5",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "2.1.3"
+  },
   "scripts": {
-    "start": "node ./bin/www",
-    "devstart": "nodemon ./bin/www"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
   "repository": {
     "type": "git",
@@ -14,16 +27,13 @@
   "bugs": {
     "url": "https://github.com/BenjaminCatarevas/reddit-outfits/issues"
   },
-  "dependencies": {
-    "bluebird": "^3.5.3",
-    "cookie-parser": "~1.4.3",
-    "debug": "~2.6.9",
-    "express": "~4.16.0",
-    "morgan": "~1.9.0",
-    "pg-promise": "^8.5.4",
-    "serve-favicon": "^2.5.0"
+  "eslintConfig": {
+    "extends": "react-app"
   },
-  "devDependencies": {
-    "nodemon": "^1.18.9"
-  }
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
