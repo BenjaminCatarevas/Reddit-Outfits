@@ -15,7 +15,7 @@ export class CommentContainer extends Component {
 }
 
 CommentContainer.proptypes = {
-  comments: PropTypes.object.isRequired,
+  comments: PropTypes.array.isRequired,
 }
 
 export default CommentContainer
