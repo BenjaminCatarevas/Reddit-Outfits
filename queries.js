@@ -23,18 +23,24 @@ const db = pgp(config);
 async function getOutfitsByUser(req, res, next) {
     let authorName = req.params.author_name;
     try {
-        const data = await db.any('SELECT * FROM outfit WHERE author_name = $1', [authorName]);
+        const outfitData = await db.any('SELECT * FROM outfit WHERE author_name = $1', [authorName]);
         // Create a JSON object to organize outfits by their comment ID.
         // We do this because outfits are stored as individual URLs, and are not inherently grouped by a comment.
         let outfitsByCommentId = {};
-        for (let comment of data) {
-            let commentId = comment.comment_id;
-            if (commentId in outfitsByCommentId) {
-                outfitsByCommentId[commentId].outfits.push(comment.outfit_url);
+        for (let currentOutfitRecord of outfitData) {
+            let currentCommentId = currentOutfitRecord.comment_id;
+            if (currentCommentId in outfitsByCommentId) {
+                outfitsByCommentId[currentCommentId].outfits.push(currentOutfitRecord.outfit_url);
             } else {
-                outfitsByCommentId[commentId] = {
-                    outfits: [comment.outfit_url],
-                    commentInfo: comment,
+                // For new entries, add the comment data to the entry so we can display it.
+                const commentData = await db.any('SELECT * FROM comment WHERE comment_id = $1', [currentCommentId]);
+                outfitsByCommentId[currentCommentId] = {
+                    authorName: commentData[0].author_name,
+                    outfits: [currentOutfitRecord.outfit_url],
+                    commentBody: commentData[0].body,
+                    commentPermalink: commentData[0].comment_permalink,
+                    commentScore: commentData[0].comment_score,
+                    commentTimestamp: commentData[0].timestamp,
                 };
             };
         };
