@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import UserComment from './UserComment';
 import PropTypes from 'prop-types';
 
 export class CommentContainer extends Component {
@@ -6,7 +7,7 @@ export class CommentContainer extends Component {
     return (
       <div>
         {this.props.comments.map((comment) => {
-          return <Comment key={comment.commentId} comment={comment}/>
+          return <UserComment key={comment.commentId} comment={comment}/>
         })}
       </div>
     )
