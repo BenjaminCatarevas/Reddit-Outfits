@@ -5,7 +5,7 @@ import axios from 'axios';
 class App extends Component {
 
   test() {
-    axios.get('http://localhost:3000/u/test')
+    axios.get('http://localhost:3001/u/test')
       .then(res => console.log(res.data))
       .catch('pri nt')
   }
