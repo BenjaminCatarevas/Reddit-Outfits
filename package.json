@@ -2,6 +2,7 @@
   "name": "reddit-outfits",
   "version": "0.1.0",
   "dependencies": {
+    "axios": "^0.18.0",
     "bluebird": "^3.5.3",
     "cookie-parser": "^1.4.3",
     "debug": "^4.1.1",

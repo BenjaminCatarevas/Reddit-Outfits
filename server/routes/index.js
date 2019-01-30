@@ -4,7 +4,8 @@ let db = require('../queries');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Reddit Outfits' });
+  //res.render('index', { title: 'Reddit Outfits' });
+  res.sendFile('../../src/App.js');
 });
 
 router.get('/u/:author_name', db.getOutfitsByUser);
