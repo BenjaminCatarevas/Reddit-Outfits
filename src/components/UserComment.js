@@ -5,14 +5,11 @@ export class UserComment extends Component {
   render() {
     return (
       <div>
-        {console.log(this.props.comment)}
+        <h1>Specific</h1>
+        {console.log(this.props.userInformation)}
       </div>
     )
   }
-}
-
-UserComment.propTypes = {
-  comment: PropTypes.object.isRequired,
 }
 
 export default UserComment
