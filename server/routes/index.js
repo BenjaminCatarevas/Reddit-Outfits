@@ -8,9 +8,10 @@ router.get('/', function(req, res, next) {
   res.sendFile('../../src/App.js');
 });
 
-router.get('/u/:author_name', db.getOutfitsByUser);
+router.get('/u/:author_name', db.getCommentsByAuthor);
 router.get('/r/:subreddit', db.getThreadsBySubreddit);
 router.get('/r/:subreddit/:threadId', db.getOutfitsOfThreadByThreadId);
-router.get('/u/:author_name/:from/:to', db.filterUserOutfitsByDate);
+router.get('/users', db.getAllAuthors);
+router.get('/threads', db.getAllThreads);
 
 module.exports = router;
