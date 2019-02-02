@@ -14,7 +14,7 @@ export class SearchUser extends Component {
   onSubmit = (e) => {
       // So it doesn't submit right away.
       e.preventDefault();
-      this.props.searchUser(this.state.user);
+      this.props.getSpecificUserComments(this.state.user);
       this.setState({ user: '' });
   }
   
@@ -38,12 +38,12 @@ export class SearchUser extends Component {
                     />
                 </form>
         </div>
-    )
-  }
+        )
+    }
 }
 
 SearchUser.propTypes = {
-    searchUser: PropTypes.func.isRequired,
+    getSpecificUserComments: PropTypes.func.isRequired,
   }
 
 export default SearchUser
