@@ -20,7 +20,7 @@ const config = {
 const db = pgp(config);
 
 /* Query functions */
-async function getCommentsByAuthor(req, res, next) {
+async function getCommentsByUser(req, res, next) {
     let authorName = req.params.author_name;
     try {
         const outfitData = await db.any('SELECT * FROM outfit WHERE author_name = $1', [authorName]);
@@ -47,7 +47,7 @@ async function getCommentsByAuthor(req, res, next) {
         return await res.status(200)
             .json({
                 success: true,
-                data: outfitsByCommentId,
+                specificUserComments: outfitsByCommentId,
                 message: `Retrieved all outfits of user ${authorName}`
             });
     } catch (err) {
@@ -65,7 +65,7 @@ async function getThreadsBySubreddit(req, res, next) {
         return await res.status(200)
             .json({
                 success: true,
-                data: data,
+                subredditThreads: data,
                 message: `Retrieved all threads from ${subreddit}`
         });
     } catch(err) {
@@ -85,7 +85,7 @@ async function getOutfitsOfThreadByThreadId(req, res, next) {
         return await res.status(200)
             .json({
                 success: true,
-                data: data,
+                threadOutfits: data,
                 message: `Retrieved all outfits from thread ${threadId} of subreddit ${subreddit}`
             });
     } catch(err) {
@@ -96,13 +96,13 @@ async function getOutfitsOfThreadByThreadId(req, res, next) {
     }
 }
 
-async function getAllAuthors(req, res, next) {
+async function getAllUsers(req, res, next) {
     try {
         const data = await db.any('SELECT * FROM author');
         return await res.status(200)
             .json({
                 success: true,
-                data: data,
+                allUsers: data,
                 message: 'Retrieved all users.'
             })
     } catch(err) {
@@ -119,7 +119,7 @@ async function getAllThreads(req, res, next) {
         return await res.status(200)
             .json({
                 success: true,
-                data: data,
+                allThreads: data,
                 message: 'Retrieved all threads.'
             })
     } catch {
@@ -131,9 +131,9 @@ async function getAllThreads(req, res, next) {
 }
 
 module.exports = {
-    getCommentsByAuthor: getCommentsByAuthor,
+    getCommentsByUser: getCommentsByUser,
     getThreadsBySubreddit: getThreadsBySubreddit,
     getOutfitsOfThreadByThreadId: getOutfitsOfThreadByThreadId,
-    getAllAuthors: getAllAuthors,
+    getAllUsers: getAllUsers,
     getAllThreads: getAllThreads,
 }
