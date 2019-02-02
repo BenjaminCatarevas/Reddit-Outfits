@@ -20,7 +20,7 @@ const config = {
 const db = pgp(config);
 
 /* Query functions */
-async function getOutfitsByUser(req, res, next) {
+async function getCommentsByAuthor(req, res, next) {
     let authorName = req.params.author_name;
     try {
         const outfitData = await db.any('SELECT * FROM outfit WHERE author_name = $1', [authorName]);
@@ -96,33 +96,44 @@ async function getOutfitsOfThreadByThreadId(req, res, next) {
     }
 }
 
-async function filterUserOutfitsByDate(req, res, next) {
-    let authorName = req.params.author_name;
-    // Because the Calendar HTML element sends dates as YYYY/MM/DD, we need to encode and decode as needed.
-    // The / character messes up routing.
-    let fromDate = decodeURIComponent(req.params.from);
-    let toDate = decodeURIComponent(req.params.to);
-    let fromDateTimestamp = new Date(fromDate).getTime() / 1000;
-    let toDateTimestamp = new Date(toDate).getTime() / 1000;
+async function getAllAuthors(req, res, next) {
     try {
-        const data = await db.any('SELECT * FROM outfit WHERE author_name = $1 AND timestamp >= $2 AND timestamp <= $3', [authorName, fromDateTimestamp, toDateTimestamp]);
-            return await res.status(200)
-                .json({
-                    success: true,
-                    data: data,
-                    message: `Retrieved outfits from ${authorName} within the date range from ${fromDate} to ${toDate}`
-                });
+        const data = await db.any('SELECT * FROM author');
+        return await res.status(200)
+            .json({
+                success: true,
+                data: data,
+                message: 'Retrieved all users.'
+            })
     } catch(err) {
         return await res.json({
-                success: false,
-                error: err.message || err
+            success: false,
+            error: err.message || err
+        });
+    }
+}
+
+async function getAllThreads(req, res, next) {
+    try {
+        const data = await db.any('SELECT * FROM thread');
+        return await res.status(200)
+            .json({
+                success: true,
+                data: data,
+                message: 'Retrieved all threads.'
+            })
+    } catch {
+        return await res.json({
+            success: false,
+            error: err.message || err
         });
     }
 }
 
 module.exports = {
-    getOutfitsByUser: getOutfitsByUser,
+    getCommentsByAuthor: getCommentsByAuthor,
     getThreadsBySubreddit: getThreadsBySubreddit,
     getOutfitsOfThreadByThreadId: getOutfitsOfThreadByThreadId,
-    filterUserOutfitsByDate: filterUserOutfitsByDate,
+    getAllAuthors: getAllAuthors,
+    getAllThreads: getAllThreads,
 }
