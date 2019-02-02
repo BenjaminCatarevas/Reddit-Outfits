@@ -16,3 +16,9 @@
 .App-link {
   color: #61dafb;
 }
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
