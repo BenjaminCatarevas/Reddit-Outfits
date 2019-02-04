@@ -18,7 +18,7 @@ class App extends Component {
 
     getSpecificUserComments = (user) => {
         axios.get(`http://localhost:3001/u/${user}`)
-        .then(res => {this.setState({ specificUserComments: res.data.specificUserComments }); console.log(this.state)})
+        .then(res => {this.setState({ specificUserComments: res.data.specificUserComments })})
         .catch((err) => console.log('Error: ', err.message))
     }
 
