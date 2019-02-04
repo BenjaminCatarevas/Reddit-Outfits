@@ -8,10 +8,12 @@ export class UserComments extends Component {
     }
   
     render() {
-        console.log(typeof this.props.specificUserComments);
-        // If the specific user comments state is null, return an empty div, else return UserComment components for each comment.
-        return this.props.specificUserComments ? this.props.specificUserComments.map((comment) => {
-            return <UserComment key={comment.author_name} userInformation={comment} />
+        // Shortener to avoid using this.props.specificUserComments everywhere.
+        let specificUserComments = this.props.specificUserComments;
+        // Object mapping approach adapted from: https://stackoverflow.com/a/39965962
+        // If the specificUserComments is null, just return an empty div. Otherwise, create a UserComment component for each comment.
+        return specificUserComments ? Object.keys(specificUserComments).map((key) => {
+            return <UserComment key={specificUserComments[key].authorName} userInformation={specificUserComments[key]} />
         }) : <div></div>
     }
 }
