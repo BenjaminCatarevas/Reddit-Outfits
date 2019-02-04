@@ -13,7 +13,7 @@ export class UserComments extends Component {
         // Object mapping approach adapted from: https://stackoverflow.com/a/39965962
         // If the specificUserComments is null, just return an empty div. Otherwise, create a UserComment component for each comment.
         return specificUserComments ? Object.keys(specificUserComments).map((key) => {
-            return <UserComment key={specificUserComments[key].authorName} userInformation={specificUserComments[key]} />
+            return <UserComment key={key} userInformation={specificUserComments[key]} />
         }) : <div></div>
     }
 }
