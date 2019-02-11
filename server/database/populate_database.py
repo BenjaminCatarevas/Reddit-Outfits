@@ -17,9 +17,9 @@ def process_threads(thread_ids: list, database):
 database = RedditOutfitsDatabase('reddit_outfits', 'redditoutfits', config.redditoutfits_password)
 
 # Retrieve most recent 25 thread IDs for each subreddit.
-malefashionadvice_thread_ids = generate_thread_ids('author:AutoModerator WAYWT', 'AutoModerator', 'malefashionadvice')
-femalefashionadvice_thread_ids = generate_thread_ids('what are you wearing today flair:weekly', 'AutoModerator', 'femalefashionadvice')
-streetwear_thread_ids = generate_thread_ids('WDYWT author:AutoModerator', 'AutoModerator', 'streetwear')
+malefashionadvice_thread_ids = generate_thread_ids('WAYWT', 'AutoModerator', 'malefashionadvice')
+femalefashionadvice_thread_ids = generate_thread_ids('WAYWT', 'AutoModerator', 'femalefashionadvice')
+streetwear_thread_ids = generate_thread_ids('WDYWT', 'AutoModerator', 'streetwear')
 
 process_threads(malefashionadvice_thread_ids, database)
 process_threads(femalefashionadvice_thread_ids, database)
