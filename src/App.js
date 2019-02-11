@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { withRouter, BrowserRouter as Router, Route } from 'react-router-dom';
 import './App.css';
 import axios from 'axios';
 import SearchUser from './components/SearchUser'
@@ -39,9 +39,9 @@ class App extends Component {
         <Router>
             <div className="App">
                 <div className="container">
-                    <NavigationBar/>
-                    <SearchUser getSpecificUserComments={this.getSpecificUserComments} />
-                    <Route exact path="/" />
+                    <NavigationBar/>                   
+                    <SearchUser acceptablePaths={['/threads', '/about']}getSpecificUserComments={this.getSpecificUserComments} specificUserComments={this.state.specificUserComments} {...this.props} />
+                    <Route exact path="/" {...this.props} />
                     <Route path="/u/:username" render = {(props) => <div><UserComments getSpecificUserComments={this.getSpecificUserComments} specificUserComments={this.state.specificUserComments} {...props}/> </div>} /> 
                     <Route path="/threads" render = {(props) => <div><Threads getAllThreads={this.getAllThreads} allThreads={this.state.allThreads} {...props}/> </div>} />
                     <Route path="/users" render = {(props) => <div><Users getAllUsers={this.getAllUsers} allUsers={this.state.allUsers} {...props}/> </div>} />
@@ -53,4 +53,4 @@ class App extends Component {
     }
 }
 
-export default App;
+export default withRouter(App);
