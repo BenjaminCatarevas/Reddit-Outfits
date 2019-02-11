@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom';
 import User from './User';
 
 export class Users extends Component {
@@ -15,4 +16,4 @@ export class Users extends Component {
     }
 }
 
-export default Users
+export default withRouter(Users)

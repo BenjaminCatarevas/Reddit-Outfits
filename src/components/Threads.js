@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom';
 import Thread from './Thread';
 
 export class Threads extends Component {
@@ -15,4 +16,4 @@ export class Threads extends Component {
     }
 }
 
-export default Threads
+export default withRouter(Threads)

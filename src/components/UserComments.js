@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom';
 import UserComment from './UserComment';
 
 export class UserComments extends Component {
@@ -18,4 +19,4 @@ export class UserComments extends Component {
     }
 }
 
-export default UserComments
+export default withRouter(UserComments)
