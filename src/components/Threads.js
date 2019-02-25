@@ -5,7 +5,11 @@ import Thread from './Thread';
 export class Threads extends Component {
 
     componentDidMount() {
-        this.props.getAllThreads();
+        if (this.props.match.params.subreddit) {
+            this.props.getSpecificThreads(this.props.match.params.subreddit);
+        } else {
+            this.props.getAllThreads();
+        }
     }
 
     render() {
