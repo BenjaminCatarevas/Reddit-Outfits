@@ -30,11 +30,16 @@ class RedditOutfitsDatabase:
         if thread_exists:
             return
 
+        # Retrieve the comments from the thread.
         comments = generate_comments_from_thread(thread_id)
+
+        # Retrieve the thread dictionary from the thread to process its information.
         thread_information = generate_thread_information_from_thread(thread_id)
 
+        # Since we have found a new thread, we update the subreddit's information to reflect the new thread.
         self.update_subreddit(thread_information)
 
+        # Since we already checked that this thread is not in the database, add it.
         self.insert_thread(thread_information)
 
         # Add relevant information from each comment into respective tables.

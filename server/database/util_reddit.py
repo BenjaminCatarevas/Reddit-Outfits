@@ -140,6 +140,8 @@ def generate_thread_information_from_thread(thread_id: str) -> dict:
     Returns a dictionary.
     '''
 
+    # NOTE: We use the reddit API as opposed to the pushshift API because it's easier to track scoring.
+    # Pushshift updates its records only so often, whereas pinging the reddit API gets us new information right away.
     reddit = praw.Reddit(
         user_agent = 'Thread Information Extraction',
         client_id = config.reddit_client_id,
