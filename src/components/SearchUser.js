@@ -21,10 +21,7 @@ export class SearchUser extends Component {
   }
   
   render() {
-      // If the path is either home or users, display the search bar. Else, don't display.
-      // We use unacceptable paths because the path /u/${username} is unmatchable.
-      // If the current path is not an unacceptable path, we display the search bar.
-      return !this.props.unacceptablePaths.includes(this.props.location.pathname) ? 
+      return (
         <div className="container">
           <form onSubmit={this.onSubmit} style={{display: 'flex'}}>
             <input
@@ -42,7 +39,8 @@ export class SearchUser extends Component {
             style={{flex:'1'}}
             />
           </form>
-        </div> : <div></div>
+        </div>
+      )
     }
 }
 
