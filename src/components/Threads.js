@@ -5,6 +5,7 @@ import Thread from './Thread';
 export class Threads extends Component {
 
     componentDidMount() {
+        // If the user requested a specific subreddit, use that.
         if (this.props.match.params.subreddit) {
             this.props.getSpecificThreads(this.props.match.params.subreddit);
         } else {
