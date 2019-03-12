@@ -49,7 +49,7 @@ class App extends Component {
                     <NavigationBar/>                   
                     <SearchUser getSpecificUserComments={this.getSpecificUserComments} specificUserComments={this.state.specificUserComments} {...this.props} />
                     <Route exact path="/" {...this.props} />
-                    <Route path="/u/:username" render = {(props) => <div><UserComments getSpecificUserComments={this.getSpecificUserComments} specificUserComments={this.state.specificUserComments} {...props}/> </div>} /> 
+                    <Route path="/u/:username?" render = {(props) => <div><UserComments getSpecificUserComments={this.getSpecificUserComments} specificUserComments={this.state.specificUserComments} {...props}/> </div>} /> 
                     <Route path="/r/:subreddit?" render = {(props) => <div><Threads getSpecificThreads={this.getSubredditThreads} getAllThreads={this.getAllThreads} allThreads={this.state.allThreads} {...props}/> </div>} />
                     <Route path="/users" render = {(props) => <div><Users getAllUsers={this.getAllUsers} allUsers={this.state.allUsers} {...props}/> </div>} />
                     <Route path="/about" component={About} />
