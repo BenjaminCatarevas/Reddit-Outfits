@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import User from './User';
 
 export class Users extends Component {
+    // Add function for end-user specifying a username and act accordingly (redirect)
 
     componentDidMount() {
         this.props.getAllUsers();
