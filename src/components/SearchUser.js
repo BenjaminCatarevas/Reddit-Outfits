@@ -27,7 +27,7 @@ export class SearchUser extends Component {
             <input
             type="text"
             name="user"
-            style={{flex: '10', padding: '5px' }}
+            className="form-control"
             placeholder="Enter user..."
             value={this.state.user}
             onChange={this.onChange}
