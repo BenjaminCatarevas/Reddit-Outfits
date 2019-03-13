@@ -15,29 +15,20 @@ export class SearchUser extends Component {
   onSubmit = (e) => {
       // So it doesn't submit right away.
       e.preventDefault();
-      this.props.history.push(`/u/${this.state.user}`);
-      this.props.getSpecificUserComments(this.state.user);
-      this.setState({ user: '' });
+      // Only submit if non-empty username.
+      if (this.state.user) {
+        this.props.history.push(`/u/${this.state.user}`);
+        this.props.getSpecificUserComments(this.state.user);
+        this.setState({ user: '' });
+      }
   }
   
   render() {
       return (
         <div className="container">
-          <form onSubmit={this.onSubmit} style={{display: 'flex'}}>
-            <input
-            type="text"
-            name="user"
-            className="form-control"
-            placeholder="Enter user..."
-            value={this.state.user}
-            onChange={this.onChange}
-            />
-            <input
-            type="submit"
-            value="Search"
-            className="btn-success"
-            style={{flex:'1'}}
-            />
+          <form onSubmit={this.onSubmit}>
+            <input type="text" name="user" className="form-control" placeholder="Enter user..." value={this.state.user} onChange={this.onChange}/>
+            <input type="submit" value="Search"/>
           </form>
         </div>
       )
