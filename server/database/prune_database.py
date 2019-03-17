@@ -3,7 +3,8 @@ from database import RedditOutfitsDatabase
 from util_url import is_url_down
 
 '''
-This script is ran once a month, checking each outfit to see if it is still up/alive.
+This script is ran once a month, checking each outfit to see if it is still up/alive, and updating the author of said outfit accordingly.
+Specifically, it will decrease the author's number of outfits by one.
 '''
 
 database = RedditOutfitsDatabase('reddit_outfits', 'redditoutfits', config.redditoutfits_password)
