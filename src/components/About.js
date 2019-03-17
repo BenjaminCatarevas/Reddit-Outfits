@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 export default function About() {
   return (
@@ -9,5 +9,5 @@ export default function About() {
       <p>n1c, for the original idea</p>
       <p>Keshav Patel, for constant support and answering </p>
     </React.Fragment>
-  )
+  );
 }
