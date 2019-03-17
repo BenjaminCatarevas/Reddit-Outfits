@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 
 export class Thread extends Component {
@@ -41,5 +42,9 @@ export class Thread extends Component {
     );
   }
 }
+
+Thread.propTypes = {
+  threadInformation: PropTypes.object.isRequired
+};
 
 export default withRouter(Thread);

@@ -22,4 +22,8 @@ export class UserComment extends Component {
   }
 }
 
+UserComment.propTypes = {
+  userInformation: PropTypes.object.isRequired
+};
+
 export default withRouter(UserComment);

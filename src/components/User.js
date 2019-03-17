@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 
 export class User extends Component {
@@ -25,5 +26,9 @@ export class User extends Component {
     );
   }
 }
+
+User.propTypes = {
+  userInformation: PropTypes.object.isRequired
+};
 
 export default withRouter(User);

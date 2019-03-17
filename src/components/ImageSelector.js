@@ -1,9 +1,7 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 export class ImageSelector extends Component {
-  // Pass in images via props to display them
-  // Each image is 2 wide?
-  // <img className="img-fluid" src={outfit} alt={outfit}/>
   render() {
     return (
       <div className="row">
@@ -28,6 +26,10 @@ const imageStyle = {
   width: "20%",
   height: "auto",
   maxWidth: "500"
+};
+
+ImageSelector.propTypes = {
+  outfits: PropTypes.array.isRequired
 };
 
 export default ImageSelector;

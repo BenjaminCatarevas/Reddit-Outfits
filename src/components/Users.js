@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 import User from "./User";
 
@@ -20,5 +21,10 @@ export class Users extends Component {
     );
   }
 }
+
+User.propTypes = {
+  getAllUsers: PropTypes.func.isRequired,
+  allUsers: PropTypes.array.isRequired
+};
 
 export default withRouter(Users);

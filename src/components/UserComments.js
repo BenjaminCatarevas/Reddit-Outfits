@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import UserComment from "./UserComment";
+import PropTypes from "prop-types";
 
 export class UserComments extends Component {
   componentDidMount() {
@@ -16,7 +17,7 @@ export class UserComments extends Component {
     // If the specificUserComments is null, just return an empty div. Otherwise, create a UserComment component for each comment.
     return specificUserComments ? (
       Object.keys(specificUserComments).map(key => {
-        // The key is the comment ID
+        // The key defaults to the comment ID, since that's the key to index into a given object.
         return (
           <UserComment key={key} userInformation={specificUserComments[key]} />
         );
@@ -26,5 +27,9 @@ export class UserComments extends Component {
     );
   }
 }
+
+UserComments.propTypes = {
+  getSpecificUserComments: PropTypes.func.isRequired
+};
 
 export default withRouter(UserComments);

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 export class BigImageDisplay extends Component {
   // Make sure to display comment as Markdown
@@ -25,6 +26,11 @@ const bigImageStyle = {
   width: "50%",
   height: "auto",
   maxWidth: "1000px"
+};
+
+BigImageDisplay.propTypes = {
+  outfit: PropTypes.string.isRequired,
+  comment: PropTypes.string.isRequired
 };
 
 export default BigImageDisplay;
