@@ -83,11 +83,20 @@ def extract_outfit_urls_from_comment(comment: str) -> list:
         comment = comment.replace(*replacement)
     
     # Links that don't start with http or https are considered invalid.
+    # TODO: Fix so that it appends http to front of token because dressed.so doesn't support HTTPS
+    '''
+            # We check for HTTP because dressed.so only uses HTTP, not HTTPS.
+        # Links that use HTTPS get replaced with HTTP as they can map to HTTPS via the browser.
+        if token.lower().startswith('http://'):
+            outfit_urls.add(token.lower())
+        elif token.lower().startswith('https://'):
+            outfit_urls.add(token.lower().replace('https', 'http'))
+    '''
     for token in comment.split():
-        if not token.lower().startswith('http://') or not token.lower().startswith('https://'):
+        if token.lower().startswith('http://') or token.lower().startswith('https://'):
             # We append http:// because dressed.so URLs only use HTTP, not HTTPS
             # All other URLs that we consider valid can change from HTTP to HTTPS.
-            outfit_urls.add('http://' + token)
+            outfit_urls.add(token)
 
     # Santitize URLs for any superfluous punctuation. Some users have a period at the end of their image URLs, so we sanitize that.
     # Adapted from: https://stackoverflow.com/a/52118554
