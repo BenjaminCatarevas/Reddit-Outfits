@@ -102,13 +102,13 @@ def create_outfit_urls(comment: str) -> set:
                 # Outfit URL starts with cdn.dressed.so, so we can add the URL as is, as it links directly to an image.
                 outfit_urls.append(raw_outfit_url)
             else:
-                print("Invalid Dressed.so URL.")
+                print(F"Invalid Dressed.so URL: {raw_outfit_url}")
         elif is_reddit_url(raw_outfit_url):
             # i.redd.it URL. We can add the URL as is, as it links directly to an image.
             outfit_urls.append(raw_outfit_url)
         else:
             # Invalid outfit URL.
-            print("Invalid outfit URL.")
+            print(F"Invalid outfit URL: {raw_outfit_url}")
             continue
 
     # We cast the list into a set to avoid duplicates.
