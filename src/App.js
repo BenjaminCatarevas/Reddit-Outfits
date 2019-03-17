@@ -78,7 +78,7 @@ class App extends Component {
               )}
             />
             <Route
-              path="/r/:subreddit?"
+              path="/r/:subreddit"
               render={props => (
                 <div>
                   <Threads
