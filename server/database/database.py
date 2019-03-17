@@ -86,11 +86,11 @@ class RedditOutfitsDatabase:
 
         # Since it is a new record, the aggregate score and average score are the same, and the author has only posted once.
         insert_author = """
-            INSERT INTO author (author_name, num_comments)
-            VALUES(%(author_name)s, 1);
+            INSERT INTO author (author_name, num_comments, num_outfits)
+            VALUES(%s, 1, %s);
         """
 
-        self.cur.execute(insert_author, comment)
+        self.cur.execute(insert_author, (comment['author_name'], len(comment['outfits'])))
         self.conn.commit()
 
     def insert_comment(self, comment: dict):
@@ -194,11 +194,12 @@ class RedditOutfitsDatabase:
 
         update_author = """
             UPDATE author
-            SET num_comments = num_comments + 1
-            WHERE author_name = %(author_name)s
+            SET num_comments = num_comments + 1,
+                num_outfits = num_outfits + %s
+            WHERE author_name = %s
         """
 
-        self.cur.execute(update_author, comment)
+        self.cur.execute(update_author, (len(comment['outfits']), comment['author_name'],))
         self.conn.commit()
     
     def select_threads_to_update(self, subreddit: str) -> list:
