@@ -5,15 +5,21 @@ export class BigImageDisplay extends Component {
   render() {
     return (
       <div className="row">
-        <div className="col-xs-8">
-            <img className="img-responsive" src={this.props.outfit} alt={this.props.outfit}></img>
+        <div className="col-xs-12">
+            <img style={bigImageStyle} className="float-left" src={"https://i.imgur.com/kX0DYxx.jpg"} alt={"https://i.imgur.com/kX0DYxx.jpg"}></img>
+            <div className="col-xs-12">
+              <p>{this.props.comment}</p>
+            </div> 
+          </div>
         </div>
-        <div className="col-xs-4">
-            <h3>{this.props.comment}</h3> 
-        </div>
-      </div>
-    )
+      )
+    }
   }
+
+const bigImageStyle = {
+  width: '50%',
+  height: 'auto',
+  maxWidth: '1000px',
 }
 
 export default BigImageDisplay
