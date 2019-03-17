@@ -195,7 +195,7 @@ class RedditOutfitsDatabase:
         update_author = """
             UPDATE author
             SET num_comments = num_comments + 1
-            WHERE author = %(author_name)s
+            WHERE author_name = %(author_name)s
         """
 
         self.cur.execute(update_author, comment)
@@ -227,7 +227,7 @@ class RedditOutfitsDatabase:
 
         select_all_outfits_query = """
             SELECT *
-            FROM outfits
+            FROM outfit
         """
 
         self.cur.execute(select_all_outfits_query)
@@ -256,8 +256,8 @@ class RedditOutfitsDatabase:
 
         update_comment_query = """
             UPDATE comment
-            SET body = %s
-                comment_score = %s
+            SET body = %s,
+                comment_score = %s,
             WHERE author = %s
         """
 
@@ -271,8 +271,8 @@ class RedditOutfitsDatabase:
 
         update_thread_query = """
             UPDATE thread
-            SET num_top_level_comments = %s
-                thread_score = %s
+            SET num_top_level_comments = %s,
+                thread_score = %s,
                 num_total_comments = %s
             WHERE thread_id = %s
         """
@@ -291,6 +291,7 @@ class RedditOutfitsDatabase:
         """
 
         self.cur.execute(delete_outfit_by_url_query, (outfit_url,))
+        self.conn.commit()
 
     def delete_outfits_by_comment_id(self, comment_id: str):
         '''
@@ -303,3 +304,4 @@ class RedditOutfitsDatabase:
         """
 
         self.cur.execute(delete_outfit_by_comment_id_query, (comment_id,))
+        self.conn.commit()
