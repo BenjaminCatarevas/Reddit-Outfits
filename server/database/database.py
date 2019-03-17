@@ -280,7 +280,7 @@ class RedditOutfitsDatabase:
         self.cur.execute(update_thread_query, (num_top_level_comments, thread_score, num_total_comments, thread_id,))
         self.conn.commit()
 
-    def delete_outfit_by_url(self, outfit_url: str):
+    def delete_outfit_by_url(self, outfit_url: str, thread_id: str):
         '''
         Given an outfit's URL, deletes it from the database.
         '''
@@ -291,6 +291,16 @@ class RedditOutfitsDatabase:
         """
 
         self.cur.execute(delete_outfit_by_url_query, (outfit_url,))
+        self.conn.commit()
+
+        # After deleting it, decrease the number of outfits from that thread by 1.
+        decrease_outfit_count_query = """
+            UPDATE thread
+            SET num_top_level_comments = num_top_level_comments - 1
+            WHERE thread_id = %s
+        """
+
+        self.cur.execute(decrease_outfit_count_query, (thread_id,))
         self.conn.commit()
 
     def delete_outfits_by_comment_id(self, comment_id: str):
