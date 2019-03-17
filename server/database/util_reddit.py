@@ -114,7 +114,7 @@ def create_outfit_urls(comment: str) -> set:
     # We cast the list into a set to avoid duplicates.
     return set(outfit_urls)
 
-def create_comment_dictionary(comment, outfits_from_comment) -> dict:
+def create_comment_dictionary(comment, outfits_from_comment: set) -> dict:
     '''
     Given a Comment object, creates a dictionary holding only relevant information.
     Returns a dictionary.
