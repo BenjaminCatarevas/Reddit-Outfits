@@ -8,7 +8,7 @@ export class ImageSelector extends Component {
       <div className="row">
           {this.props.outfits.map((outfit, key) => {
             return (
-              <div key={key} className="col-xs-6">
+              <div key={key} className="col-xs-2">
                 <img className="img-fluid" src={outfit} alt={outfit}/> 
               </div>
             )
