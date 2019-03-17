@@ -27,9 +27,13 @@ async function getCommentsByUser(req, res, next) {
         // Create a JSON object to organize outfits by their comment ID.
         // We do this because outfits are stored as individual URLs, and are not inherently grouped by a comment.
         let outfitsByCommentId = {};
+        // Go through each comment of the user.
         for (let currentOutfitRecord of outfitData) {
+            // Obtain the comment ID so we can make a new entry in the JSON object to be returned.
             let currentCommentId = currentOutfitRecord.comment_id;
+            // If we've already seen the comment ID before, we know it exists.
             if (currentCommentId in outfitsByCommentId) {
+                // So, we just add the outft to the already created array of outfit URLs.
                 outfitsByCommentId[currentCommentId].outfits.push(currentOutfitRecord.outfit_url);
             } else {
                 // For new entries, add the comment data to the entry so we can display it.
