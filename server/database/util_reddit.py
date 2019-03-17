@@ -57,9 +57,10 @@ def generate_comments_from_thread(thread_id: str) -> list:
 
     # Traverse all of the comments.
     for top_level_comment in thread_submission.comments:
+        outfits_from_comment = create_outfit_urls(top_level_comment.body)
         # We only care about comments that have outfit URLs in them. All others (such as a comment with no links), we ignore.
-        if not len(create_outfit_urls(top_level_comment.body)) < 1:
-                comments.append(create_comment_dictionary(top_level_comment))
+        if len(outfits_from_comment) >= 1:
+            comments.append(create_comment_dictionary(top_level_comment, outfits_from_comment))
     
     return comments
 
@@ -113,7 +114,7 @@ def create_outfit_urls(comment: str) -> set:
     # We cast the list into a set to avoid duplicates.
     return set(outfit_urls)
 
-def create_comment_dictionary(comment) -> dict:
+def create_comment_dictionary(comment, outfits_from_comment) -> dict:
     '''
     Given a Comment object, creates a dictionary holding only relevant information.
     Returns a dictionary.
@@ -125,7 +126,7 @@ def create_comment_dictionary(comment) -> dict:
         'comment_id': comment.id,
         'comment_permalink': 'https://reddit.com' + comment.permalink,
         'comment_score': comment.score,
-        'outfits': create_outfit_urls(comment.body),
+        'outfits': outfits_from_comment,
         'subreddit': comment.subreddit.display_name.lower(),
         'subreddit_id': comment.subreddit_id,
         'thread_id': comment.submission.id,
