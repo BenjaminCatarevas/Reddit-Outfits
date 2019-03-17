@@ -83,19 +83,11 @@ def extract_outfit_urls_from_comment(comment: str) -> list:
         comment = comment.replace(*replacement)
     
     # Links that don't start with http or https are considered invalid.
-    # TODO: Fix so that it appends http to front of token because dressed.so doesn't support HTTPS
-    '''
-            # We check for HTTP because dressed.so only uses HTTP, not HTTPS.
-        # Links that use HTTPS get replaced with HTTP as they can map to HTTPS via the browser.
-        if token.lower().startswith('http://'):
-            outfit_urls.add(token.lower())
-        elif token.lower().startswith('https://'):
-            outfit_urls.add(token.lower().replace('https', 'http'))
-    '''
     for token in comment.split():
         if token.lower().startswith('http://') or token.lower().startswith('https://'):
-            # We append http:// because dressed.so URLs only use HTTP, not HTTPS
-            # All other URLs that we consider valid can change from HTTP to HTTPS.
+            # NOTE: It is worth noting that dressed.so does not use HTTPS.
+            # However, for storage purposes, we can leave links as is with HTTPS and change to HTTP for URL validation.
+            # This has been done in the is_url_down function.
             outfit_urls.add(token)
 
     # Santitize URLs for any superfluous punctuation. Some users have a period at the end of their image URLs, so we sanitize that.
@@ -145,11 +137,14 @@ def is_url_down(url: str) -> bool:
     Function adapted from: https://stackoverflow.com/a/15743618
     '''
 
-    if not url.lower().startswith('http://') or not url.lower().startswith('https://'):
+    if url.lower().startswith('https://'):
         # The URL must start with http(s):// to make a successful HEAD request.
-        # We append http:// because dressed.so does not use HTTPS, and HTTP works for imgur and i.redd.it URLs.
+        # We replace https with http because dressed.so does not use HTTPS, and HTTP works for imgur and i.redd.it URLs.
         # NOTE: we use .startswith() because there is the chance, though incredibly low, that the string 'http' could appear in the URL in other places.
         # Using .startswith() ensures that we only check the necessary locations.
+        url.replace('https', 'http')
+    elif not url.lower().startswith('http://') or not url.lower().startswith('https://'):
+        # If the URL doesn't start with either http or https, append http to it.
         url = 'http://' + url
 
     # Approach adapted from: https://stackoverflow.com/a/15743618
@@ -157,5 +152,6 @@ def is_url_down(url: str) -> bool:
 
     # cdn.dressed.so returns 403 if there is no image found at the URL.
     # i.imgur.com returns 302 if image is not found.
+    # We assume if the URL has been moved (301), the URL is no longer active.
     # imgur.com and i.redd.it returns 404 if image is not found.
-    return r.status_code in (403, 302, 404)
+    return r.status_code in (403, 302, 301, 404)
