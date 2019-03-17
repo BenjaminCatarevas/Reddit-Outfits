@@ -14,6 +14,6 @@ outfitRecords = database.select_all_outfits()
 for outfitRecord in outfitRecords:
     # We delete by URL since we're concerned about whether or not the URL is up.
     if is_url_down(outfitRecord['outfit_url']):
-        database.delete_outfit_by_url(outfitRecord['outfit_url'])
+        database.delete_outfit_by_url(outfitRecord['outfit_url'], outfitRecord['thread_id'])
 
 database.close()
