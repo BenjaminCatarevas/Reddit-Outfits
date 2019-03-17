@@ -24,7 +24,7 @@ def generate_thread_ids(query: str, author_name: str, subreddit: str, size: int 
     thread_ids = set()
 
     # Query API for historical thread data.
-    with urllib.request.urlopen(F"https://api.pushshift.io/reddit/search/submission/?t={query}&author={author_name}&subreddit={subreddit}&size={size}") as url:
+    with urllib.request.urlopen(F"https://api.pushshift.io/reddit/search/submission/?title={query}&author={author_name}&subreddit={subreddit}&size={size}") as url:
         thread_data = json.loads(url.read().decode())
 
     # Traverse each thread in the values part of the decoded JSON dictionary and add the ID of each thread to the set.
@@ -152,7 +152,7 @@ def generate_thread_information_from_thread(thread_id: str) -> dict:
     
     thread = {
         'num_top_level_comments': len(thread_submission.comments),
-        'num_comments': thread_submission.num_comments,
+        'num_total_comments': thread_submission.num_comments,
         'subreddit': thread_submission.subreddit.display_name,
         'subreddit_id': thread_submission.subreddit_id,
         'thread_id': thread_submission.id,
