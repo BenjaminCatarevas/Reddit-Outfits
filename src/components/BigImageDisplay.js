@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+const ReactMarkdown = require("react-markdown");
 
 export class BigImageDisplay extends Component {
   // Make sure to display comment as Markdown
@@ -14,7 +15,7 @@ export class BigImageDisplay extends Component {
             alt={this.props.outfit}
           />
           <div className="col-xs-12">
-            <p>{this.props.comment}</p>
+            <ReactMarkdown source={this.props.comment} />
           </div>
         </div>
       </div>
@@ -25,7 +26,8 @@ export class BigImageDisplay extends Component {
 const bigImageStyle = {
   width: "50%",
   height: "auto",
-  maxWidth: "1000px"
+  maxWidth: "1000px",
+  padding: "5px 5px 5px 5px"
 };
 
 BigImageDisplay.propTypes = {
