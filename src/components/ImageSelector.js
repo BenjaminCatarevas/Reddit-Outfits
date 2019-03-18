@@ -25,7 +25,8 @@ export class ImageSelector extends Component {
 const imageStyle = {
   width: "20%",
   height: "auto",
-  maxWidth: "500"
+  maxWidth: "500px",
+  padding: "5px 5px 5px 5px"
 };
 
 ImageSelector.propTypes = {
