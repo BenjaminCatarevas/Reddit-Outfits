@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 export default function NavigationBar() {
   return (
     <header style={navBarStyle}>
-      <h1>Reddit Outfits</h1>
       <Link style={linkStyle} to="/">
         Home
       </Link>{" "}
@@ -28,13 +27,15 @@ export default function NavigationBar() {
 }
 
 const navBarStyle = {
-  background: "#333",
-  color: "#fff",
+  background: "#fff",
   textAlign: "center",
-  padding: "10px"
+  padding: "10px",
+  border: "2px solid #b8e0d3",
+  borderRadius: "5px solid #b8e0d3",
+  margin: "5px"
 };
 
 const linkStyle = {
-  color: "#fff",
+  color: "#333",
   textDecoration: "none"
 };
