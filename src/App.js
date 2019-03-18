@@ -58,6 +58,7 @@ class App extends Component {
       <Router>
         <div className="App">
           <div className="container">
+            <h1 style={{ textAlign: "center" }}>Reddit Outfits</h1>
             <NavigationBar />
             <SearchUser
               getSpecificUserComments={this.getSpecificUserComments}
