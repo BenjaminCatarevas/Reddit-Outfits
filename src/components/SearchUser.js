@@ -27,15 +27,17 @@ export class SearchUser extends Component {
     return (
       <div className="container">
         <form onSubmit={this.onSubmit}>
-          <input
-            type="text"
-            name="user"
-            className="form-control"
-            placeholder="Enter user..."
-            value={this.state.user}
-            onChange={this.onChange}
-          />
-          <input type="submit" value="Search" />
+          <div className="row input-group">
+            <input
+              type="text"
+              name="user"
+              className="form-control"
+              placeholder="Enter user..."
+              value={this.state.user}
+              onChange={this.onChange}
+            />
+            <input className="input-group-btn" type="submit" value="Search" />
+          </div>
         </form>
       </div>
     );
