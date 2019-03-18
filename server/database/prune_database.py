@@ -7,7 +7,8 @@ This script is ran once a month, checking each outfit to see if it is still up/a
 Specifically, it will decrease the author's number of outfits by one.
 '''
 
-database = RedditOutfitsDatabase('reddit_outfits', 'redditoutfits', config.redditoutfits_password)
+database = RedditOutfitsDatabase(
+    'reddit_outfits', 'redditoutfits', config.redditoutfits_password)
 
 outfitRecords = database.select_all_outfits()
 
@@ -15,6 +16,7 @@ outfitRecords = database.select_all_outfits()
 for outfitRecord in outfitRecords:
     # We delete by URL since we're concerned about whether or not the URL is up.
     if is_url_down(outfitRecord['outfit_url']):
-        database.delete_outfit_by_url(outfitRecord['outfit_url'], outfitRecord['thread_id'])
+        database.delete_outfit_by_url(
+            outfitRecord['outfit_url'], outfitRecord['thread_id'])
 
 database.close()

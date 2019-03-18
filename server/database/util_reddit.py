@@ -2,9 +2,7 @@ import json
 import re
 import urllib.request
 from urllib.parse import urlparse
-
 import praw
-
 import config
 from util_url import extract_image_urls_from_imgur_url
 from util_url import extract_outfit_urls_from_comment
@@ -12,6 +10,7 @@ from util_url import generate_imgur_url_info
 from util_url import is_dressed_so_url
 from util_url import is_imgur_url
 from util_url import is_reddit_url
+
 
 def generate_thread_ids(query: str, author_name: str, subreddit: str, size: int = 25) -> set:
     '''
@@ -32,8 +31,9 @@ def generate_thread_ids(query: str, author_name: str, subreddit: str, size: int 
     for threads in thread_data.values():
         for thread_data in threads:
             thread_ids.add(thread_data['id'])
-            
+
     return thread_ids
+
 
 def generate_comments_from_thread(thread_id: str) -> list:
     '''
@@ -44,9 +44,9 @@ def generate_comments_from_thread(thread_id: str) -> list:
 
     comments = []
     reddit = praw.Reddit(
-        user_agent = 'Comment Extraction',
-        client_id = config.reddit_client_id,
-        client_secret = config.reddit_client_secret
+        user_agent='Comment Extraction',
+        client_id=config.reddit_client_id,
+        client_secret=config.reddit_client_secret
     )
 
     # Obtain a CommentForest object.
@@ -60,16 +60,18 @@ def generate_comments_from_thread(thread_id: str) -> list:
         outfits_from_comment = create_outfit_urls(top_level_comment.body)
         # We only care about comments that have outfit URLs in them. All others (such as a comment with no links), we ignore.
         if len(outfits_from_comment) >= 1:
-            comments.append(create_comment_dictionary(top_level_comment, outfits_from_comment))
-    
+            comments.append(create_comment_dictionary(
+                top_level_comment, outfits_from_comment))
+
     return comments
+
 
 def create_outfit_urls(comment: str) -> set:
     '''
     Given a comment, constructs a list of each Imgur or Dressed.so URL from a comment ending in .jpg, .png, or .jpeg.
     Returns a list of outfit URLs.
     '''
-    
+
     outfit_urls = []
 
     # Extract all of the image links from the given comment.
@@ -84,20 +86,22 @@ def create_outfit_urls(comment: str) -> set:
             imgur_url_info = generate_imgur_url_info(raw_outfit_url)
             imgur_url_type = imgur_url_info['url_type']
             imgur_hash = imgur_url_info['imgur_hash']
-            
+
             # Not a valid URL, so just return an empty list.
             if imgur_url_type == 'ERROR':
                 print(F"Invalid Imgur URL: {raw_outfit_url}")
                 return []
             else:
                 # Process the Imgur URL no matter the type.
-                outfit_urls += extract_image_urls_from_imgur_url(raw_outfit_url, imgur_hash, imgur_url_type)
+                outfit_urls += extract_image_urls_from_imgur_url(
+                    raw_outfit_url, imgur_hash, imgur_url_type)
 
         elif is_dressed_so_url(raw_outfit_url):
             if raw_outfit_url.startswith('http://dressed.so'):
                 # Parse the URL for the hash of the image before adding to the list.
                 outfit_hash = parsed_raw_outfit_url.path.split('/')[3]
-                outfit_urls.append(F'http://cdn.dressed.so/i/{outfit_hash}l.png')
+                outfit_urls.append(
+                    F'http://cdn.dressed.so/i/{outfit_hash}l.png')
             elif raw_outfit_url.startswith('http://cdn.dressed.so'):
                 # Outfit URL starts with cdn.dressed.so, so we can add the URL as is, as it links directly to an image.
                 outfit_urls.append(raw_outfit_url)
@@ -113,6 +117,7 @@ def create_outfit_urls(comment: str) -> set:
 
     # We cast the list into a set to avoid duplicates.
     return set(outfit_urls)
+
 
 def create_comment_dictionary(comment, outfits_from_comment: set) -> dict:
     '''
@@ -135,6 +140,7 @@ def create_comment_dictionary(comment, outfits_from_comment: set) -> dict:
 
     return comment
 
+
 def generate_thread_information_from_thread(thread_id: str) -> dict:
     '''
     Given a Submission object, creates a dictionary holding only relevant information.
@@ -144,13 +150,13 @@ def generate_thread_information_from_thread(thread_id: str) -> dict:
     # NOTE: We use the reddit API as opposed to the pushshift API because it's easier to track scoring.
     # Pushshift updates its records only so often, whereas pinging the reddit API gets us new information right away.
     reddit = praw.Reddit(
-        user_agent = 'Thread Information Extraction',
-        client_id = config.reddit_client_id,
-        client_secret = config.reddit_client_secret
+        user_agent='Thread Information Extraction',
+        client_id=config.reddit_client_id,
+        client_secret=config.reddit_client_secret
     )
 
     thread_submission = reddit.submission(id=thread_id)
-    
+
     thread = {
         'num_top_level_comments': len(thread_submission.comments),
         'num_total_comments': thread_submission.num_comments,

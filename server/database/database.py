@@ -3,10 +3,12 @@ import psycopg2.extras
 from util_reddit import generate_comments_from_thread
 from util_reddit import generate_thread_information_from_thread
 
+
 class RedditOutfitsDatabase:
-    
+
     def __init__(self, dbname: str, user: str, password: str):
-        self.conn = psycopg2.connect(dbname=dbname, user=user, password=password)
+        self.conn = psycopg2.connect(
+            dbname=dbname, user=user, password=password)
 
         self.cur = self.conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -78,7 +80,6 @@ class RedditOutfitsDatabase:
         self.cur.execute(insert_thread, thread_information)
         self.conn.commit()
 
-
     def insert_author(self, comment: dict):
         '''
         Given information about a comment, inserts a new record for the author associated with the comment.
@@ -90,7 +91,8 @@ class RedditOutfitsDatabase:
             VALUES(%s, 1, %s);
         """
 
-        self.cur.execute(insert_author, (comment['author_name'], len(comment['outfits'])))
+        self.cur.execute(
+            insert_author, (comment['author_name'], len(comment['outfits'])))
         self.conn.commit()
 
     def insert_comment(self, comment: dict):
@@ -116,7 +118,8 @@ class RedditOutfitsDatabase:
             VALUES(%s, %s, %s, %s, %s, %s);
         """
 
-        self.cur.execute(insert_outfit, (comment['author_name'], comment['comment_id'], outfit_url, comment['subreddit'], comment['thread_id'], comment['timestamp']))
+        self.cur.execute(insert_outfit, (comment['author_name'], comment['comment_id'],
+                                         outfit_url, comment['subreddit'], comment['thread_id'], comment['timestamp']))
         self.conn.commit()
 
     def thread_exists(self, thread_id: str) -> bool:
@@ -199,9 +202,10 @@ class RedditOutfitsDatabase:
             WHERE author_name = %s
         """
 
-        self.cur.execute(update_author, (len(comment['outfits']), comment['author_name'],))
+        self.cur.execute(
+            update_author, (len(comment['outfits']), comment['author_name'],))
         self.conn.commit()
-    
+
     def select_threads_to_update(self, subreddit: str) -> list:
         '''
         Selects all threads that are less than two weeks old.
@@ -262,7 +266,8 @@ class RedditOutfitsDatabase:
             WHERE author = %s
         """
 
-        self.cur.execute(update_comment_query, (body, comment_score, comment_id,))
+        self.cur.execute(update_comment_query,
+                         (body, comment_score, comment_id,))
         self.conn.commit()
 
     def update_thread(self, thread_id: str, num_top_level_comments: int, thread_score: int, num_total_comments: int):
@@ -278,7 +283,8 @@ class RedditOutfitsDatabase:
             WHERE thread_id = %s
         """
 
-        self.cur.execute(update_thread_query, (num_top_level_comments, thread_score, num_total_comments, thread_id,))
+        self.cur.execute(update_thread_query, (num_top_level_comments,
+                                               thread_score, num_total_comments, thread_id,))
         self.conn.commit()
 
     def delete_outfit_by_url(self, outfit_url: str, thread_id: str):
