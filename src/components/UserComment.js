@@ -11,7 +11,7 @@ export class UserComment extends Component {
     // One of these for every comment of a user
     // one row in the parent
     return (
-      <div className="container">
+      <div className="container" style={commentStyle}>
         <BigImageDisplay
           outfit={this.props.userInformation.outfits[0]}
           comment={this.props.userInformation.commentBody}
@@ -21,6 +21,11 @@ export class UserComment extends Component {
     );
   }
 }
+
+const commentStyle = {
+  border: "2px solid #8B8C89",
+  margin: "10px"
+};
 
 UserComment.propTypes = {
   userInformation: PropTypes.object.isRequired
