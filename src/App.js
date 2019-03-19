@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { withRouter, BrowserRouter as Router, Route } from "react-router-dom";
 import "./App.css";
 import axios from "axios";
-import SearchUser from "./components/SearchUser";
 import UserComments from "./components/UserComments";
 import NavigationBar from "./components/NavigationBar";
 import About from "./components/About";
@@ -58,9 +57,15 @@ class App extends Component {
       <Router>
         <div className="App">
           <div className="container">
-            <h1 style={{ textAlign: "center" }}>Reddit Outfits</h1>
-            <NavigationBar />
-            <SearchUser
+            <h1 style={{ textAlign: "center" }}>
+              <a style={{ color: "black", textDecoration: "none" }} href="/">
+                Reddit Outfits
+              </a>
+            </h1>
+            <h6 style={{ textAlign: "center", color: "#555" }}>
+              To view outfits of reddit's fashion communities
+            </h6>
+            <NavigationBar
               getSpecificUserComments={this.getSpecificUserComments}
               specificUserComments={this.state.specificUserComments}
               {...this.props}
