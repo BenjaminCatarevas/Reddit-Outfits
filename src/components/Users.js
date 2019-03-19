@@ -23,8 +23,7 @@ export class Users extends Component {
 }
 
 User.propTypes = {
-  getAllUsers: PropTypes.func.isRequired,
-  allUsers: PropTypes.array.isRequired
+  getAllUsers: PropTypes.func.isRequired
 };
 
 export default withRouter(Users);
