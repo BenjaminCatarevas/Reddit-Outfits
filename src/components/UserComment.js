@@ -24,7 +24,8 @@ export class UserComment extends Component {
 
 const commentStyle = {
   border: "2px solid #8B8C89",
-  margin: "10px"
+  width: "75%",
+  margin: "0 auto"
 };
 
 UserComment.propTypes = {
