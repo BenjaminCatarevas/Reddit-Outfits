@@ -27,8 +27,7 @@ export class Threads extends Component {
 
 Threads.propTypes = {
   getSpecificThreads: PropTypes.func.isRequired,
-  getAllThreads: PropTypes.func.isRequired,
-  allThreads: PropTypes.object.isRequired
+  getAllThreads: PropTypes.func.isRequired
 };
 
 export default withRouter(Threads);
