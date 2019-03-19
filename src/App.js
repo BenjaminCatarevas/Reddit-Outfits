@@ -63,7 +63,7 @@ class App extends Component {
               </a>
             </h1>
             <h6 style={{ textAlign: "center", color: "#555" }}>
-              To view outfits of reddit's fashion communities
+              View outfits, threads, and more of reddit's fashion communities
             </h6>
             <NavigationBar
               getSpecificUserComments={this.getSpecificUserComments}
