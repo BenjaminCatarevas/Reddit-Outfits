@@ -35,13 +35,11 @@ export class NavigationBar extends Component {
       // Source: https://react-bootstrap.github.io/components/navbar/
       <div>
         <Navbar style={navBarStyle} bg="white" expand="lg">
-          <Navbar.Brand href="/">Menu</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
               <Nav.Link href="/">Home</Nav.Link>
               <Nav.Link href="/users">Users</Nav.Link>
-              <Nav.Link href="/about">About</Nav.Link>
               <NavDropdown title="Threads" id="basic-nav-dropdown">
                 <NavDropdown.Item href="/r/malefashionadvice">
                   MaleFashionAdvice
@@ -53,6 +51,8 @@ export class NavigationBar extends Component {
                   Streetwear
                 </NavDropdown.Item>
               </NavDropdown>
+              <Nav.Link href="/about">About</Nav.Link>
+              <Nav.Link href="#githublink">Github</Nav.Link>
             </Nav>
             <Form onSubmit={this.onSubmit} inline>
               <FormControl
