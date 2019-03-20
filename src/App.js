@@ -5,22 +5,26 @@ import axios from "axios";
 import UserComments from "./components/UserComments";
 import NavigationBar from "./components/NavigationBar";
 import About from "./components/About";
-import Threads from "./components/Threads";
+import ThreadList from "./components/ThreadList";
 import Users from "./components/Users";
+import ThreadDisplayer from "./components/ThreadDisplayer";
 
 class App extends Component {
   state = {
     allUsers: null,
     allThreads: null,
-    specificUserComments: null
+    commentsFromSpecificUser: null,
+    commentsFromSpecificThread: null
   };
 
   // NOTE: These functions will replace the axios URL with a server.
-  getSpecificUserComments = user => {
+  getCommentsFromSpecificUser = user => {
     axios
       .get(`http://localhost:3001/u/${user}`)
       .then(res => {
-        this.setState({ specificUserComments: res.data.specificUserComments });
+        this.setState({
+          commentsFromSpecificUser: res.data.commentsFromSpecificUser
+        });
       })
       .catch(err => console.log("Error: ", err.message));
   };
@@ -43,11 +47,20 @@ class App extends Component {
       .catch(err => console.log("Error: ", err.message));
   };
 
-  getSubredditThreads = subreddit => {
+  getThreadsBySubreddit = subreddit => {
     axios
       .get(`http://localhost:3001/r/${subreddit}`)
       .then(res => {
         this.setState({ allThreads: res.data.subredditThreads });
+      })
+      .catch(err => console.log("Error: ", err.message));
+  };
+
+  getCommentsOfThreadByThreadId = (subreddit, threadId) => {
+    axios
+      .get(`http://localhost:3001/r/${subreddit}/${threadId}`)
+      .then(res => {
+        this.setState({ commentsFromSpecificThread: res.data.threadOutfits });
       })
       .catch(err => console.log("Error: ", err.message));
   };
@@ -66,8 +79,8 @@ class App extends Component {
               View outfits, threads, and more of reddit's fashion communities
             </h6>
             <NavigationBar
-              getSpecificUserComments={this.getSpecificUserComments}
-              specificUserComments={this.state.specificUserComments}
+              getCommentsFromSpecificUser={this.getCommentsFromSpecificUser}
+              commentsFromSpecificUser={this.state.commentsFromSpecificUser}
               {...this.props}
             />
             <Route exact path="/" {...this.props} />
@@ -76,19 +89,24 @@ class App extends Component {
               render={props => (
                 <div>
                   <UserComments
-                    getSpecificUserComments={this.getSpecificUserComments}
-                    specificUserComments={this.state.specificUserComments}
+                    getCommentsFromSpecificUser={
+                      this.getCommentsFromSpecificUser
+                    }
+                    commentsFromSpecificUser={
+                      this.state.commentsFromSpecificUser
+                    }
                     {...props}
                   />{" "}
                 </div>
               )}
             />
             <Route
+              exact
               path="/r/:subreddit"
               render={props => (
                 <div>
-                  <Threads
-                    getSpecificThreads={this.getSubredditThreads}
+                  <ThreadList
+                    getThreadsBySubreddit={this.getThreadsBySubreddit}
                     getAllThreads={this.getAllThreads}
                     allThreads={this.state.allThreads}
                     {...props}
@@ -105,6 +123,22 @@ class App extends Component {
                     allUsers={this.state.allUsers}
                     {...props}
                   />{" "}
+                </div>
+              )}
+            />
+            <Route
+              path="/r/:subreddit/:threadId"
+              render={props => (
+                <div>
+                  <ThreadDisplayer
+                    getCommentsOfThreadByThreadId={
+                      this.getCommentsOfThreadByThreadId
+                    }
+                    commentsFromSpecificThread={
+                      this.state.commentsFromSpecificThread
+                    }
+                    {...props}
+                  />
                 </div>
               )}
             />
