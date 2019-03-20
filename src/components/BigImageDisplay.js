@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 const ReactMarkdown = require("react-markdown");
 
 export class BigImageDisplay extends Component {
-  // Make sure to display comment as Markdown
   render() {
     return (
       <div className="row">
