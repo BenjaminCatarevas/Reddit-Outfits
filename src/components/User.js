@@ -7,14 +7,8 @@ export class User extends Component {
     // This will be the component displayed by the Users component
     // It contains info like score, etc.
     // It will link to a user's page
-    /*
-        {author_name: "test", num_comments: 1}
-        author_name: "test"
-        num_comments: 1
-        */
     return (
-      <div>
-        {console.log(this.props.userInformation)}
+      <h6 style={userStyle}>
         <a
           href={`http://localhost:3000/u/${
             this.props.userInformation.author_name
@@ -22,10 +16,15 @@ export class User extends Component {
         >
           {this.props.userInformation.author_name}
         </a>
-      </div>
+      </h6>
     );
   }
 }
+
+const userStyle = {
+  width: "75%",
+  margin: "0 auto"
+};
 
 User.propTypes = {
   userInformation: PropTypes.object.isRequired
