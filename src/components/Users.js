@@ -15,9 +15,9 @@ export class Users extends Component {
     return this.props.allUsers ? (
       this.props.allUsers.map(user => {
         return (
-          <div className="row">
+          <div key={user.author_name} className="row">
             <div className="container">
-              <User key={user.author_name} userInformation={user} />
+              <User userInformation={user} />
             </div>
           </div>
         );
