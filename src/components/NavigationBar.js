@@ -25,7 +25,7 @@ export class NavigationBar extends Component {
     // Only submit if non-empty username.
     if (this.state.user) {
       this.props.history.push(`/u/${this.state.user}`);
-      this.props.getSpecificUserComments(this.state.user);
+      this.props.getCommentsFromSpecificUser(this.state.user);
       this.setState({ user: "" });
     }
   };
