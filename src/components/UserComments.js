@@ -11,7 +11,7 @@ export class UserComments extends Component {
   }
 
   render() {
-    // Shortener to avoid using this.props.commentsFromSpecificUser everywhere.
+    // Use object destructuring to shorten using this.props.commentsFromSpecificUser everywhere.
     let { commentsFromSpecificUser } = this.props;
     // Object mapping approach adapted from: https://stackoverflow.com/a/39965962
     // If the commentsFromSpecificUser is null, just return an empty div. Otherwise, create a UserComment component for each comment.
