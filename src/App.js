@@ -57,7 +57,7 @@ class App extends Component {
       <Router>
         <div className="App">
           <div className="container">
-            <h1 style={{ textAlign: "center" }}>
+            <h1 style={{ textAlign: "center", fontWeight: "bold" }}>
               <a style={{ color: "black", textDecoration: "none" }} href="/">
                 Reddit Outfits
               </a>
