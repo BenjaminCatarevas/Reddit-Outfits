@@ -23,22 +23,22 @@ const db = pgp(config);
 async function getCommentsByUser(req, res, next) {
   let authorName = req.params.author_name;
   try {
-    const outfitData = await db.any(
+    const commentData = await db.any(
       "SELECT * FROM outfit WHERE author_name = $1",
       [authorName]
     );
     // Create a JSON object to organize outfits by their comment ID.
     // We do this because outfits are stored as individual URLs, and are not inherently grouped by a comment.
-    let outfitsByCommentId = {};
+    let commentsByCommentId = {};
     // Go through each comment of the user.
-    for (let currentOutfitRecord of outfitData) {
+    for (let currentCommentRecord of commentData) {
       // Obtain the comment ID so we can make a new entry in the JSON object to be returned.
-      let currentCommentId = currentOutfitRecord.comment_id;
+      let currentCommentId = currentCommentRecord.comment_id;
       // If we've already seen the comment ID before, we know it exists.
-      if (currentCommentId in outfitsByCommentId) {
+      if (currentCommentId in commentsByCommentId) {
         // So, we just add the outft to the already created array of outfit URLs.
-        outfitsByCommentId[currentCommentId].outfits.push(
-          currentOutfitRecord.outfit_url
+        commentsByCommentId[currentCommentId].outfits.push(
+          currentCommentRecord.outfit_url
         );
       } else {
         // For new entries, add the comment data to the entry so we can display it.
@@ -46,9 +46,9 @@ async function getCommentsByUser(req, res, next) {
           "SELECT * FROM comment WHERE comment_id = $1",
           [currentCommentId]
         );
-        outfitsByCommentId[currentCommentId] = {
+        commentsByCommentId[currentCommentId] = {
           authorName: commentData[0].author_name,
-          outfits: [currentOutfitRecord.outfit_url],
+          outfits: [currentCommentRecord.outfit_url],
           commentBody: commentData[0].body,
           commentPermalink: commentData[0].comment_permalink,
           commentScore: commentData[0].comment_score,
@@ -58,7 +58,7 @@ async function getCommentsByUser(req, res, next) {
     }
     return await res.status(200).json({
       success: true,
-      specificUserComments: outfitsByCommentId,
+      specificUserComments: commentsByCommentId,
       message: `Retrieved all outfits of user ${authorName}`
     });
   } catch (err) {
@@ -88,8 +88,11 @@ async function getThreadsBySubreddit(req, res, next) {
   }
 }
 
-async function getOutfitsOfThreadByThreadId(req, res, next) {
+async function getCommentsOfThreadByThreadId(req, res, next) {
   // Use the thread ID member variable from the thread component on the front-end (with React)
+
+  // NOTE: We need to sort the data by comment ID like we did for getting comments from a user
+  // Abstract function getting comments from user query to own function and call in each query function
   let subreddit = req.params.subreddit;
   let threadId = req.params.threadId;
   try {
@@ -145,7 +148,7 @@ async function getAllThreads(req, res, next) {
 module.exports = {
   getCommentsByUser: getCommentsByUser,
   getThreadsBySubreddit: getThreadsBySubreddit,
-  getOutfitsOfThreadByThreadId: getOutfitsOfThreadByThreadId,
+  getCommentsOfThreadByThreadId: getCommentsOfThreadByThreadId,
   getAllUsers: getAllUsers,
   getAllThreads: getAllThreads
 };
