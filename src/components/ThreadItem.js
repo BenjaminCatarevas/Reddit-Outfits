@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 
-export class Thread extends Component {
+export class ThreadItem extends Component {
   render() {
     // Multiply 1000 since Date takes in miliseconds, not seconds.
     let threadDate = new Date(this.props.threadInformation.timestamp * 1000);
@@ -22,12 +22,15 @@ export class Thread extends Component {
         thread_title: "test"
         timestamp: 1
         */
-
     return (
       <div className="container">
         <div className="row">
           <h6 style={threadDisplayStyle}>
-            <a href={this.props.threadInformation.thread_permalink}>
+            <a
+              href={`http://localhost:3000/r/${
+                this.props.threadInformation.subreddit
+              }/${this.props.threadInformation.thread_id}`}
+            >
               {humanDate}
             </a>{" "}
             | Number of outfits: {numOutfits} | Number of total comments:{" "}
@@ -48,8 +51,8 @@ const threadDisplayStyle = {
   padding: "2px"
 };
 
-Thread.propTypes = {
+ThreadItem.propTypes = {
   threadInformation: PropTypes.object.isRequired
 };
 
-export default withRouter(Thread);
+export default withRouter(ThreadItem);
