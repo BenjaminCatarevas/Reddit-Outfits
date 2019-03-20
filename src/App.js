@@ -23,7 +23,7 @@ class App extends Component {
       .get(`http://localhost:3001/u/${user}`)
       .then(res => {
         this.setState({
-          commentsFromSpecificUser: res.data.commentsFromSpecificUser
+          commentsFromSpecificUser: res.data.specificUserComments
         });
       })
       .catch(err => console.log("Error: ", err.message));
