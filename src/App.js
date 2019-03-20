@@ -60,7 +60,9 @@ class App extends Component {
     axios
       .get(`http://localhost:3001/r/${subreddit}/${threadId}`)
       .then(res => {
-        this.setState({ commentsFromSpecificThread: res.data.threadOutfits });
+        this.setState({
+          commentsFromSpecificThread: res.data.commentsOfThreadByCommentId
+        });
       })
       .catch(err => console.log("Error: ", err.message));
   };
