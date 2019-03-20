@@ -19,10 +19,6 @@ const config = {
 
 const db = pgp(config);
 
-/* Helper functions */
-
-function sortDataByCommentId(data) {}
-
 /* Query functions */
 async function getCommentsByUser(req, res, next) {
   let authorName = req.params.author_name;
@@ -64,7 +60,7 @@ async function getCommentsByUser(req, res, next) {
     }
     return await res.status(200).json({
       success: true,
-      specificUserComments: commentsByCommentId,
+      commentsFromSpecificUser: commentsByCommentId,
       message: `Retrieved all outfits of user ${authorName}`
     });
   } catch (err) {
