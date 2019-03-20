@@ -8,7 +8,7 @@ router.get("/", function(req, res, next) {
   res.sendFile("../../src/App.js");
 });
 
-router.get("/u/:author_name", db.getCommentsByUser);
+router.get("/u/:author_name", db.getCommentsFromSpecificUser);
 router.get("/r/:subreddit", db.getThreadsBySubreddit);
 router.get("/r/:subreddit/:threadId", db.getCommentsOfThreadByThreadId);
 router.get("/users", db.getAllUsers);
