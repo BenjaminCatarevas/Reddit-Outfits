@@ -26,22 +26,27 @@ export class Thread extends Component {
     return (
       <div className="container">
         <div className="row">
-          <div className="col-xs-6">
-            <h3 className="text-center">
-              <a href={this.props.threadInformation.thread_permalink}>
-                {humanDate}
-              </a>
-            </h3>
-            <h3 className="text-center">Number of outfits: {numOutfits}</h3>
-            <h3 className="text-center">
-              Number of total comments: {numTotalComments}
-            </h3>
-          </div>
+          <h6 style={threadDisplayStyle}>
+            <a href={this.props.threadInformation.thread_permalink}>
+              {humanDate}
+            </a>{" "}
+            | Number of outfits: {numOutfits} | Number of total comments:{" "}
+            {numTotalComments} |{" "}
+            <a href={this.props.threadInformation.thread_permalink}>
+              Thread Link
+            </a>
+          </h6>
         </div>
       </div>
     );
   }
 }
+
+const threadDisplayStyle = {
+  width: "75%",
+  margin: "0 auto",
+  padding: "2px"
+};
 
 Thread.propTypes = {
   threadInformation: PropTypes.object.isRequired
