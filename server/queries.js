@@ -19,11 +19,16 @@ const config = {
 
 const db = pgp(config);
 
+/* Helper functions */
+
+function sortDataByCommentId(data) {}
+
 /* Query functions */
 async function getCommentsByUser(req, res, next) {
   let authorName = req.params.author_name;
   try {
-    const commentData = await db.any(
+    // Extract all outfit data.
+    const outfitData = await db.any(
       "SELECT * FROM outfit WHERE author_name = $1",
       [authorName]
     );
@@ -31,24 +36,25 @@ async function getCommentsByUser(req, res, next) {
     // We do this because outfits are stored as individual URLs, and are not inherently grouped by a comment.
     let commentsByCommentId = {};
     // Go through each comment of the user.
-    for (let currentCommentRecord of commentData) {
+    for (let currentOutfitRecord of outfitData) {
       // Obtain the comment ID so we can make a new entry in the JSON object to be returned.
-      let currentCommentId = currentCommentRecord.comment_id;
+      let currentCommentId = currentOutfitRecord.comment_id;
       // If we've already seen the comment ID before, we know it exists.
       if (currentCommentId in commentsByCommentId) {
-        // So, we just add the outft to the already created array of outfit URLs.
+        // So, we just add the outft from the record to the already created array of outfit URLs.
         commentsByCommentId[currentCommentId].outfits.push(
-          currentCommentRecord.outfit_url
+          currentOutfitRecord.outfit_url
         );
       } else {
-        // For new entries, add the comment data to the entry so we can display it.
+        // Otherwise, the current outfit is from a comment we haven't processed yet.
+        // So we find the comment that has the outfit, and construct a new entry in the object based on the comment.
         const commentData = await db.any(
           "SELECT * FROM comment WHERE comment_id = $1",
           [currentCommentId]
         );
         commentsByCommentId[currentCommentId] = {
           authorName: commentData[0].author_name,
-          outfits: [currentCommentRecord.outfit_url],
+          outfits: [currentOutfitRecord.outfit_url],
           commentBody: commentData[0].body,
           commentPermalink: commentData[0].comment_permalink,
           commentScore: commentData[0].comment_score,
