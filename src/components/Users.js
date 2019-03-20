@@ -14,7 +14,13 @@ export class Users extends Component {
     // If the users state is null, return an empty div, else return User components for each user.
     return this.props.allUsers ? (
       this.props.allUsers.map(user => {
-        return <User key={user.author_name} userInformation={user} />;
+        return (
+          <div className="row">
+            <div className="container">
+              <User key={user.author_name} userInformation={user} />
+            </div>
+          </div>
+        );
       })
     ) : (
       <div />
