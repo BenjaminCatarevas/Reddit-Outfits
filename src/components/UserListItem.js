@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 
-export class User extends Component {
+export class UserListItem extends Component {
   render() {
     // This will be the component displayed by the Users component
     // It contains info like score, etc.
@@ -26,8 +26,8 @@ const userStyle = {
   margin: "0 auto"
 };
 
-User.propTypes = {
+UserListItem.propTypes = {
   userInformation: PropTypes.object.isRequired
 };
 
-export default withRouter(User);
+export default withRouter(UserListItem);

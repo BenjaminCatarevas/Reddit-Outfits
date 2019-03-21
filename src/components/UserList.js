@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
-import User from "./User";
+import UserListItem from "./UserListItem";
 
-export class Users extends Component {
+export class UserList extends Component {
   // Add function for end-user specifying a username and act accordingly (redirect)
 
   componentDidMount() {
@@ -17,7 +17,7 @@ export class Users extends Component {
         return (
           <div key={user.author_name} className="row">
             <div className="container">
-              <User userInformation={user} />
+              <UserListItem userInformation={user} />
             </div>
           </div>
         );
@@ -28,8 +28,8 @@ export class Users extends Component {
   }
 }
 
-User.propTypes = {
+UserList.propTypes = {
   getAllUsers: PropTypes.func.isRequired
 };
 
-export default withRouter(Users);
+export default withRouter(UserList);

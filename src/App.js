@@ -6,7 +6,7 @@ import UserComments from "./components/UserComments";
 import NavigationBar from "./components/NavigationBar";
 import About from "./components/About";
 import ThreadList from "./components/ThreadList";
-import Users from "./components/Users";
+import UserList from "./components/UserList";
 import ThreadDisplayer from "./components/ThreadDisplayer";
 
 class App extends Component {
@@ -120,7 +120,7 @@ class App extends Component {
               path="/users"
               render={props => (
                 <div>
-                  <Users
+                  <UserList
                     getAllUsers={this.getAllUsers}
                     allUsers={this.state.allUsers}
                     {...props}
