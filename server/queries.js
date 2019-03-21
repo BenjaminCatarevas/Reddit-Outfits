@@ -170,18 +170,43 @@ async function getThreadByTimestamp(req, res, next) {
   let formattedDate = year + "-" + month + "-" + day;
   let specifiedTimestamp = new Date(formattedDate).getTime() / 1000;
   try {
-    const data = await db.any(
+    // Query adapted from: https://stackoverflow.com/a/18270068 and https://stackoverflow.com/a/16610459
+    const threadInformation = await db.any(
       `SELECT * 
       FROM thread 
       WHERE subreddit = $1
-      AND ABS((thread_timestamp) - ($2)) <= 86400`,
+      AND TO_TIMESTAMP(thread_timestamp)::date >= TO_TIMESTAMP($2)
+      AND TO_TIMESTAMP(thread_timestamp)::date < TO_TIMESTAMP($2) + INTERVAL '1 DAY'`,
       [subreddit, specifiedTimestamp]
     );
-    return await res.status(200).json({
-      success: true,
-      specifiedThreadByTimestamp: data ? data[0] : [],
-      message: `Retrieved thread with given date ${formattedDate}`
-    });
+
+    console.log(threadInformation);
+
+    // We want to stop if the query yielded 0 results.
+    if (threadInformation.length === 0) {
+      return await res.status(200).json({
+        success: true,
+        specifiedThreadByTimestamp: [],
+        message: `No data retrieved with given date ${formattedDate}`
+      });
+    } else {
+      // We have the thread ID of the thread with the specified date.
+      // So now we want to get the outfits from that thread, organize them, and return them.
+      const outfitsOfThread = await db.any(
+        "SELECT * FROM outfit WHERE thread_id = $1",
+        [threadInformation[0].thread_id]
+      );
+
+      const commentsOfThreadByCommentId = await sortCommentsByCommentId(
+        outfitsOfThread,
+        res
+      );
+      return await res.status(200).json({
+        success: true,
+        commentsOfThreadByCommentId: commentsOfThreadByCommentId,
+        message: `Retrieved thread with given date ${formattedDate}`
+      });
+    }
   } catch (err) {
     return await res.json({
       success: false,
