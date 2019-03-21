@@ -36,8 +36,9 @@ export class UserComment extends Component {
 
 const commentContainerStyle = {
   border: "2px solid #8B8C89",
-  width: "75%",
-  margin: "0 auto"
+  maxWidth: "75%",
+  marginTop: "10px",
+  marginBottom: "10px"
 };
 
 const textDisplayStyle = {
