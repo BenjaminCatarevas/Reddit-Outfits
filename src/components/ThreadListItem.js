@@ -10,6 +10,10 @@ export class ThreadListItem extends Component {
     let threadDate = new Date(threadInformation.thread_timestamp * 1000);
     let humanDate = threadDate.toDateString();
 
+    let year = threadDate.getFullYear();
+    let month = threadDate.getMonth() + 1;
+    let day = threadDate.getDate();
+
     let numOutfits = threadInformation.num_top_level_comments;
     let numTotalComments = threadInformation.num_total_comments;
 
@@ -18,9 +22,9 @@ export class ThreadListItem extends Component {
         <div className="row">
           <h6 style={threadDisplayStyle}>
             <a
-              href={`http://localhost:3000/r/${threadInformation.subreddit}/${
-                threadInformation.thread_id
-              }`}
+              href={`http://localhost:3000/r/${
+                threadInformation.subreddit
+              }/${year}/${month}/${day}`}
             >
               {humanDate}
             </a>{" "}
