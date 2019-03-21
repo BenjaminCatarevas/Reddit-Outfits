@@ -5,6 +5,14 @@ import { BigImageDisplay } from "./BigImageDisplay";
 import PropTypes from "prop-types";
 
 export class UserComment extends Component {
+  state = {
+    bigImageToDisplay: this.props.userInformation.outfits[0]
+  };
+
+  setBigImageToDisplay = imageUrl => {
+    this.setState({ bigImageToDisplay: imageUrl });
+  };
+
   render() {
     let threadDate = new Date(
       this.props.userInformation.commentTimestamp * 1000
@@ -22,13 +30,17 @@ export class UserComment extends Component {
             Permalink
           </a>{" "}
           | Score: {this.props.userInformation.commentScore} | Posted:{" "}
-          {humanDate}
+          {humanDate} at {threadDate.toLocaleTimeString("en-US")}
         </h6>
         <BigImageDisplay
-          outfit={this.props.userInformation.outfits[0]}
+          bigImageToDisplay={this.state.bigImageToDisplay}
           comment={this.props.userInformation.commentBody}
         />
-        <ImageSelector outfits={this.props.userInformation.outfits} />
+        <ImageSelector
+          bigImageToDisplay={this.state.bigImageToDisplay}
+          outfits={this.props.userInformation.outfits}
+          setBigImageToDisplay={this.setBigImageToDisplay}
+        />
       </div>
     );
   }
