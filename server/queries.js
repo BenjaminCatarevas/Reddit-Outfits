@@ -48,7 +48,7 @@ async function sortCommentsByCommentId(data, res) {
           commentBody: commentData[0].body,
           commentPermalink: commentData[0].comment_permalink,
           commentScore: commentData[0].comment_score,
-          commentTimestamp: commentData[0].timestamp
+          commentTimestamp: commentData[0].comment_timestamp
         };
       }
     }
@@ -165,10 +165,36 @@ async function getAllThreads(req, res, next) {
   }
 }
 
+async function getThreadByTimestamp(req, res, next) {
+  let { year, month, day, subreddit } = req.params;
+  let formattedDate = year + "-" + month + "-" + day;
+  let specifiedTimestamp = new Date(formattedDate).getTime() / 1000;
+  try {
+    const data = await db.any(
+      `SELECT * 
+      FROM thread 
+      WHERE subreddit = $1
+      AND ABS((thread_timestamp) - ($2)) <= 86400`,
+      [subreddit, specifiedTimestamp]
+    );
+    return await res.status(200).json({
+      success: true,
+      specifiedThreadByTimestamp: data ? data[0] : [],
+      message: `Retrieved thread with given date ${formattedDate}`
+    });
+  } catch (err) {
+    return await res.json({
+      success: false,
+      error: err.message || err
+    });
+  }
+}
+
 module.exports = {
   getCommentsFromSpecificUser: getCommentsFromSpecificUser,
   getThreadsBySubreddit: getThreadsBySubreddit,
   getCommentsOfThreadByThreadId: getCommentsOfThreadByThreadId,
   getAllUsers: getAllUsers,
-  getAllThreads: getAllThreads
+  getAllThreads: getAllThreads,
+  getThreadByTimestamp: getThreadByTimestamp
 };
