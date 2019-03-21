@@ -10,11 +10,11 @@ export class BigImageDisplay extends Component {
           <img
             style={bigImageStyle}
             className="img-responsive float-left"
-            src={this.props.outfit}
-            alt={this.props.outfit}
+            src={this.props.bigImageToDisplay}
+            alt={this.props.bigImageToDisplay}
           />
         </div>
-        <div className="col-xs-6">
+        <div style={commentStyle} className="col-xs-6">
           <ReactMarkdown escapeHtml={true} source={this.props.comment} />
         </div>
       </div>
@@ -28,8 +28,12 @@ const bigImageStyle = {
   marginLeft: "5px"
 };
 
+const commentStyle = {
+  marginLeft: "5px"
+};
+
 BigImageDisplay.propTypes = {
-  outfit: PropTypes.string.isRequired,
+  bigImageToDisplay: PropTypes.string.isRequired,
   comment: PropTypes.string.isRequired
 };
 
