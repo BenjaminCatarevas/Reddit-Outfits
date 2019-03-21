@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 
-export class ThreadItem extends Component {
+export class ThreadListItem extends Component {
   render() {
     // Multiply 1000 since Date takes in miliseconds, not seconds.
     let threadDate = new Date(this.props.threadInformation.timestamp * 1000);
@@ -35,7 +35,11 @@ export class ThreadItem extends Component {
             </a>{" "}
             | Number of outfits: {numOutfits} | Number of total comments:{" "}
             {numTotalComments} |{" "}
-            <a href={this.props.threadInformation.thread_permalink}>
+            <a
+              rel="noopener noreferrer"
+              target="_blank"
+              href={this.props.threadInformation.thread_permalink}
+            >
               Thread Link
             </a>
           </h6>
@@ -51,8 +55,8 @@ const threadDisplayStyle = {
   padding: "2px"
 };
 
-ThreadItem.propTypes = {
+ThreadListItem.propTypes = {
   threadInformation: PropTypes.object.isRequired
 };
 
-export default withRouter(ThreadItem);
+export default withRouter(ThreadListItem);
