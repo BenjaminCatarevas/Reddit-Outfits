@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
-import ThreadItem from "./ThreadItem";
+import ThreadListItem from "./ThreadListItem";
 
 export class ThreadList extends Component {
   // Big link that goes to thread display page on reddit outfits
@@ -20,7 +20,9 @@ export class ThreadList extends Component {
     // If the threads state is null, return an empty div, else return Thread components for each thread.
     return this.props.allThreads ? (
       this.props.allThreads.map(thread => {
-        return <ThreadItem key={thread.thread_id} threadInformation={thread} />;
+        return (
+          <ThreadListItem key={thread.thread_id} threadInformation={thread} />
+        );
       })
     ) : (
       <div />
