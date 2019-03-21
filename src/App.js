@@ -56,9 +56,9 @@ class App extends Component {
       .catch(err => console.log("Error: ", err.message));
   };
 
-  getCommentsOfThreadByThreadId = (subreddit, threadId) => {
+  getCommentsOfThreadByThreadDate = (subreddit, year, month, day) => {
     axios
-      .get(`http://localhost:3001/r/${subreddit}/${threadId}`)
+      .get(`http://localhost:3001/r/${subreddit}/${year}/${month}/${day}`)
       .then(res => {
         this.setState({
           commentsFromSpecificThread: res.data.commentsOfThreadByCommentId
@@ -85,7 +85,24 @@ class App extends Component {
               commentsFromSpecificUser={this.state.commentsFromSpecificUser}
               {...this.props}
             />
-            <Route exact path="/" {...this.props} />
+            <Route
+              exact
+              path="/"
+              render={props => (
+                <div>
+                  <h6 className="text-center">
+                    Search for a user or explore outfit threads
+                  </h6>
+                  <h6 className="text-center">
+                    If you know the date of the thread you want to explore,
+                    enter it as the following:
+                  </h6>
+                  <h6 className="text-center">
+                    redditoutfits.com/r/(subreddit)/(year)/(month)/(day)
+                  </h6>
+                </div>
+              )}
+            />
             <Route
               path="/u/:username"
               render={props => (
@@ -129,12 +146,12 @@ class App extends Component {
               )}
             />
             <Route
-              path="/r/:subreddit/:threadId"
+              path="/r/:subreddit/:year/:month/:day"
               render={props => (
                 <div>
                   <ThreadDisplayer
-                    getCommentsOfThreadByThreadId={
-                      this.getCommentsOfThreadByThreadId
+                    getCommentsOfThreadByThreadDate={
+                      this.getCommentsOfThreadByThreadDate
                     }
                     commentsFromSpecificThread={
                       this.state.commentsFromSpecificThread

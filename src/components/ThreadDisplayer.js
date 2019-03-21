@@ -7,7 +7,12 @@ export class ThreadDisplayer extends Component {
       match: { params }
     } = this.props;
 
-    this.props.getCommentsOfThreadByThreadId(params.subreddit, params.threadId);
+    this.props.getCommentsOfThreadByThreadDate(
+      params.subreddit,
+      params.year,
+      params.month,
+      params.day
+    );
   }
 
   render() {
