@@ -2,6 +2,10 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 export class ImageSelector extends Component {
+  onClick(imageUrl) {
+    this.props.setBigImageToDisplay(imageUrl);
+  }
+
   render() {
     return (
       <div className="row">
@@ -9,6 +13,7 @@ export class ImageSelector extends Component {
           return (
             <div key={key} className="col-xs-2">
               <img
+                onClick={this.onClick.bind(this, this.props.outfits[key])}
                 style={imageStyle}
                 className="img-responsive"
                 src={outfit}
