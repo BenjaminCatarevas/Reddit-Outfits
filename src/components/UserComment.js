@@ -14,9 +14,9 @@ export class UserComment extends Component {
   };
 
   render() {
-    let threadDate = new Date(
-      this.props.userInformation.commentTimestamp * 1000
-    );
+    const { userInformation } = this.props;
+
+    let threadDate = new Date(userInformation.commentTimestamp * 1000);
     let humanDate = threadDate.toDateString();
 
     return (
@@ -25,20 +25,20 @@ export class UserComment extends Component {
           <a
             rel="noopener noreferrer"
             target="_blank"
-            href={this.props.userInformation.commentPermalink}
+            href={userInformation.commentPermalink}
           >
             Permalink
           </a>{" "}
-          | Score: {this.props.userInformation.commentScore} | Posted:{" "}
-          {humanDate} at {threadDate.toLocaleTimeString("en-US")}
+          | Score: {userInformation.commentScore} | Posted: {humanDate} at{" "}
+          {threadDate.toLocaleTimeString("en-US")}
         </h6>
         <BigImageDisplay
           bigImageToDisplay={this.state.bigImageToDisplay}
-          comment={this.props.userInformation.commentBody}
+          comment={userInformation.commentBody}
         />
         <ImageSelector
           bigImageToDisplay={this.state.bigImageToDisplay}
-          outfits={this.props.userInformation.outfits}
+          outfits={userInformation.outfits}
           setBigImageToDisplay={this.setBigImageToDisplay}
         />
       </div>

@@ -4,21 +4,23 @@ import { withRouter } from "react-router-dom";
 
 export class ThreadListItem extends Component {
   render() {
+    const { threadInformation } = this.props;
+
     // Multiply 1000 since Date takes in seconds, not miliseconds.
-    let threadDate = new Date(this.props.threadInformation.timestamp * 1000);
+    let threadDate = new Date(threadInformation.thread_timestamp * 1000);
     let humanDate = threadDate.toDateString();
 
-    let numOutfits = this.props.threadInformation.num_top_level_comments;
-    let numTotalComments = this.props.threadInformation.num_total_comments;
+    let numOutfits = threadInformation.num_top_level_comments;
+    let numTotalComments = threadInformation.num_total_comments;
 
     return (
       <div className="container">
         <div className="row">
           <h6 style={threadDisplayStyle}>
             <a
-              href={`http://localhost:3000/r/${
-                this.props.threadInformation.subreddit
-              }/${this.props.threadInformation.thread_id}`}
+              href={`http://localhost:3000/r/${threadInformation.subreddit}/${
+                threadInformation.thread_id
+              }`}
             >
               {humanDate}
             </a>{" "}
@@ -27,7 +29,7 @@ export class ThreadListItem extends Component {
             <a
               rel="noopener noreferrer"
               target="_blank"
-              href={this.props.threadInformation.thread_permalink}
+              href={threadInformation.thread_permalink}
             >
               Thread Link
             </a>

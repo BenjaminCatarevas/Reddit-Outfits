@@ -4,18 +4,20 @@ import ReactMarkdown from "react-markdown";
 
 export class BigImageDisplay extends Component {
   render() {
+    const { bigImageToDisplay, comment } = this.props;
+
     return (
       <div className="row">
         <div className="col-xs-6">
           <img
             style={bigImageStyle}
             className="img-responsive float-left"
-            src={this.props.bigImageToDisplay}
-            alt={this.props.bigImageToDisplay}
+            src={bigImageToDisplay}
+            alt={bigImageToDisplay}
           />
         </div>
         <div style={commentStyle} className="col-xs-6">
-          <ReactMarkdown escapeHtml={true} source={this.props.comment} />
+          <ReactMarkdown escapeHtml={true} source={comment} />
         </div>
       </div>
     );

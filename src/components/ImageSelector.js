@@ -7,13 +7,14 @@ export class ImageSelector extends Component {
   }
 
   render() {
+    const { outfits } = this.props;
     return (
       <div className="row">
-        {this.props.outfits.map((outfit, key) => {
+        {outfits.map((outfit, key) => {
           return (
             <div key={key} className="col-xs-2">
               <img
-                onClick={this.onClick.bind(this, this.props.outfits[key])}
+                onClick={this.onClick.bind(this, outfits[key])}
                 style={imageStyle}
                 className="img-responsive"
                 src={outfit}

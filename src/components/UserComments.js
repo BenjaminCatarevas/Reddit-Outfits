@@ -5,14 +5,17 @@ import PropTypes from "prop-types";
 
 export class UserComments extends Component {
   componentDidMount() {
+    const {
+      match: { params }
+    } = this.props;
     // Once the component mounts, grab the comments of the given user.
     // Add check to see if 0 results. If so, redirect to error page.
-    this.props.getCommentsFromSpecificUser(this.props.match.params.username);
+    this.props.getCommentsFromSpecificUser(params.username);
   }
 
   render() {
     // Use object destructuring to shorten using this.props.commentsFromSpecificUser everywhere.
-    let { commentsFromSpecificUser } = this.props;
+    const { commentsFromSpecificUser } = this.props;
     // Object mapping approach adapted from: https://stackoverflow.com/a/39965962
     // If the commentsFromSpecificUser is null, just return an empty div. Otherwise, create a UserComment component for each comment.
     return commentsFromSpecificUser ? (

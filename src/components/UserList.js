@@ -11,9 +11,10 @@ export class UserList extends Component {
   }
 
   render() {
+    const { allUsers } = this.props;
     // If the users state is null, return an empty div, else return User components for each user.
-    return this.props.allUsers ? (
-      this.props.allUsers.map(user => {
+    return allUsers ? (
+      allUsers.map(user => {
         return (
           <div key={user.author_name} className="row">
             <div className="container">

@@ -3,10 +3,11 @@ import UserComment from "./UserComment";
 
 export class ThreadDisplayer extends Component {
   componentDidMount() {
-    this.props.getCommentsOfThreadByThreadId(
-      this.props.match.params.subreddit,
-      this.props.match.params.threadId
-    );
+    const {
+      match: { params }
+    } = this.props;
+
+    this.props.getCommentsOfThreadByThreadId(params.subreddit, params.threadId);
   }
 
   render() {

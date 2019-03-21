@@ -8,9 +8,13 @@ export class ThreadList extends Component {
   // Subtext that has # comments and # outfits
   // 4 random outfits
   componentDidMount() {
+    const {
+      match: { params }
+    } = this.props;
+
     // If the user requested a specific subreddit, use that.
-    if (this.props.match.params.subreddit) {
-      this.props.getThreadsBySubreddit(this.props.match.params.subreddit);
+    if (params.subreddit) {
+      this.props.getThreadsBySubreddit(params.subreddit);
     } else {
       this.props.getAllThreads();
     }
