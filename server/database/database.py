@@ -73,8 +73,8 @@ class RedditOutfitsDatabase:
         # We use named parameters because psycopg2 uses a dictionary to map named parameters to values in PostgreSQL.
         # It is also worth noting that even if a dictionary has extra keys, psycopg2 will simply ignore those and look only for the named parameters.
         insert_thread = """
-            INSERT INTO thread (num_top_level_comments, num_total_comments, subreddit, subreddit_id, thread_id, thread_title, thread_score, thread_permalink, timestamp)
-            VALUES(%(num_top_level_comments)s, %(num_total_comments)s, %(subreddit)s, %(subreddit_id)s, %(thread_id)s, %(thread_title)s, %(thread_score)s, %(thread_permalink)s, %(timestamp)s);
+            INSERT INTO thread (num_top_level_comments, num_total_comments, subreddit, subreddit_id, thread_id, thread_title, thread_score, thread_permalink, thread_timestamp)
+            VALUES(%(num_top_level_comments)s, %(num_total_comments)s, %(subreddit)s, %(subreddit_id)s, %(thread_id)s, %(thread_title)s, %(thread_score)s, %(thread_permalink)s, %(thread_timestamp)s);
         """
 
         self.cur.execute(insert_thread, thread_information)
@@ -101,8 +101,8 @@ class RedditOutfitsDatabase:
         '''
 
         insert_comment = """
-            INSERT INTO comment (author_name, body, comment_id, comment_permalink, comment_score, subreddit, subreddit_id, thread_id, timestamp)
-            VALUES(%(author_name)s, %(body)s, %(comment_id)s, %(comment_permalink)s, %(comment_score)s, %(subreddit)s, %(subreddit_id)s, %(thread_id)s, %(timestamp)s);
+            INSERT INTO comment (author_name, body, comment_id, comment_permalink, comment_score, subreddit, subreddit_id, thread_id, comment_timestamp)
+            VALUES(%(author_name)s, %(body)s, %(comment_id)s, %(comment_permalink)s, %(comment_score)s, %(subreddit)s, %(subreddit_id)s, %(thread_id)s, %(comment_timestamp)s);
         """
 
         self.cur.execute(insert_comment, comment)
@@ -114,12 +114,12 @@ class RedditOutfitsDatabase:
         '''
 
         insert_outfit = """
-            INSERT INTO outfit (author_name, comment_id, outfit_url, subreddit, thread_id, timestamp)
+            INSERT INTO outfit (author_name, comment_id, outfit_url, subreddit, thread_id, outfit_timestamp)
             VALUES(%s, %s, %s, %s, %s, %s);
         """
 
         self.cur.execute(insert_outfit, (comment['author_name'], comment['comment_id'],
-                                         outfit_url, comment['subreddit'], comment['thread_id'], comment['timestamp']))
+                                         outfit_url, comment['subreddit'], comment['thread_id'], comment['comment_timestamp']))
         self.conn.commit()
 
     def thread_exists(self, thread_id: str) -> bool:
@@ -216,7 +216,7 @@ class RedditOutfitsDatabase:
         select_threads = """
             SELECT *
             FROM thread
-            WHERE timestamp > EXTRACT(epoch from NOW() - INTERVAL '14 DAY') AND subreddit = %s
+            WHERE thread_timestamp > EXTRACT(epoch from NOW() - INTERVAL '14 DAY') AND subreddit = %s
         """
 
         self.cur.execute(select_threads, (subreddit,))

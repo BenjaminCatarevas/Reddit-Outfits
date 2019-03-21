@@ -135,7 +135,7 @@ def create_comment_dictionary(comment, outfits_from_comment: set) -> dict:
         'subreddit': comment.subreddit.display_name.lower(),
         'subreddit_id': comment.subreddit_id,
         'thread_id': comment.submission.id,
-        'timestamp': comment.created_utc
+        'comment_timestamp': comment.created_utc
     }
 
     return comment
@@ -166,7 +166,7 @@ def generate_thread_information_from_thread(thread_id: str) -> dict:
         'thread_title': thread_submission.title,
         'thread_score': thread_submission.score,
         'thread_permalink': 'https://reddit.com' + thread_submission.permalink,
-        'timestamp': thread_submission.created_utc
+        'thread_timestamp': thread_submission.created_utc
     }
 
     return thread
