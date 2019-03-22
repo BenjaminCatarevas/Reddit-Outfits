@@ -57,8 +57,8 @@ def generate_comments_from_thread(thread_id: str) -> list:
 
     # Traverse all of the comments.
     for top_level_comment in thread_submission.comments:
-        # If we hit an empty comment, just move on.
-        if top_level_comment is None:
+        # If we hit an empty comment or a comment whose account has been deleted, move on.
+        if top_level_comment is None or top_level_comment.author is None:
             continue
 
         outfits_from_comment = create_outfit_urls(top_level_comment.body)
@@ -130,7 +130,7 @@ def create_comment_dictionary(comment, outfits_from_comment: set) -> dict:
     '''
 
     comment = {
-        'author_name': comment.author.name if comment.author is not None else '[deleted]',
+        'author_name': comment.author.name,
         'body': comment.body,
         'comment_id': comment.id,
         'comment_permalink': 'https://reddit.com' + comment.permalink,
