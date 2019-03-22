@@ -3,11 +3,11 @@ import { withRouter, BrowserRouter as Router, Route } from "react-router-dom";
 import "./App.css";
 import axios from "axios";
 import UserComments from "./components/UserComments";
-import NavigationBar from "./components/NavigationBar";
 import About from "./components/About";
 import ThreadList from "./components/ThreadList";
 import UserList from "./components/UserList";
 import ThreadDisplayer from "./components/ThreadDisplayer";
+import Header from "./components/Header";
 
 class App extends Component {
   state = {
@@ -73,25 +73,22 @@ class App extends Component {
     return (
       <Router>
         <div className="App">
-          <div className="container">
-            <h1 style={{ textAlign: "center", fontWeight: "bold" }}>
-              <a style={{ color: "black", textDecoration: "none" }} href="/">
-                Reddit Outfits
-              </a>
-            </h1>
-            <h6 style={{ textAlign: "center", color: "#555" }}>
-              View outfits, threads, and more of reddit's fashion communities
-            </h6>
-            <NavigationBar
-              getCommentsFromSpecificUser={this.getCommentsFromSpecificUser}
-              commentsFromSpecificUser={this.state.commentsFromSpecificUser}
-              {...this.props}
-            />
+          <div className="container" id="app-container">
+            <div className="container" id="header-container">
+              <Header
+                getCommentsFromSpecificUser={this.getCommentsFromSpecificUser}
+                commentsFromSpecificUser={this.state.commentsFromSpecificUser}
+              />
+            </div>
             <Route exact path="/" />
             <Route
               path="/u/:username"
               render={props => (
-                <div className="text-center" style={{ paddingTop: "7.5px" }}>
+                <div
+                  className="text-center"
+                  id="username-displayer"
+                  style={{ paddingTop: "7.5px" }}
+                >
                   <h6>
                     Posts by{" "}
                     <a
@@ -104,15 +101,17 @@ class App extends Component {
                       /u/{this.state.currentlyDisplayedUser}
                     </a>
                   </h6>
-                  <UserComments
-                    getCommentsFromSpecificUser={
-                      this.getCommentsFromSpecificUser
-                    }
-                    commentsFromSpecificUser={
-                      this.state.commentsFromSpecificUser
-                    }
-                    {...props}
-                  />{" "}
+                  <div className="container" id="user-comments-container">
+                    <UserComments
+                      getCommentsFromSpecificUser={
+                        this.getCommentsFromSpecificUser
+                      }
+                      commentsFromSpecificUser={
+                        this.state.commentsFromSpecificUser
+                      }
+                      {...props}
+                    />{" "}
+                  </div>
                 </div>
               )}
             />
@@ -120,7 +119,7 @@ class App extends Component {
               exact
               path="/r/:subreddit"
               render={props => (
-                <div>
+                <div className="container" id="thread-list-container">
                   <ThreadList
                     getThreadsBySubreddit={this.getThreadsBySubreddit}
                     getAllThreads={this.getAllThreads}
@@ -133,7 +132,7 @@ class App extends Component {
             <Route
               path="/users"
               render={props => (
-                <div>
+                <div className="container" id="user-list-container">
                   <UserList
                     getAllUsers={this.getAllUsers}
                     allUsers={this.state.allUsers}
@@ -145,7 +144,7 @@ class App extends Component {
             <Route
               path="/r/:subreddit/:year/:month/:day"
               render={props => (
-                <div>
+                <div className="container" id="thread-displayer-container">
                   <ThreadDisplayer
                     getCommentsOfThreadByThreadDate={
                       this.getCommentsOfThreadByThreadDate
