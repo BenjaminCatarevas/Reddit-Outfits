@@ -5,7 +5,7 @@ from urllib.parse import urlparse
 import praw
 import config
 from util_url import extract_image_urls_from_imgur_url
-from util_url import extract_outfit_urls_from_comment
+from util_url import extract_outfit_urls_from_comment_body
 from util_url import generate_imgur_url_info
 from util_url import is_dressed_so_url
 from util_url import is_imgur_url
@@ -66,9 +66,9 @@ def generate_comments_from_thread(thread_id: str) -> list:
     return comments
 
 
-def create_outfit_urls(comment: str) -> set:
+def create_outfit_urls(comment_body: str) -> set:
     '''
-    Given a comment, constructs a list of each Imgur or Dressed.so URL from a comment ending in .jpg, .png, or .jpeg.
+    Given the body of a comment, constructs a list of each Imgur or Dressed.so URL from the body of a comment ending in .jpg, .png, or .jpeg.
     Returns a list of outfit URLs.
     '''
 
@@ -76,7 +76,7 @@ def create_outfit_urls(comment: str) -> set:
 
     # Extract all of the image links from the given comment.
     # We call it raw because some Imgur URLs may have multiple images (e.g. albums, galleries), so we need to explode those URLs.
-    raw_outfit_urls = extract_outfit_urls_from_comment(comment)
+    raw_outfit_urls = extract_outfit_urls_from_comment_body(comment_body)
 
     for raw_outfit_url in raw_outfit_urls:
         parsed_raw_outfit_url = urlparse(raw_outfit_url)
