@@ -23,7 +23,7 @@ class RedditOutfitsDatabase:
     def process_thread(self, thread_id: str):
         '''
         Given a thread ID, retrieves all of the top-level comments and processes them.
-        This function is called for new threads only. 
+        This function is called for new threads only.
         '''
 
         # If the thread exists, we have already processed it, so we do nothing.
@@ -48,22 +48,31 @@ class RedditOutfitsDatabase:
         # Start with the table that does not have any foreign keys or constraints(i.e. top-down) when adding information.
         # The order is subreddit, thread, author, comment, outfit.
         for comment in comments:
-            author_exists = self.author_exists(comment['author_name'])
-
-            # If the author exists, update their information. Otherwise insert a new entry.
-            if author_exists:
-                self.update_author(comment)
+            # In case the comment is None (most likely due to deletion), move on.
+            if comment is None:
+                continue
+            elif comment['outfits'] == []:
+                continue
             else:
-                self.insert_author(comment)
+                self.process_comment(comment)
 
-            self.insert_comment(comment)
+    def process_comment(self, comment: dict):
+        author_exists = self.author_exists(comment['author_name'])
 
-            for outfit in comment['outfits']:
-                outfit_exists = self.outfit_exists(outfit)
+        # If the author exists, update their information. Otherwise insert a new entry.
+        if author_exists:
+            self.update_author(comment)
+        else:
+            self.insert_author(comment)
 
-                # Only insert if the user did not submit a duplicate outfit and/or split an album into individual images.
-                if not outfit_exists:
-                    self.insert_outfit(comment, outfit)
+        self.insert_comment(comment)
+
+        for outfit in comment['outfits']:
+            outfit_exists = self.outfit_exists(outfit)
+
+            # Only insert if the user did not submit a duplicate outfit and/or split an album into individual images.
+            if not outfit_exists:
+                self.insert_outfit(comment, outfit)
 
     def insert_thread(self, thread_information: dict):
         '''
@@ -101,8 +110,8 @@ class RedditOutfitsDatabase:
         '''
 
         insert_comment = """
-            INSERT INTO comment (author_name, body, comment_id, comment_permalink, comment_score, subreddit, subreddit_id, thread_id, comment_timestamp)
-            VALUES(%(author_name)s, %(body)s, %(comment_id)s, %(comment_permalink)s, %(comment_score)s, %(subreddit)s, %(subreddit_id)s, %(thread_id)s, %(comment_timestamp)s);
+            INSERT INTO comment (author_name, body, comment_id, comment_permalink, comment_score, subreddit, subreddit_id, thread_id, comment_timestamp, num_outfits)
+            VALUES(%(author_name)s, %(body)s, %(comment_id)s, %(comment_permalink)s, %(comment_score)s, %(subreddit)s, %(subreddit_id)s, %(thread_id)s, %(comment_timestamp)s, %(num_outfits)s);
         """
 
         self.cur.execute(insert_comment, comment)
@@ -114,12 +123,12 @@ class RedditOutfitsDatabase:
         '''
 
         insert_outfit = """
-            INSERT INTO outfit (author_name, comment_id, outfit_url, subreddit, thread_id, outfit_timestamp)
-            VALUES(%s, %s, %s, %s, %s, %s);
+            INSERT INTO outfit (author_name, comment_id, outfit_url, subreddit, thread_id)
+            VALUES(%s, %s, %s, %s, %s);
         """
 
         self.cur.execute(insert_outfit, (comment['author_name'], comment['comment_id'],
-                                         outfit_url, comment['subreddit'], comment['thread_id'], comment['comment_timestamp']))
+                                         outfit_url, comment['subreddit'], comment['thread_id']))
         self.conn.commit()
 
     def thread_exists(self, thread_id: str) -> bool:
@@ -245,7 +254,7 @@ class RedditOutfitsDatabase:
         '''
 
         select_comment_query = """
-            SELECT 1
+            SELECT *
             FROM comment
             WHERE comment_id = %s
         """
@@ -254,7 +263,7 @@ class RedditOutfitsDatabase:
 
         return list(self.cur)
 
-    def update_comment(self, comment_id: str, body: str, comment_score: str):
+    def update_comment(self, comment_id: str, body: str, comment_score: str, num_outfits: int):
         '''
         Given a comment ID, updates the body of the comment and comment score for the corresponding comment.
         '''
@@ -263,11 +272,12 @@ class RedditOutfitsDatabase:
             UPDATE comment
             SET body = %s,
                 comment_score = %s,
-            WHERE author = %s
+                num_outfits = %s
+            WHERE comment_id = %s
         """
 
         self.cur.execute(update_comment_query,
-                         (body, comment_score, comment_id,))
+                         (body, comment_score, comment_id, num_outfits))
         self.conn.commit()
 
     def update_thread(self, thread_id: str, num_top_level_comments: int, thread_score: int, num_total_comments: int):
