@@ -33,7 +33,7 @@ export class NavigationBar extends Component {
   render() {
     return (
       // Source: https://react-bootstrap.github.io/components/navbar/
-      <div>
+      <div id="navbar-container">
         <Navbar style={navBarStyle} bg="white" expand="lg">
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">

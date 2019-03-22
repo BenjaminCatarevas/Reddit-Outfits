@@ -17,7 +17,7 @@ export class UserList extends Component {
       allUsers.map(user => {
         return (
           <div key={user.author_name} className="row">
-            <div className="container">
+            <div className="container" id="user-item-container">
               <UserListItem userInformation={user} />
             </div>
           </div>

@@ -20,7 +20,11 @@ export class UserComment extends Component {
     let humanDate = threadDate.toDateString();
 
     return (
-      <div className="container" style={commentContainerStyle}>
+      <div
+        className="container"
+        id="user-comment-displayer"
+        style={commentContainerStyle}
+      >
         <h6 style={textDisplayStyle}>
           <a
             rel="noopener noreferrer"

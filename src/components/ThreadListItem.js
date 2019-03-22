@@ -18,28 +18,24 @@ export class ThreadListItem extends Component {
     let numTotalComments = threadInformation.num_total_comments;
 
     return (
-      <div className="container">
-        <div className="row">
-          <h6 style={threadDisplayStyle}>
-            <a
-              href={`http://localhost:3000/r/${
-                threadInformation.subreddit
-              }/${year}/${month}/${day}`}
-            >
-              {humanDate}
-            </a>{" "}
-            | Number of outfits: {numOutfits} | Number of total comments:{" "}
-            {numTotalComments} |{" "}
-            <a
-              rel="noopener noreferrer"
-              target="_blank"
-              href={threadInformation.thread_permalink}
-            >
-              Thread Link
-            </a>
-          </h6>
-        </div>
-      </div>
+      <h6 style={threadDisplayStyle}>
+        <a
+          href={`http://localhost:3000/r/${
+            threadInformation.subreddit
+          }/${year}/${month}/${day}`}
+        >
+          {humanDate}
+        </a>{" "}
+        | Number of outfits: {numOutfits} | Number of total comments:{" "}
+        {numTotalComments} |{" "}
+        <a
+          rel="noopener noreferrer"
+          target="_blank"
+          href={threadInformation.thread_permalink}
+        >
+          Thread Link
+        </a>
+      </h6>
     );
   }
 }
