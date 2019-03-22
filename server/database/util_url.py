@@ -5,6 +5,7 @@ from urllib.parse import urlparse
 
 import config
 
+
 def is_imgur_url(url: str) -> bool:
     '''
     Determines if a given URL is an Imgur URL using urlparse.or Dressed.so url using urlparse.
@@ -15,15 +16,17 @@ def is_imgur_url(url: str) -> bool:
     host = parsed_url.netloc.lower()
     return host == 'imgur.com' or host == 'i.imgur.com'
 
+
 def is_dressed_so_url(url: str) -> bool:
     '''
     Determines if a given URL is a Dressed.so URL using urlparse.
     Returns True if so, False otherwise.
     '''
-    
+
     parsed_url = urlparse(url)
     host = parsed_url.netloc.lower()
     return host == 'dressed.so' or host == 'cdn.dressed.so'
+
 
 def is_reddit_url(url: str) -> bool:
     '''
@@ -34,6 +37,7 @@ def is_reddit_url(url: str) -> bool:
     parsed_url = urlparse(url)
     host = parsed_url.netloc.lower()
     return host == 'i.redd.it'
+
 
 def extract_image_urls_from_imgur_url(imgur_url: str, imgur_hash: str, url_type: str) -> list:
     '''
@@ -49,7 +53,8 @@ def extract_image_urls_from_imgur_url(imgur_url: str, imgur_hash: str, url_type:
     headers = {
         'Authorization': F'Client-ID {config.imgur_client_id}'
     }
-    response = requests.request('GET', url, headers = headers, data = payload, allow_redirects=False)
+    response = requests.request(
+        'GET', url, headers=headers, data=payload, allow_redirects=False)
     image_json = json.loads(response.text)['data']
 
     # Invalid Imgur URL.
@@ -68,6 +73,7 @@ def extract_image_urls_from_imgur_url(imgur_url: str, imgur_hash: str, url_type:
 
     return image_urls
 
+
 def extract_outfit_urls_from_comment_body(comment: str) -> list:
     '''
     Extracts URLs from a given comment.
@@ -81,7 +87,7 @@ def extract_outfit_urls_from_comment_body(comment: str) -> list:
     # Approach adapted from: https://stackoverflow.com/a/44593228
     for replacement in (('[', ' '), (']', ' '), ('(', ' '), (')', ' ')):
         comment = comment.replace(*replacement)
-    
+
     # Links that don't start with http or https are considered invalid.
     for token in comment.split():
         if token.lower().startswith('http://') or token.lower().startswith('https://'):
@@ -92,13 +98,15 @@ def extract_outfit_urls_from_comment_body(comment: str) -> list:
 
     # Santitize URLs for any superfluous punctuation. Some users have a period at the end of their image URLs, so we sanitize that.
     # Adapted from: https://stackoverflow.com/a/52118554
-    outfit_urls = [re.sub('[^a-zA-Z0-9]+$','',URL) for URL in outfit_urls]
+    outfit_urls = [re.sub('[^a-zA-Z0-9]+$', '', URL) for URL in outfit_urls]
 
     # Filter out URLs that are not Imgur, Dressed.so, or redd.it domains (also turns the set into a list).
     # Also check if the URL is up or not. If not, ignore.
-    outfit_urls = [url for url in outfit_urls if not is_url_down(url) and (is_imgur_url(url) or is_dressed_so_url(url) or is_reddit_url(url))]
+    outfit_urls = [url for url in outfit_urls if not is_url_down(url) and (
+        is_imgur_url(url) or is_dressed_so_url(url) or is_reddit_url(url))]
 
     return outfit_urls
+
 
 def generate_imgur_url_info(imgur_url: str) -> dict:
     '''
@@ -130,6 +138,7 @@ def generate_imgur_url_info(imgur_url: str) -> dict:
     else:
         return {'url_type': 'ERROR', 'imgur_hash': 'ERROR'}
 
+
 def is_url_down(url: str) -> bool:
     '''
     Given a URL, determines if the given URL is down.
@@ -137,15 +146,17 @@ def is_url_down(url: str) -> bool:
     Function adapted from: https://stackoverflow.com/a/15743618
     '''
 
-    if url.lower().startswith('https://'):
-        # The URL must start with http(s):// to make a successful HEAD request.
-        # We replace https with http because dressed.so does not use HTTPS, and HTTP works for imgur and i.redd.it URLs.
-        # NOTE: we use .startswith() because there is the chance, though incredibly low, that the string 'http' could appear in the URL in other places.
-        # Using .startswith() ensures that we only check the necessary locations.
-        url.replace('https', 'http')
-    elif not url.lower().startswith('http://') or not url.lower().startswith('https://'):
-        # If the URL doesn't start with either http or https, append http to it.
-        url = 'http://' + url
+    # dressed.so direct-image links do not support HTTPS.
+    # Thus, we have to check if the URL starts with http. If so, if it's a dressed.so url, we leave it as is.
+    # Else, we replace http with https.
+    if url.lower().startswith('http://'):
+        if not is_dressed_so_url(url):
+            # If it's not a dressed.so URL, change HTTP to HTTPS.
+            url = url.replace('http://', 'https://')
+        # If it is a dressed.so URL, leave it as HTTP.
+    elif not url.lower().startswith('https://'):
+        # If the URL does not start with https://, add it to the front of the URL.
+        url = 'https://' + url
 
     # Approach adapted from: https://stackoverflow.com/a/15743618
     r = requests.head(url)
