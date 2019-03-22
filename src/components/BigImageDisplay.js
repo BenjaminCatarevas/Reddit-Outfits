@@ -16,7 +16,7 @@ export class BigImageDisplay extends Component {
             alt={bigImageToDisplay}
           />
         </div>
-        <div style={commentStyle} className="col-xs-6">
+        <div style={commentStyle} className="col-xs-6 text-left">
           <ReactMarkdown escapeHtml={true} source={comment} />
         </div>
       </div>
