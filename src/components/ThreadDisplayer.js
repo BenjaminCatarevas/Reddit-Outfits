@@ -16,7 +16,6 @@ export class ThreadDisplayer extends Component {
   }
 
   render() {
-    // Shortener to avoid using this.props.commentsFromSpecificThread everywhere.
     let { commentsFromSpecificThread } = this.props;
     // Object mapping approach adapted from: https://stackoverflow.com/a/39965962
     // If the commentsFromSpecificThread is null, just return an empty div. Otherwise, create a UserComment component for each comment.
