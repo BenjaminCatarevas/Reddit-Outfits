@@ -57,6 +57,10 @@ def generate_comments_from_thread(thread_id: str) -> list:
 
     # Traverse all of the comments.
     for top_level_comment in thread_submission.comments:
+        # If we hit an empty comment, just move on.
+        if top_level_comment is None:
+            continue
+
         outfits_from_comment = create_outfit_urls(top_level_comment.body)
         # We only care about comments that have outfit URLs in them. All others (such as a comment with no links), we ignore.
         if len(outfits_from_comment) >= 1:
@@ -135,7 +139,8 @@ def create_comment_dictionary(comment, outfits_from_comment: set) -> dict:
         'subreddit': comment.subreddit.display_name.lower(),
         'subreddit_id': comment.subreddit_id,
         'thread_id': comment.submission.id,
-        'comment_timestamp': comment.created_utc
+        'comment_timestamp': comment.created_utc,
+        'num_outfits': len(outfits_from_comment)
     }
 
     return comment
