@@ -58,7 +58,8 @@ const commentContainerStyle = {
 };
 
 const textDisplayStyle = {
-  textAlign: "center"
+  textAlign: "center",
+  marginTop: "7.5px"
 };
 
 UserComment.propTypes = {
