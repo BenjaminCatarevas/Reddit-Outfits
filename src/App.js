@@ -14,7 +14,8 @@ class App extends Component {
     allUsers: null,
     allThreads: null,
     commentsFromSpecificUser: null,
-    commentsFromSpecificThread: null
+    commentsFromSpecificThread: null,
+    currentlyDisplayedUser: null
   };
 
   // NOTE: These functions will replace the axios URL with a server.
@@ -23,7 +24,8 @@ class App extends Component {
       .get(`http://localhost:3001/u/${user}`)
       .then(res => {
         this.setState({
-          commentsFromSpecificUser: res.data.commentsFromSpecificUser
+          commentsFromSpecificUser: res.data.commentsFromSpecificUser,
+          currentlyDisplayedUser: user
         });
       })
       .catch(err => console.log("Error: ", err.message));
@@ -85,28 +87,23 @@ class App extends Component {
               commentsFromSpecificUser={this.state.commentsFromSpecificUser}
               {...this.props}
             />
-            <Route
-              exact
-              path="/"
-              render={props => (
-                <div>
-                  <h6 className="text-center">
-                    Search for a user or explore outfit threads
-                  </h6>
-                  <h6 className="text-center">
-                    If you know the date of the thread you want to explore,
-                    enter it as the following:
-                  </h6>
-                  <h6 className="text-center">
-                    redditoutfits.com/r/(subreddit)/(year)/(month)/(day)
-                  </h6>
-                </div>
-              )}
-            />
+            <Route exact path="/" />
             <Route
               path="/u/:username"
               render={props => (
-                <div>
+                <div className="text-center" style={{ paddingTop: "7.5px" }}>
+                  <h6>
+                    Posts by{" "}
+                    <a
+                      rel="noopener noreferrer"
+                      target="_blank"
+                      href={`https://reddit.com/u/${
+                        this.state.currentlyDisplayedUser
+                      }`}
+                    >
+                      /u/{this.state.currentlyDisplayedUser}
+                    </a>
+                  </h6>
                   <UserComments
                     getCommentsFromSpecificUser={
                       this.getCommentsFromSpecificUser
