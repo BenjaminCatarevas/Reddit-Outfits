@@ -30,7 +30,10 @@ export class UserComment extends Component {
             Permalink
           </a>{" "}
           | Score: {userInformation.commentScore} | Posted: {humanDate} at{" "}
-          {threadDate.toLocaleTimeString("en-US")}
+          {threadDate.toLocaleTimeString("en-US")} by{" "}
+          <a href={`http://localhost:3000/u/${userInformation.authorName}`}>
+            {userInformation.authorName}
+          </a>
         </h6>
         <BigImageDisplay
           bigImageToDisplay={this.state.bigImageToDisplay}
@@ -50,7 +53,8 @@ const commentContainerStyle = {
   border: "2px solid #8B8C89",
   maxWidth: "75%",
   marginTop: "10px",
-  marginBottom: "10px"
+  marginBottom: "10px",
+  background: "#f5f7f9"
 };
 
 const textDisplayStyle = {
