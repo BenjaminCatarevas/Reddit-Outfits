@@ -8,6 +8,7 @@ import {
   FormControl
 } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
+import Select from "react-select";
 
 export class NavigationBar extends Component {
   state = {
@@ -15,11 +16,11 @@ export class NavigationBar extends Component {
     user: ""
   };
 
-  onChange = e => {
+  onSearchUserBarChange = e => {
     this.setState({ user: e.target.value });
   };
 
-  onSubmit = e => {
+  onSearchUserBarSubmit = e => {
     // So it doesn't submit right away.
     e.preventDefault();
     // Only submit if non-empty username.
@@ -34,7 +35,7 @@ export class NavigationBar extends Component {
     return (
       // Source: https://react-bootstrap.github.io/components/navbar/
       <div id="navbar-container">
-        <Navbar style={navBarStyle} bg="white" expand="lg">
+        <Navbar style={navBarStyle} bg="white" expand="xl">
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
@@ -54,12 +55,12 @@ export class NavigationBar extends Component {
               <Nav.Link href="/about">About</Nav.Link>
               <Nav.Link href="#githublink">Github</Nav.Link>
             </Nav>
-            <Form onSubmit={this.onSubmit} inline>
+            <Form onSubmit={this.onSearchUserBarSubmit} inline>
               <FormControl
                 type="text"
                 placeholder="Enter user..."
                 value={this.state.user}
-                onChange={this.onChange}
+                onChange={this.onSearchUserBarChange}
                 className="mr-sm-2"
               />
               <Button type="submit" variant="outline-success">
