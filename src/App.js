@@ -89,18 +89,6 @@ class App extends Component {
                   id="username-displayer"
                   style={{ paddingTop: "7.5px" }}
                 >
-                  <h6>
-                    Posts by{" "}
-                    <a
-                      rel="noopener noreferrer"
-                      target="_blank"
-                      href={`https://reddit.com/u/${
-                        this.state.currentlyDisplayedUser
-                      }`}
-                    >
-                      /u/{this.state.currentlyDisplayedUser}
-                    </a>
-                  </h6>
                   <div className="container" id="user-comments-container">
                     <UserComments
                       getCommentsFromSpecificUser={

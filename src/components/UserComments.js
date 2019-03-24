@@ -19,15 +19,27 @@ export class UserComments extends Component {
     // Object mapping approach adapted from: https://stackoverflow.com/a/39965962
     // If the commentsFromSpecificUser is null, just return an empty div. Otherwise, create a UserComment component for each comment.
     return commentsFromSpecificUser ? (
-      Object.keys(commentsFromSpecificUser).map(key => {
-        // The key defaults to the comment ID, since that's the key to index into a given object.
-        return (
-          <UserComment
-            key={key}
-            userInformation={commentsFromSpecificUser[key]}
-          />
-        );
-      })
+      <div>
+        <h6>
+          Posts by{" "}
+          <a
+            rel="noopener noreferrer"
+            target="_blank"
+            href={`https://reddit.com/u/${this.props.match.params.username}`}
+          >
+            /u/{this.props.match.params.username}
+          </a>
+        </h6>
+        {Object.keys(commentsFromSpecificUser).map(key => {
+          // The key defaults to the comment ID, since that's the key to index into a given object.
+          return (
+            <UserComment
+              key={key}
+              userInformation={commentsFromSpecificUser[key]}
+            />
+          );
+        })}
+      </div>
     ) : (
       <div />
     );
