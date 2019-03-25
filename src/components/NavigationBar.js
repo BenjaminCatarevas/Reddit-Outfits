@@ -9,6 +9,7 @@ import {
 } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
 import Select from "react-select";
+import { LinkContainer } from "react-router-bootstrap";
 
 export class NavigationBar extends Component {
   state = {
@@ -38,22 +39,30 @@ export class NavigationBar extends Component {
         <Navbar style={navBarStyle} bg="white" expand="xl">
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="mr-auto">
-              <Nav.Link href="/">Home</Nav.Link>
-              <Nav.Link href="/users">Users</Nav.Link>
+            <Nav fill variant="tabs" className="mr-auto">
+              <LinkContainer exact to="/">
+                <Nav.Link>Home</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/users">
+                <Nav.Link>Users</Nav.Link>
+              </LinkContainer>
               <NavDropdown title="Threads" id="basic-nav-dropdown">
-                <NavDropdown.Item href="/r/malefashionadvice">
-                  MaleFashionAdvice
-                </NavDropdown.Item>
-                <NavDropdown.Item href="/r/femalefashionadvice">
-                  FemaleFashionAdvice
-                </NavDropdown.Item>
-                <NavDropdown.Item href="/r/streetwear">
-                  Streetwear
-                </NavDropdown.Item>
+                <LinkContainer to="/r/malefashionadvice">
+                  <NavDropdown.Item>MaleFashionAdvice</NavDropdown.Item>
+                </LinkContainer>
+                <LinkContainer to="/r/femalefashionadvice">
+                  <NavDropdown.Item>FemaleFashionAdvice</NavDropdown.Item>
+                </LinkContainer>
+                <LinkContainer to="/r/streetwear">
+                  <NavDropdown.Item>Streetwear</NavDropdown.Item>
+                </LinkContainer>
               </NavDropdown>
-              <Nav.Link href="/about">About</Nav.Link>
-              <Nav.Link href="#githublink">Github</Nav.Link>
+              <LinkContainer to="/about">
+                <Nav.Link>About</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/github">
+                <Nav.Link>Github</Nav.Link>
+              </LinkContainer>
             </Nav>
             <Form onSubmit={this.onSearchUserBarSubmit} inline>
               <FormControl
