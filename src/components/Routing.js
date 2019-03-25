@@ -6,12 +6,7 @@ import ThreadList from "./ThreadList";
 import UserList from "./UserList";
 import ThreadDisplayer from "./ThreadDisplayer";
 import Error from "./Error";
-import {
-  Switch,
-  withRouter,
-  BrowserRouter as Router,
-  Route
-} from "react-router-dom";
+import { Switch, withRouter, Route } from "react-router-dom";
 import "../styles/Routing.css";
 
 function Routing({
