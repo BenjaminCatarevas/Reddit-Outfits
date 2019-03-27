@@ -6,7 +6,14 @@ export class Header extends Component {
     return (
       <div>
         <h1 style={textHeaderStyle}>
-          <a style={{ color: "black", textDecoration: "none" }} href="/">
+          <a
+            style={{
+              color: "black",
+              textDecoration: "none",
+              fontWeight: "500px"
+            }}
+            href="/"
+          >
             Reddit Outfits
           </a>
         </h1>
@@ -24,8 +31,7 @@ export class Header extends Component {
 }
 
 const textHeaderStyle = {
-  textAlign: "center",
-  fontWeight: "bold"
+  textAlign: "center"
 };
 
 const subtextHeaderStyle = {
