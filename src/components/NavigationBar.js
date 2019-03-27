@@ -39,7 +39,7 @@ export class NavigationBar extends Component {
         <Navbar style={navBarStyle} bg="white" expand="xl">
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav fill variant="tabs" className="mr-auto">
+            <Nav variant="tabs" className="mr-auto">
               <LinkContainer exact to="/">
                 <Nav.Link>Home</Nav.Link>
               </LinkContainer>
@@ -72,7 +72,7 @@ export class NavigationBar extends Component {
                 onChange={this.onSearchUserBarChange}
                 className="mr-sm-2"
               />
-              <Button type="submit" variant="outline-success">
+              <Button type="submit" variant="outline-dark">
                 Search
               </Button>
             </Form>
@@ -84,9 +84,7 @@ export class NavigationBar extends Component {
 }
 
 const navBarStyle = {
-  border: "2px solid #b8e0d3",
-  borderRadius: "10px solid #b8e0d3",
-  width: "75%",
+  border: "2px solid #333",
   margin: "0 auto"
 };
 
