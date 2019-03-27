@@ -12,7 +12,7 @@ export class ImageSelector extends Component {
       <div className="row">
         {outfits.map((outfit, key) => {
           return (
-            <div key={key} className="col-xs-2">
+            <div key={key} className="col-xs-1" style={{ width: "35%" }}>
               <img
                 onClick={this.onClick.bind(this, outfits[key])}
                 style={imageStyle}
@@ -29,7 +29,7 @@ export class ImageSelector extends Component {
 }
 
 const imageStyle = {
-  width: "20%",
+  width: "35%",
   height: "auto",
   maxWidth: "500px",
   padding: "5px 5px 5px 5px"
