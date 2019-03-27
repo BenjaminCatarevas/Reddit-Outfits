@@ -8,6 +8,7 @@ import ThreadDisplayer from "./ThreadDisplayer";
 import Error from "./Error";
 import { Switch, withRouter, Route } from "react-router-dom";
 import "../styles/Routing.css";
+import HomePageButton from "./HomePageButton";
 
 function Routing({
   location,
@@ -35,7 +36,26 @@ function Routing({
         >
           <section className="route-selection" style={sectionStyle}>
             <Switch location={location}>
-              <Route exact path="/" />
+              <Route
+                exact
+                path="/"
+                render={props => (
+                  <div>
+                    <HomePageButton
+                      displayText="MaleFashionAdvice"
+                      directTo="/r/malefashionadvice"
+                    />
+                    <HomePageButton
+                      displayText="FemaleFashionAdvice"
+                      directTo="/r/femalefashionadvice"
+                    />
+                    <HomePageButton
+                      displayText="Streetwear"
+                      directTo="/r/streetwear"
+                    />
+                  </div>
+                )}
+              />
               <Route
                 path="/u/:username"
                 render={props => (
