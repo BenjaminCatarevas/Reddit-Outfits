@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
 export class UserListItem extends Component {
   render() {
@@ -10,16 +10,15 @@ export class UserListItem extends Component {
     // It will link to a user's page
     return (
       <h6 style={userStyle}>
-        <a href={`http://localhost:3000/u/${userInformation.author_name}`}>
+        <Link to={`/u/${userInformation.author_name}`}>
           {userInformation.author_name}
-        </a>
+        </Link>
       </h6>
     );
   }
 }
 
 const userStyle = {
-  width: "75%",
   margin: "0 auto"
 };
 

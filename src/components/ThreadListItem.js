@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
 export class ThreadListItem extends Component {
   render() {
@@ -19,13 +19,9 @@ export class ThreadListItem extends Component {
 
     return (
       <h6 style={threadDisplayStyle}>
-        <a
-          href={`http://localhost:3000/r/${
-            threadInformation.subreddit
-          }/${year}/${month}/${day}`}
-        >
+        <Link to={`/r/${threadInformation.subreddit}/${year}/${month}/${day}`}>
           {humanDate}
-        </a>{" "}
+        </Link>{" "}
         | Number of outfits: {numOutfits} | Number of total comments:{" "}
         {numTotalComments} |{" "}
         <a
@@ -41,9 +37,7 @@ export class ThreadListItem extends Component {
 }
 
 const threadDisplayStyle = {
-  width: "75%",
-  margin: "0 auto",
-  padding: "2px"
+  margin: "0 auto"
 };
 
 ThreadListItem.propTypes = {

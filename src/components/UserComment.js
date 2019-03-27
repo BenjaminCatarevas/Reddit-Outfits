@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { ImageSelector } from "./ImageSelector";
 import { BigImageDisplay } from "./BigImageDisplay";
 import PropTypes from "prop-types";
@@ -35,9 +35,9 @@ export class UserComment extends Component {
           </a>{" "}
           | Score: {userInformation.commentScore} | Posted: {humanDate} at{" "}
           {threadDate.toLocaleTimeString("en-US")} by{" "}
-          <a href={`http://localhost:3000/u/${userInformation.authorName}`}>
+          <Link to={`/u/${userInformation.authorName}`}>
             {userInformation.authorName}
-          </a>
+          </Link>
         </h6>
         <BigImageDisplay
           bigImageToDisplay={this.state.bigImageToDisplay}
@@ -55,10 +55,9 @@ export class UserComment extends Component {
 
 const commentContainerStyle = {
   border: "2px solid #8B8C89",
-  maxWidth: "75%",
   marginTop: "10px",
   marginBottom: "10px",
-  background: "#f5f7f9"
+  background: "#eee"
 };
 
 const textDisplayStyle = {
