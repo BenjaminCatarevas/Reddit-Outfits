@@ -15,7 +15,5 @@ export default function About() {
 
 const aboutStyling = {
   textAlign: "center",
-  marginTop: "1em",
-  paddingTop: "1em",
-  lineHeight: "1.5"
+  paddingTop: "5px"
 };
