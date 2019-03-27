@@ -61,7 +61,8 @@ def generate_comments_from_thread(thread_id: str) -> list:
         if top_level_comment is None or top_level_comment.author is None:
             continue
 
-        outfits_from_comment = create_outfit_urls(top_level_comment.body)
+        outfits_from_comment = create_outfit_urls(
+            top_level_comment.body, top_level_comment.permalink)
         # We only care about comments that have outfit URLs in them. All others (such as a comment with no links), we ignore.
         if len(outfits_from_comment) >= 1:
             comments.append(create_comment_dictionary(
@@ -70,9 +71,10 @@ def generate_comments_from_thread(thread_id: str) -> list:
     return comments
 
 
-def create_outfit_urls(comment_body: str) -> set:
+def create_outfit_urls(comment_body: str, permalink: str) -> set:
     '''
     Given the body of a comment, constructs a list of each Imgur or Dressed.so URL from the body of a comment ending in .jpg, .png, or .jpeg.
+    Also takes in permalink for error purposes.
     Returns a list of outfit URLs.
     '''
 
@@ -93,7 +95,10 @@ def create_outfit_urls(comment_body: str) -> set:
 
             # Not a valid URL, so just return an empty list.
             if imgur_url_type == 'ERROR':
+                print('-------------------------')
                 print(F"Invalid Imgur URL: {raw_outfit_url}")
+                print(F'Permalink: https://reddit.com{permalink}')
+                print('-------------------------')
                 return []
             else:
                 # Process the Imgur URL no matter the type.
@@ -110,13 +115,19 @@ def create_outfit_urls(comment_body: str) -> set:
                 # Outfit URL starts with cdn.dressed.so, so we can add the URL as is, as it links directly to an image.
                 outfit_urls.append(raw_outfit_url)
             else:
+                print('-------------------------')
                 print(F"Invalid Dressed.so URL: {raw_outfit_url}")
+                print(F'Permalink: https://reddit.com{permalink}')
+                print('-------------------------')
         elif is_reddit_url(raw_outfit_url):
             # i.redd.it URL. We can add the URL as is, as it links directly to an image.
             outfit_urls.append(raw_outfit_url)
         else:
             # Invalid outfit URL.
+            print('-------------------------')
             print(F"Invalid outfit URL: {raw_outfit_url}")
+            print(F'Permalink: https://reddit.com{permalink}')
+            print('-------------------------')
             continue
 
     # We cast the list into a set to avoid duplicates.
@@ -133,7 +144,7 @@ def create_comment_dictionary(comment, outfits_from_comment: set) -> dict:
         'author_name': comment.author.name,
         'body': comment.body,
         'comment_id': comment.id,
-        'comment_permalink': 'https://reddit.com' + comment.permalink,
+        'comment_permalink': F'https://reddit.com{comment.permalink}',
         'comment_score': comment.score,
         'outfits': outfits_from_comment,
         'subreddit': comment.subreddit.display_name.lower(),
