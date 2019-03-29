@@ -9,6 +9,8 @@ import {
 } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
 import Select from "react-select";
+//TODO: Embed react-select in navbar?: https://react-select.com/components
+// https://github.com/JedWatson/react-select
 import { LinkContainer } from "react-router-bootstrap";
 
 export class NavigationBar extends Component {
@@ -39,7 +41,7 @@ export class NavigationBar extends Component {
         <Navbar style={navBarStyle} bg="white" expand="xl">
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav variant="tabs" className="mr-auto">
+            <Nav className="mr-auto">
               <LinkContainer exact to="/">
                 <Nav.Link>Home</Nav.Link>
               </LinkContainer>
@@ -62,6 +64,9 @@ export class NavigationBar extends Component {
               </LinkContainer>
               <LinkContainer to="/github">
                 <Nav.Link>Github</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/stats">
+                <Nav.Link>Stats</Nav.Link>
               </LinkContainer>
             </Nav>
             <Form onSubmit={this.onSearchUserBarSubmit} inline>

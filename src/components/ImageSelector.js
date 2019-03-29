@@ -4,15 +4,16 @@ import PropTypes from "prop-types";
 export class ImageSelector extends Component {
   onClick(imageUrl) {
     this.props.setBigImageToDisplay(imageUrl);
+    //window.scrollTo(0, this.props.topOfWindowRef.current.offsetTop);
   }
 
   render() {
     const { outfits } = this.props;
     return (
-      <div className="row">
+      <div className="row center-block" style={{ justifyContent: "center" }}>
         {outfits.map((outfit, key) => {
           return (
-            <div key={key} className="col-xs-1" style={{ width: "35%" }}>
+            <div key={key} style={{ height: "20vh" }} className="col-xs-1">
               <img
                 onClick={this.onClick.bind(this, outfits[key])}
                 style={imageStyle}
@@ -29,10 +30,9 @@ export class ImageSelector extends Component {
 }
 
 const imageStyle = {
-  width: "35%",
-  height: "auto",
-  maxWidth: "500px",
-  padding: "5px 5px 5px 5px"
+  height: "100%",
+  padding: "5px 5px 5px 5px",
+  width: "auto"
 };
 
 ImageSelector.propTypes = {
