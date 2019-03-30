@@ -114,15 +114,16 @@ def extract_outfit_urls_from_comment_body(comment: str) -> list:
 
 def generate_imgur_url_info(imgur_url: str) -> dict:
     '''
-    Given an Imgur URL, determines if the URL is an album, gallery, Imgur image, or single image (.png, .jpeg, .jpg)
+    Given an Imgur URL, determines if the URL is an album, gallery, Imgur image, or single image (.png, .jpeg, .jpg, .gif, .gifv)
     Returns a dictionary where the first element is the type of URL, and the second element is the alphanumeric hash (if applicable).
-    Type is chosen from {'album', 'gallery', 'imgur_image', {'png', 'jpeg', 'jpg'}}.
+    Type is chosen from {'album', 'gallery', 'imgur_image', {'png', 'jpeg', 'jpg', '.gif', '.gifv'}}.
     '''
 
     parsed_url = urlparse(imgur_url)
     parsed_url_path = parsed_url.path
 
-    is_single_image = imgur_url.endswith(('.jpg', '.jpeg', '.png'))
+    is_single_image = imgur_url.endswith(
+        ('.jpg', '.jpeg', '.png', '.gif', '.gifv'))
     is_album = parsed_url_path.startswith('/a/')
     is_gallery = parsed_url_path.startswith('/gallery/')
 
@@ -131,7 +132,7 @@ def generate_imgur_url_info(imgur_url: str) -> dict:
     elif is_gallery:
         return {'url_type': 'gallery', 'imgur_hash': parsed_url_path[9:]}
     elif is_single_image:
-        # A single image is one that links directly to a file e.g. ending in .jpg, .jpeg, or .png.
+        # A single image is one that links directly to a file e.g. ending in .jpg, .jpeg, .png, .gif, or .gifv.
         # Regular expression for hash parsing adapted from: https://stackoverflow.com/a/23259147
         # Split on / and . to get the alphanumeric hash, and isolate it.
         return {'url_type': 'image', 'imgur_hash': re.split(r'[/.]', parsed_url_path)[1]}
