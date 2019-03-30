@@ -2,6 +2,7 @@ import json
 import re
 import requests
 from urllib.parse import urlparse
+from furl import furl
 
 import config
 
@@ -104,7 +105,8 @@ def extract_outfit_urls_from_comment_body(comment: str) -> list:
 
     # Filter out URLs that are not Imgur, Dressed.so, or redd.it domains (also turns the set into a list).
     # Also check if the URL is up or not. If not, ignore.
-    outfit_urls = [url for url in outfit_urls if not is_url_down(url) and (
+    # Assuming the conditions are met, remove the query string part of the URLs if applicable (does nothing if no query string).
+    outfit_urls = [furl(url).remove(args=True, fragment=True).url for url in outfit_urls if not is_url_down(url) and (
         is_imgur_url(url) or is_dressed_so_url(url) or is_reddit_url(url))]
 
     return outfit_urls
@@ -161,10 +163,15 @@ def is_url_down(url: str) -> bool:
         url = 'https://' + url
 
     # Approach adapted from: https://stackoverflow.com/a/15743618
-    r = requests.head(url)
-
-    # cdn.dressed.so returns 403 if there is no image found at the URL.
-    # i.imgur.com returns 302 if image is not found.
-    # We assume if the URL has been moved (301), the URL is no longer active.
-    # imgur.com and i.redd.it returns 404 if image is not found.
-    return r.status_code in (403, 302, 301, 404)
+    # TODO: Use try and catch block for invalid URLs that make it through above checks
+    # also use GET request?
+    try:
+        r = requests.head(url)
+        # cdn.dressed.so returns 403 if there is no image found at the URL.
+        # i.imgur.com returns 302 if image is not found.
+        # We assume if the URL has been moved (301), the URL is no longer active.
+        # imgur.com and i.redd.it returns 404 if image is not found.
+        return r.status_code in (403, 302, 301, 404)
+    except Exception as e:
+        print("Error: ", str(e))
+        return True
