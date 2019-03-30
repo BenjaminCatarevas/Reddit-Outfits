@@ -61,7 +61,7 @@ def extract_image_urls_from_imgur_url(imgur_url: str, imgur_hash: str, url_type:
     # Invalid Imgur URL.
     if 'error' in image_json:
         print('-------------------------')
-        print(F"Error: {image_json['error']}")
+        print(F'Error: {image_json["error"]}')
         print('-------------------------')
         return []
 
@@ -106,8 +106,8 @@ def extract_outfit_urls_from_comment_body(comment: str) -> list:
     # Filter out URLs that are not Imgur, Dressed.so, or redd.it domains (also turns the set into a list).
     # Also check if the URL is up or not. If not, ignore.
     # Assuming the conditions are met, remove the query string part of the URLs if applicable (does nothing if no query string).
-    outfit_urls = [furl(url).remove(args=True, fragment=True).url for url in outfit_urls if not is_url_down(url) and (
-        is_imgur_url(url) or is_dressed_so_url(url) or is_reddit_url(url))]
+    outfit_urls = [furl(url).remove(args=True, fragment=True).url for url in outfit_urls if (
+        is_imgur_url(url) or is_dressed_so_url(url) or is_reddit_url(url)) and not is_url_down(url)]
 
     return outfit_urls
 
@@ -173,5 +173,8 @@ def is_url_down(url: str) -> bool:
         # imgur.com and i.redd.it returns 404 if image is not found.
         return r.status_code in (403, 302, 301, 404)
     except Exception as e:
-        print("Error: ", str(e))
+        print('-------------------------')
+        print('Invalid URL: ', url)
+        print('Error: ', str(e))
+        print('-------------------------')
         return True
