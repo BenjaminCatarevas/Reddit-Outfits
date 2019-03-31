@@ -5,15 +5,12 @@ import { BigImageDisplay } from "./BigImageDisplay";
 import PropTypes from "prop-types";
 
 export class UserComment extends Component {
-  constructor(props) {
-    super(props);
-    // Create a reference to reset the window to the top of the user comment when a new image is clicked.
-    this.topOfWindowRef = React.createRef();
-  }
-
   state = {
     bigImageToDisplay: this.props.userInformation.outfits[0]
   };
+
+  // Reference to give to ImageSelector
+  topOfWindowRef = React.createRef();
 
   setBigImageToDisplay = imageUrl => {
     this.setState({ bigImageToDisplay: imageUrl });
@@ -30,7 +27,7 @@ export class UserComment extends Component {
         className="container"
         id="user-comment-displayer"
         style={commentContainerStyle}
-        ref={this.props.topOfWindowRef}
+        ref={this.topOfWindowRef}
       >
         <h6 style={textDisplayStyle}>
           <a

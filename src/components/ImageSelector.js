@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 export class ImageSelector extends Component {
   onClick(imageUrl) {
     this.props.setBigImageToDisplay(imageUrl);
-    //window.scrollTo(0, this.props.topOfWindowRef.current.offsetTop);
+    window.scrollTo(0, this.props.topOfWindowRef.current.offsetTop);
   }
 
   render() {
@@ -39,4 +39,8 @@ ImageSelector.propTypes = {
   outfits: PropTypes.array.isRequired
 };
 
-export default ImageSelector;
+//export default ImageSelector;
+
+export default React.forwardRef((props, ref) => {
+  return <ImageSelector {...props} topOfWindowRef={ref} />;
+});
