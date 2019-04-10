@@ -142,7 +142,7 @@ def create_comment_dictionary(comment, outfits_from_comment: set) -> dict:
     '''
 
     comment = {
-        'author_name': comment.author.name,
+        'author_name': comment.author.name if comment.author else '[deleted]',
         'body': comment.body,
         'comment_id': comment.id,
         'comment_permalink': F'https://reddit.com{comment.permalink}',
