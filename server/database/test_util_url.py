@@ -3,6 +3,8 @@ from util_url import generate_imgur_url_info
 from util_url import is_dressed_so_url
 from util_url import is_imgur_url
 from util_url import is_reddit_url
+from util_url import is_twimg_url
+from util_url import is_ibbco_url
 
 
 class TestIsImgurURL(unittest.TestCase):
@@ -58,6 +60,41 @@ class TestIsRedditUrl(unittest.TestCase):
     def test_is_reddit_url_other(self):
         url = 'https://instagram.com/fgjefw0'
         self.assertEqual(is_reddit_url(url), False)
+
+
+class TestIsTwimgUrl(unittest.TestCase):
+    def setUp(self):
+        pass
+
+    # Returns True if the URL is a pbs.twimg URL.
+    def test_is_twimg_url(self):
+        url = 'https://pbs.twimg.com/media/D1eNtYoUcAUQ0Hg.jpg'
+        self.assertEqual(is_twimg_url(url), True)
+
+    # Returns True if the URL is a pbs.twimg URL and is large.
+    def test_is_twimg_url_large(self):
+        url = 'https://pbs.twimg.com/media/D1eNtYoUcAUQ0Hg.jpg:large'
+        self.assertEqual(is_twimg_url(url), True)
+
+    # Returns False if the URL is not a pbs.twimg URL.
+    def test_is_twimg_url_other(self):
+        url = 'https://imgur.com/t3tweF'
+        self.assertEqual(is_twimg_url(url), False)
+
+
+class TestIsIbbcoUrl(unittest.TestCase):
+    def setUp(self):
+        pass
+
+    # Returns True if the URL is a i.ibb.co URL.
+    def test_is_ibbco_url(self):
+        url = 'https://i.ibb.co/L5J9Thc/IMG-20190410-163127.jpg'
+        self.assertEqual(is_ibbco_url(url), True)
+
+    # Returns False if the URL is not a i.ibb.co URL.
+    def test_is_ibbco_url_other(self):
+        url = 'https://imgur.com/r34yeragsd'
+        self.assertEqual(is_ibbco_url(url), False)
 
 
 class TestCreateImgurUrlInfoUrl(unittest.TestCase):
