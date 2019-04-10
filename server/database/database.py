@@ -277,7 +277,7 @@ class RedditOutfitsDatabase:
         """
 
         self.cur.execute(update_comment_query,
-                         (body, comment_score, comment_id, num_outfits))
+                         (body, comment_score, num_outfits, comment_id,))
         self.conn.commit()
 
     def update_thread(self, thread_id: str, num_top_level_comments: int, thread_score: int, num_total_comments: int):
