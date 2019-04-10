@@ -91,7 +91,8 @@ def create_outfit_urls(comment_body: str, permalink: str) -> set:
             # Determine what type of Imgur URL it is, and the hash of said Imgur URL.
             imgur_url_info = generate_imgur_url_info(raw_outfit_url)
             imgur_url_type = imgur_url_info['url_type']
-            imgur_hash = imgur_url_info['imgur_hash']
+            # NOTE: We split on ampersand because anything after an ampersand in an Imgur has is not necessary.
+            imgur_hash = imgur_url_info['imgur_hash'].split('&')[0]
 
             # Not a valid URL, so just return an empty list.
             if imgur_url_type == 'ERROR':
