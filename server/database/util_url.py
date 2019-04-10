@@ -65,14 +65,14 @@ def extract_image_urls_from_imgur_url(imgur_url: str, imgur_hash: str, url_type:
         print('-------------------------')
         return []
 
-    if url_type == 'gallery' or url_type == 'album':
-        # From /album/ and /gallery/ endpoint
-        # The returned JSON is in an array for albums and galleries, while it's a single JSON object for a single image.
+    # The JSON format is the same for a single image, gallery, or album.
+    # However, the Imgur endpoint returns a list of dictionaries in the event there are multiple images.
+    # So we check if the returned JSON is a dict. If so, we can directly access its values. Else, it's a list of dicts, so we iterate.
+    if isinstance(image_json, dict):
+        image_urls.append(image_json['link'])
+    else:
         for image in image_json:
             image_urls.append(image['link'])
-    else:
-        # Single JSON object (from /image/ endpoint), so we access it directly.
-        image_urls.append(image_json['link'])
 
     return image_urls
 
@@ -81,7 +81,7 @@ def extract_outfit_urls_from_comment_body(comment: str) -> list:
     '''
     Extracts URLs from a given comment.
     Splits the comment twice. The function splits the comment once to check for URLs posted in plaintext, and once for URLs posted in Markdown.
-    Returns a list of URLs. 
+    Returns a list of URLs.
     '''
 
     outfit_urls = set()
@@ -116,7 +116,7 @@ def generate_imgur_url_info(imgur_url: str) -> dict:
     '''
     Given an Imgur URL, determines if the URL is an album, gallery, Imgur image, or single image (.png, .jpeg, .jpg, .gif, .gifv)
     Returns a dictionary where the first element is the type of URL, and the second element is the alphanumeric hash (if applicable).
-    Type is chosen from {'album', 'gallery', 'imgur_image', {'png', 'jpeg', 'jpg', '.gif', '.gifv'}}.
+    Type is chosen from {{'album', 'gallery', 'imgur_image'}, {'png', 'jpeg', 'jpg', '.gif', '.gifv'}}.
     '''
 
     parsed_url = urlparse(imgur_url)
