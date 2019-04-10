@@ -40,6 +40,28 @@ def is_reddit_url(url: str) -> bool:
     return host == 'i.redd.it'
 
 
+def is_twimg_url(url: str) -> bool:
+    '''
+    Determines if a given URL is a pbs.twimg URL using urlparse.
+    Returns True if so, False otherwise.
+    '''
+
+    parsed_url = urlparse(url)
+    host = parsed_url.netloc
+    return host == 'pbs.twimg.com'
+
+
+def is_ibbco_url(url: str) -> bool:
+    '''
+    Determines if a given URL is a i.ibb.co URL using urlparse.
+    Returns True if so, False otherwise.
+    '''
+
+    parsed_url = urlparse(url)
+    host = parsed_url.netloc
+    return host == 'i.ibb.co'
+
+
 def extract_image_urls_from_imgur_url(imgur_url: str, imgur_hash: str, url_type: str) -> list:
     '''
     Extracts image URLs from either an Imgur album, image, or gallery, depending on url_type.
@@ -112,7 +134,7 @@ def extract_outfit_urls_from_comment_body(comment: str) -> list:
     # Also check if the URL is up or not. If not, ignore.
     # Assuming the conditions are met, remove the query string part of the URLs if applicable (does nothing if no query string).
     outfit_urls = [furl(url).remove(args=True, fragment=True).url for url in outfit_urls if (
-        is_imgur_url(url) or is_dressed_so_url(url) or is_reddit_url(url)) and not is_url_down(url)]
+        is_imgur_url(url) or is_dressed_so_url(url) or is_reddit_url(url) or is_twimg_url(url) or is_ibbco_url(url)) and not is_url_down(url)]
 
     return outfit_urls
 
@@ -159,12 +181,13 @@ def is_url_down(url: str) -> bool:
     # dressed.so direct-image links do not support HTTPS.
     # Thus, we have to check if the URL starts with http. If so, if it's a dressed.so url, we leave it as is.
     # Else, we replace http with https.
-    if url.lower().startswith('http://'):
+    parsed_url = urlparse(url)
+    if parsed_url.scheme == 'http':
         if not is_dressed_so_url(url):
             # If it's not a dressed.so URL, change HTTP to HTTPS.
             url = url.replace('http://', 'https://')
         # If it is a dressed.so URL, leave it as HTTP.
-    elif not url.lower().startswith('https://'):
+    elif not parsed_url.scheme == 'https':
         # If the URL does not start with https://, add it to the front of the URL.
         url = 'https://' + url
 
