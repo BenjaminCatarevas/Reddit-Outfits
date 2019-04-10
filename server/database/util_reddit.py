@@ -10,6 +10,8 @@ from util_url import generate_imgur_url_info
 from util_url import is_dressed_so_url
 from util_url import is_imgur_url
 from util_url import is_reddit_url
+from util_url import is_twimg_url
+from util_url import is_ibbco_url
 
 
 def generate_thread_ids(query: str, author_name: str, subreddit: str, size: int = 25) -> set:
@@ -122,6 +124,12 @@ def create_outfit_urls(comment_body: str, permalink: str) -> set:
                 print('-------------------------')
         elif is_reddit_url(raw_outfit_url):
             # i.redd.it URL. We can add the URL as is, as it links directly to an image.
+            outfit_urls.append(raw_outfit_url)
+        elif is_twimg_url(raw_outfit_url):
+            # pbs.twimg URL. It links directly to an image, so we can add it.
+            outfit_urls.append(raw_outfit_url)
+        elif is_ibbco_url(raw_outfit_url):
+            # i.ibb.co URL, links directly to an image, so we can add it.
             outfit_urls.append(raw_outfit_url)
         else:
             # Invalid outfit URL.
