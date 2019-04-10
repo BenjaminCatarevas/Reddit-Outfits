@@ -61,7 +61,12 @@ def extract_image_urls_from_imgur_url(imgur_url: str, imgur_hash: str, url_type:
     # Invalid Imgur URL.
     if 'error' in image_json:
         print('-------------------------')
+        print(F'Query URL: {url}')
         print(F'Error with Imgur API: {image_json["error"]}')
+        print(F'Imgur URL: {imgur_url}')
+        print(F'Imgur Hash: {imgur_hash}')
+        print(F'URL type: {url_type}')
+        print(F'JSON: {image_json}')
         print('-------------------------')
         return []
 
