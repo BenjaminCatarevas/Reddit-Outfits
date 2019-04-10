@@ -52,7 +52,7 @@ def update_threads(threads_to_update: list, database):
             if selected_comment == []:
                 # This is a comment that was not in the previous thread, so we process it.
                 database.process_comment(create_comment_dictionary(
-                    new_comment, create_outfit_urls(new_comment.body)))
+                    new_comment, create_outfit_urls(new_comment.body, new_comment.permalink)))
                 continue
             else:
                 # Old comment, just update it.
@@ -61,8 +61,8 @@ def update_threads(threads_to_update: list, database):
             # Update comment information.
             if change_in_comment(old_comment_to_update, new_comment):
                 # In case they added or deleted new outfits, calculate the outfits from the body.
-                num_updated_outfits = create_outfit_urls(
-                    old_comment_to_update['body'])
+                num_updated_outfits = len(create_outfit_urls(
+                    old_comment_to_update['body'], new_comment.permalink))
                 database.update_comment(
                     old_comment_to_update['comment_id'], new_comment.body, new_comment.score, num_updated_outfits)
 
@@ -73,7 +73,8 @@ def update_threads(threads_to_update: list, database):
             # Update outfits for a given comment if new ones are added later on.
             # This can happen if for instance a user posts an outfit they've already posted once before, then realize it and update their comment.
             # Note that we check if an outfit is already posted in the database with the outfit_exists function. If so, we ignore it in the insert_outfit function.
-            outfits_from_new_comment = create_outfit_urls(new_comment.body)
+            outfits_from_new_comment = create_outfit_urls(
+                new_comment.body, new_comment.permalink)
 
             for outfit in outfits_from_new_comment:
                 if not database.outfit_exists(outfit):
