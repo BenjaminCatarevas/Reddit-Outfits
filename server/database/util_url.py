@@ -62,6 +62,17 @@ def is_ibbco_url(url: str) -> bool:
     return host == 'i.ibb.co'
 
 
+def is_cdninstagram_url(url: str) -> bool:
+    '''
+    Determines if a given URL is a direct-link Instagram URL using urlparse.
+    Returns True if so, False otherwise.
+    '''
+
+    parsed_url = urlparse(url)
+    host = parsed_url.netloc
+    return 'cdninstagram.com' in host
+
+
 def extract_image_urls_from_imgur_url(imgur_url: str, imgur_hash: str, url_type: str) -> list:
     '''
     Extracts image URLs from either an Imgur album, image, or gallery, depending on url_type.
@@ -134,7 +145,7 @@ def extract_outfit_urls_from_comment_body(comment: str) -> list:
     # Also check if the URL is up or not. If not, ignore.
     # Assuming the conditions are met, remove the query string part of the URLs if applicable (does nothing if no query string).
     outfit_urls = [furl(url).remove(args=True, fragment=True).url for url in outfit_urls if (
-        is_imgur_url(url) or is_dressed_so_url(url) or is_reddit_url(url) or is_twimg_url(url) or is_ibbco_url(url)) and not is_url_down(url)]
+        is_imgur_url(url) or is_dressed_so_url(url) or is_reddit_url(url) or is_twimg_url(url) or is_ibbco_url(url) or is_cdninstagram_url(url)) and not is_url_down(url)]
 
     return outfit_urls
 
