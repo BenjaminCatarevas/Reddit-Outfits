@@ -73,6 +73,17 @@ def is_cdninstagram_url(url: str) -> bool:
     return 'cdninstagram.com' in host
 
 
+def is_cdndiscordapp_url(url: str) -> bool:
+    '''
+    Determines if a given URL is a direct-link Instagram URL using urlparse.
+    Returns True if so, False otherwise.
+    '''
+
+    parsed_url = urlparse(url)
+    host = parsed_url.netloc
+    return host == 'cdn.discordapp.com'
+
+
 def extract_image_urls_from_imgur_url(imgur_url: str, imgur_hash: str, url_type: str) -> list:
     '''
     Extracts image URLs from either an Imgur album, image, or gallery, depending on url_type.
@@ -141,11 +152,14 @@ def extract_outfit_urls_from_comment_body(comment: str) -> list:
     # Adapted from: https://stackoverflow.com/a/52118554
     outfit_urls = [re.sub('[^a-zA-Z0-9]+$', '', URL) for URL in outfit_urls]
 
-    # Filter out URLs that are not Imgur, Dressed.so, or redd.it domains (also turns the set into a list).
+    # Filter out URLs that are not any of the predescribed URLs(also turns the set into a list).
     # Also check if the URL is up or not. If not, ignore.
+    outfit_urls = [url for url in outfit_urls if (
+        is_imgur_url(url) or is_dressed_so_url(url) or is_reddit_url(url) or is_twimg_url(url) or is_ibbco_url(url) or is_cdninstagram_url(url) or is_cdndiscordapp_url(url)) and not is_url_down(url)]
     # Assuming the conditions are met, remove the query string part of the URLs if applicable (does nothing if no query string).
-    outfit_urls = [furl(url).remove(args=True, fragment=True).url for url in outfit_urls if (
-        is_imgur_url(url) or is_dressed_so_url(url) or is_reddit_url(url) or is_twimg_url(url) or is_ibbco_url(url) or is_cdninstagram_url(url)) and not is_url_down(url)]
+    # We do not do this for instagram URLs, as the query string is necessary.
+    outfit_urls = [furl(url).remove(
+        args=True, fragment=True).url for url in outfit_urls]
 
     return outfit_urls
 

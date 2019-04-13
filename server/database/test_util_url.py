@@ -6,6 +6,7 @@ from util_url import is_reddit_url
 from util_url import is_twimg_url
 from util_url import is_ibbco_url
 from util_url import is_cdninstagram_url
+from util_url import is_cdndiscordapp_url
 
 
 class TestIsImgurURL(unittest.TestCase):
@@ -103,14 +104,29 @@ class TestIsCdnInstagramUrl(unittest.TestCase):
         pass
 
     # Returns True if the URL is a direct-link Instagram URL.
-    def test_is_ibbco_url(self):
+    def test_is_cdninstagram_url(self):
         url = 'https://scontent-lax3-2.cdninstagram.com/vp/5e2594dfd58514670647d5233a6206e7/5D49890A/t51.2885-15/e35/54512090_173076057012116_1781387478764732544_n.jpg?_nc_ht=scontent-lax3-2.cdninstagram.com'
         self.assertEqual(is_cdninstagram_url(url), True)
 
     # Returns False if the URL is not a i.ibb.co URL.
-    def test_is_ibbco_url_other(self):
+    def test_is_cdninstagram_url_other(self):
         url = 'https://imgur.com/r34yeragsd'
         self.assertEqual(is_cdninstagram_url(url), False)
+
+
+class TestIsCdnDiscordAppUrl(unittest.TestCase):
+    def setUp(self):
+        pass
+
+    # Returns True if the URL is a direct-link Instagram URL.
+    def test_is_cdndiscordapp_url(self):
+        url = 'https://cdn.discordapp.com/attachments/373487679515525120/564852781715030027/image0.jpg'
+        self.assertEqual(is_cdndiscordapp_url(url), True)
+
+    # Returns False if the URL is not a i.ibb.co URL.
+    def test_is_cdndiscordapp_url_other(self):
+        url = 'https://imgur.com/r34yeragsd'
+        self.assertEqual(is_cdndiscordapp_url(url), False)
 
 
 class TestCreateImgurUrlInfoUrl(unittest.TestCase):

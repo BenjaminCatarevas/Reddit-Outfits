@@ -13,6 +13,7 @@ from util_url import is_reddit_url
 from util_url import is_twimg_url
 from util_url import is_ibbco_url
 from util_url import is_cdninstagram_url
+from util_url import is_cdndiscordapp_url
 
 
 def generate_thread_ids(query: str, author_name: str, subreddit: str, size: int = 25) -> set:
@@ -133,6 +134,10 @@ def create_outfit_urls(comment_body: str, permalink: str) -> set:
             # i.ibb.co URL, links directly to an image, so we can add it.
             outfit_urls.append(raw_outfit_url)
         elif is_cdninstagram_url(raw_outfit_url):
+            # cdninstagram.com URL, links directly to an image, so we can add it.
+            outfit_urls.append(raw_outfit_url)
+        elif is_cdndiscordapp_url(raw_outfit_url):
+            # cdndiscordapp.com URL, links directly to an image, so we can add it.
             outfit_urls.append(raw_outfit_url)
         else:
             # Invalid outfit URL.
