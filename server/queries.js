@@ -17,6 +17,14 @@ const config = {
   database: configInfo.databaseInfo.databaseName
 };
 
+const mapIntToSubreddit = {
+  0: "malefashionadvice",
+  1: "femalefashionadvice",
+  2: "streetwear",
+  3: "goodyearwelt",
+  4: "rawdenim"
+};
+
 const db = pgp(config);
 
 /* Heler functions */
@@ -89,12 +97,14 @@ async function getCommentsFromSpecificUser(req, res, next) {
 }
 
 async function getCommentsOfThreadByThreadId(req, res, next) {
-  let subreddit = req.params.subreddit;
+  // The subreddit comes in as an int from the React frontend, so convert it from an int to a subreddit.
+  let { subredditAsInt } = req.params;
+  let intToSubreddit = mapIntToSubreddit[Number(subredditAsInt)];
   let threadId = req.params.threadId;
   try {
     const threadData = await db.any(
       "SELECT * FROM outfit WHERE subreddit = $1 AND thread_id = $2",
-      [subreddit, threadId]
+      [intToSubreddit, threadId]
     );
 
     const commentsOfThreadByCommentId = await sortCommentsByCommentId(
@@ -104,7 +114,7 @@ async function getCommentsOfThreadByThreadId(req, res, next) {
     return await res.status(200).json({
       success: true,
       commentsOfThreadByCommentId: commentsOfThreadByCommentId,
-      message: `Retrieved all outfits from thread ${threadId} of subreddit ${subreddit}`
+      message: `Retrieved all outfits from thread ${threadId} of subreddit ${intToSubreddit}`
     });
   } catch (err) {
     return await res.json({
@@ -115,15 +125,17 @@ async function getCommentsOfThreadByThreadId(req, res, next) {
 }
 
 async function getThreadsBySubreddit(req, res, next) {
-  let subreddit = req.params.subreddit;
+  // The subreddit comes in as an int from the React frontend, so convert it from an int to a subreddit.
+  let { subredditAsInt } = req.params;
+  let intToSubreddit = mapIntToSubreddit[Number(subredditAsInt)];
   try {
     const data = await db.any("SELECT * FROM thread WHERE subreddit = $1", [
-      subreddit
+      intToSubreddit
     ]);
     return await res.status(200).json({
       success: true,
       subredditThreads: data,
-      message: `Retrieved all threads from ${subreddit}`
+      message: `Retrieved all threads from ${intToSubreddit}`
     });
   } catch (err) {
     return await res.json({
@@ -166,10 +178,21 @@ async function getAllThreads(req, res, next) {
 }
 
 async function getThreadByTimestamp(req, res, next) {
-  let { year, month, day, subreddit } = req.params;
+  let { year, month, day, subredditAsInt } = req.params;
+  // Convert the year, month, and day into a formatted date.
   let formattedDate = year + "-" + month + "-" + day;
+  // Then extract the timestamp from the formatted date.
   let specifiedTimestamp = new Date(formattedDate).getTime() / 1000;
+  // The subreddit comes in as an int from the React frontend, so convert it from an int to a subreddit.
+  let intToSubreddit = mapIntToSubreddit[Number(subredditAsInt)];
   try {
+    // Check if any portion of the specified timestamp is not a number. If so, return nothing.
+    if (isNaN(Number(day)) || isNaN(Number(month)) || isNaN(Number(year))) {
+      return await res.json({
+        success: false,
+        error: "Invalid day, month, or year."
+      });
+    }
     // Query adapted from: https://stackoverflow.com/a/18270068 and https://stackoverflow.com/a/16610459
     const threadInformation = await db.any(
       `SELECT * 
@@ -177,12 +200,10 @@ async function getThreadByTimestamp(req, res, next) {
       WHERE subreddit = $1
       AND TO_TIMESTAMP(thread_timestamp)::date >= TO_TIMESTAMP($2)
       AND TO_TIMESTAMP(thread_timestamp)::date < TO_TIMESTAMP($2) + INTERVAL '1 DAY'`,
-      [subreddit, specifiedTimestamp]
+      [intToSubreddit, specifiedTimestamp]
     );
 
-    console.log(threadInformation);
-
-    // We want to stop if the query yielded 0 results.
+    // We want to stop if the query yielded 0 results (and avoid sorting effectively nothing).
     if (threadInformation.length === 0) {
       return await res.status(200).json({
         success: true,

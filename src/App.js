@@ -14,6 +14,14 @@ class App extends Component {
     currentlyDisplayedUser: null
   };
 
+  mapSubredditToInt = {
+    malefashionadvice: 0,
+    femalefashionadvice: 1,
+    streetwear: 2,
+    goodyearwelt: 3,
+    rawdenim: 4
+  };
+
   // NOTE: These functions will replace the axios URL with a server.
   getCommentsFromSpecificUser = user => {
     axios
@@ -46,8 +54,9 @@ class App extends Component {
   };
 
   getThreadsBySubreddit = subreddit => {
+    let subredditToInt = this.mapSubredditToInt[subreddit];
     axios
-      .get(`http://localhost:3001/r/${subreddit}`)
+      .get(`http://localhost:3001/r/${subredditToInt}`)
       .then(res => {
         this.setState({ allThreads: res.data.subredditThreads });
       })
@@ -55,8 +64,13 @@ class App extends Component {
   };
 
   getCommentsOfThreadByThreadDate = (subreddit, year, month, day) => {
+    /*
+    Ensure that year, month, day are cast to Numbers
+    Check if year, month, day are not NaN; if they are, return nothing
+    */
+    let subredditToInt = this.mapSubredditToInt[subreddit];
     axios
-      .get(`http://localhost:3001/r/${subreddit}/${year}/${month}/${day}`)
+      .get(`http://localhost:3001/r/${subredditToInt}/${year}/${month}/${day}`)
       .then(res => {
         this.setState({
           commentsFromSpecificThread: res.data.commentsOfThreadByCommentId
