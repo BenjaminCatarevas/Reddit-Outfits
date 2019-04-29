@@ -7,6 +7,7 @@ import UserList from "./UserList";
 import ThreadDisplayer from "./ThreadDisplayer";
 import Error from "./Error";
 import { Switch, withRouter, Route } from "react-router-dom";
+import Stats from "./Stats";
 import "../styles/Routing.css";
 
 function Routing({
@@ -97,6 +98,7 @@ function Routing({
                 )}
               />
               <Route path="/about" component={About} />
+              <Route path="/stats" component={Stats} />
               <Route component={Error} />
             </Switch>
           </section>
