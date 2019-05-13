@@ -17,23 +17,26 @@ export class UserComments extends Component {
 
   sortByAscendingScore = () => {
     this.child.sortByAscendingScore();
-    this.props.sortCommentsFromSpecificUserByAscendingScore();
     // Set state of App to sort comments by ascending score
+    this.props.sortCommentsFromSpecificUserByAscendingScore();
   };
 
   sortByDescendingScore = () => {
     this.child.sortByDescendingScore();
-    // Set state of App to sort comments by ascending score
+    // Set state of App to sort comments by descending score
+    this.props.sortCommentsFromSpecificUserByDescendingScore();
   };
 
   sortByAscendingDate = () => {
     this.child.sortByAscendingDate();
-    // Set state of App to sort comments by ascending score
+    // Set state of App to sort comments by ascending date
+    this.props.sortCommentsFromSpecificUserByAscendingDate();
   };
 
   sortByDescendingDate = () => {
     this.child.sortByDescendingDate();
-    // Set state of App to sort comments by ascending score
+    // Set state of App to sort comments by descending date
+    this.props.sortCommentsFromSpecificUserByDescendingDate();
   };
 
   render() {
