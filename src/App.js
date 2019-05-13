@@ -79,6 +79,22 @@ class App extends Component {
       .catch(err => console.log("Error: ", err.message));
   };
 
+  sortCommentsFromSpecificUserByAscendingScore = () => {
+    //TODO: Find way to sort object of objects and maintain the same structure
+  };
+
+  sortCommentsFromSpecificUserByDescendingScore = () => {
+    //TODO: Find way to sort object of objects and maintain the same structure
+  };
+
+  sortCommentsFromSpecificUserByAscendingDate = () => {
+    //TODO: Find way to sort object of objects and maintain the same structure
+  };
+
+  sortCommentsFromSpecificUserByDescendingDate = () => {
+    //TODO: Find way to sort object of objects and maintain the same structure
+  };
+
   render() {
     return (
       <div className="App">
@@ -98,6 +114,9 @@ class App extends Component {
             allThreads={this.state.allThreads}
             getCommentsOfThreadByThreadDate={
               this.getCommentsOfThreadByThreadDate
+            }
+            sortCommentsFromSpecificUserByAscendingScore={
+              this.sortCommentsFromSpecificUserByAscendingScore
             }
           />
         </div>
