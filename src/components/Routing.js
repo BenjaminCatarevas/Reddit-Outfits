@@ -58,6 +58,15 @@ function Routing({
                         sortCommentsFromSpecificUserByAscendingScore={
                           sortCommentsFromSpecificUserByAscendingScore
                         }
+                        sortCommentsFromSpecificUserByDescendingScore={
+                          sortCommentsFromSpecificUserByDescendingScore
+                        }
+                        sortCommentsFromSpecificUserByAscendingDate={
+                          sortCommentsFromSpecificUserByAscendingDate
+                        }
+                        sortCommentsFromSpecificUserByDescendingDate={
+                          sortCommentsFromSpecificUserByDescendingDate
+                        }
                         {...props}
                       />{" "}
                     </div>
