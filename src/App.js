@@ -118,6 +118,15 @@ class App extends Component {
             sortCommentsFromSpecificUserByAscendingScore={
               this.sortCommentsFromSpecificUserByAscendingScore
             }
+            sortCommentsFromSpecificUserByDescendingScore={
+              this.sortCommentsFromSpecificUserByDescendingScore
+            }
+            sortCommentsFromSpecificUserByAscendingDate={
+              this.sortCommentsFromSpecificUserByAscendingDate
+            }
+            sortCommentsFromSpecificUserByDescendingDate={
+              this.sortCommentsFromSpecificUserByDescendingDate
+            }
           />
         </div>
       </div>
