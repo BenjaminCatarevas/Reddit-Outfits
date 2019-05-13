@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 
 export class UserComments extends Component {
   componentDidMount() {
+    // Extract URL parameters
     const {
       match: { params }
     } = this.props;
@@ -13,6 +14,27 @@ export class UserComments extends Component {
     // TODO: Add check to see if 0 results. If so, redirect to error page.
     this.props.getCommentsFromSpecificUser(params.username);
   }
+
+  sortByAscendingScore = () => {
+    this.child.sortByAscendingScore();
+    this.props.sortCommentsFromSpecificUserByAscendingScore();
+    // Set state of App to sort comments by ascending score
+  };
+
+  sortByDescendingScore = () => {
+    this.child.sortByDescendingScore();
+    // Set state of App to sort comments by ascending score
+  };
+
+  sortByAscendingDate = () => {
+    this.child.sortByAscendingDate();
+    // Set state of App to sort comments by ascending score
+  };
+
+  sortByDescendingDate = () => {
+    this.child.sortByDescendingDate();
+    // Set state of App to sort comments by ascending score
+  };
 
   render() {
     const { commentsFromSpecificUser } = this.props;
@@ -34,12 +56,14 @@ export class UserComments extends Component {
       // Add dictionary to array for displaying
       scoreAndDateData.push(dataDict);
     }
-    // Sort the data by
+
+    // Sort the data by ascending date.
     scoreAndDateData.sort((a, b) => {
       let aDate = Date.parse(a.date);
       let bDate = Date.parse(b.date);
       return aDate > bDate ? 1 : -1;
     });
+
     // Object mapping approach adapted from: https://stackoverflow.com/a/39965962
     return commentsFromSpecificUser ? (
       <div>
@@ -53,8 +77,14 @@ export class UserComments extends Component {
             /u/{this.props.match.params.username}
           </a>
         </h6>
+        <button onClick={this.sortByAscendingScore}>Score ↑</button>
+        <button onClick={this.sortByDescendingScore}>Score ↓</button>
+        <button onClick={this.sortByAscendingDate}>Date ↑</button>
+        <button onClick={this.sortByDescendingDate}>Date ↓</button>
         <div id="user-barchart-container" style={svgStyle}>
           <TimeChart
+            /* Ref forwarding adapted from: https://github.com/kriasoft/react-starter-kit/issues/909#issuecomment-252969542 */
+            onRef={ref => (this.child = ref)}
             data={scoreAndDateData}
             width={1000}
             height={1000}
