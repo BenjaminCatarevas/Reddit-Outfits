@@ -3,6 +3,7 @@ import { scaleLinear, scaleBand } from "d3-scale";
 import { axisBottom, axisLeft } from "d3-axis";
 import { max } from "d3-array";
 import { select } from "d3-selection";
+// eslint-disable-next-line
 import { transition } from "d3-transition";
 import { isoParse, timeFormat } from "d3-time-format";
 import { withRouter } from "react-router-dom";
@@ -15,16 +16,26 @@ class BarChart extends Component {
     this.createBarChart = this.createBarChart.bind(this);
     // This function removes the old SVG when transitioning from one chart to another
     this.removeOldSvg = this.removeOldSvg.bind(this);
+    // These functions update the data based on score or data
+    this.sortByAscendingScore = this.sortByAscendingScore.bind(this);
+    this.sortByDescendingScore = this.sortByDescendingScore.bind(this);
+    this.sortByAscendingDate = this.sortByAscendingDate.bind(this);
+    this.sortByDescendingDate = this.sortByDescendingDate.bind(this);
   }
 
+  /* Ref forwarding adapted from: https://github.com/kriasoft/react-starter-kit/issues/909#issuecomment-252969542 */
   componentDidMount() {
+    this.props.onRef(this);
     this.createBarChart();
   }
 
   componentWillUpdate() {
-    // TODO: Find way to delete or remove SVG when going from one SVG to another
     this.removeOldSvg();
     this.createBarChart();
+  }
+
+  componentWillUnmount() {
+    this.props.onRef(undefined);
   }
 
   createBarChart() {
@@ -67,7 +78,7 @@ class BarChart extends Component {
       d.date = isoParse(d.date);
     });
 
-    // Scale the range (in traditional sense) of the data
+    // Scale the range (limit the data to within the highest and lowest respective data)
     xScale.domain(
       this.props.data.map(d => {
         return d.date;
@@ -85,12 +96,8 @@ class BarChart extends Component {
     select(node)
       .append("g")
       .attr("transform", "translate(" + axisPadding + "," + height + ")")
-      .call(xAxis)
-      .selectAll("text")
-      .style("text-anchor", "end")
-      .attr("dx", "-.8em")
-      .attr("dy", "-.55em")
-      .attr("transform", "rotate(-90)");
+      .attr("class", "xAxis")
+      .call(xAxis);
 
     // Add X axis label
     select(node)
@@ -106,14 +113,8 @@ class BarChart extends Component {
     select(node)
       .append("g")
       .attr("transform", "translate(" + axisPadding + ",0)")
-      .call(yAxis)
-      .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .style("fill", "black")
-      .text(this.props.yAxisLabel);
+      .attr("class", "yAxis")
+      .call(yAxis);
 
     // Add the rects to the graph (but currently are empty)
     select(node)
@@ -140,6 +141,36 @@ class BarChart extends Component {
       .attr("height", d => {
         return height - yScale(d.score);
       });
+
+    // Transition in the X axis
+    select(node)
+      .select(".xAxis")
+      .transition()
+      .duration(1000)
+      .call(xAxis)
+      .selectAll("text")
+      .style("text-anchor", "end")
+      .attr("dx", "-.8em")
+      .attr("dy", "-.55em")
+      .attr("transform", "rotate(-90)");
+
+    // Transition in the Y axis
+    select(node)
+      .select(".yAxis")
+      .transition()
+      .duration(1000)
+      .call(yAxis);
+
+    // Add the Y axis label (we cannot do this in the call above because it is being transitioned in)
+    select(node)
+      .select(".yAxis")
+      .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .style("fill", "black")
+      .text(this.props.yAxisLabel);
   }
 
   removeOldSvg() {
@@ -149,6 +180,39 @@ class BarChart extends Component {
     select(node)
       .selectAll("*")
       .remove();
+  }
+
+  // Adapted from: https://bl.ocks.org/martinjc/7fa5deb1782da2fc6da15c3fad02c88b
+  sortByAscendingScore() {
+    this.props.data.sort((a, b) => {
+      return a.score > b.score ? 1 : -1;
+    });
+    this.removeOldSvg();
+    this.createBarChart();
+  }
+
+  sortByDescendingScore() {
+    this.props.data.sort((a, b) => {
+      return a.score < b.score ? 1 : -1;
+    });
+    this.removeOldSvg();
+    this.createBarChart();
+  }
+
+  sortByAscendingDate() {
+    this.props.data.sort((a, b) => {
+      return a.date > b.date ? 1 : -1;
+    });
+    this.removeOldSvg();
+    this.createBarChart();
+  }
+
+  sortByDescendingDate() {
+    this.props.data.sort((a, b) => {
+      return a.date < b.date ? 1 : -1;
+    });
+    this.removeOldSvg();
+    this.createBarChart();
   }
 
   render() {
