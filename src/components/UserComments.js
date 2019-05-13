@@ -44,9 +44,11 @@ export class UserComments extends Component {
     // Convert user data into x/y data for data visualization:
     let scoreAndDateData = [];
     for (let commentId in commentsFromSpecificUser) {
-      // Extract score and timestamp
+      // Extract score, timestamp, and comment permalink
       let score = commentsFromSpecificUser[commentId].commentScore;
       let timestamp = commentsFromSpecificUser[commentId].commentTimestamp;
+      let commentPermalink =
+        commentsFromSpecificUser[commentId].commentPermalink;
       // Create formatted date
       let d = new Date(timestamp * 1000);
       let formattedDate =
@@ -54,7 +56,8 @@ export class UserComments extends Component {
       // Create dictionary of each value for displaying
       let dataDict = {
         score,
-        date: formattedDate
+        date: formattedDate,
+        commentPermalink
       };
       // Add dictionary to array for displaying
       scoreAndDateData.push(dataDict);

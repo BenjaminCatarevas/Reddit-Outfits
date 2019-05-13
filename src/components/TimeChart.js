@@ -142,6 +142,13 @@ class BarChart extends Component {
         return height - yScale(d.score);
       });
 
+    // Add "on" functionality for bars
+    select(node)
+      .selectAll("rect")
+      .on("click", d => {
+        window.open(d.commentPermalink);
+      });
+
     // Transition in the X axis
     select(node)
       .select(".xAxis")
