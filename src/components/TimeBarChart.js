@@ -8,12 +8,22 @@ import { transition } from "d3-transition";
 import { isoParse, timeFormat } from "d3-time-format";
 import { withRouter } from "react-router-dom";
 
-class BarChart extends Component {
+/*
+RESOURCES:
+- http://bl.ocks.org/williaster/10ef968ccfdc71c30ef8 (switch to dropdown on UserComments component?)
+- https://bl.ocks.org/ProQuestionAsker/8382f70af7f4a7355827c6dc4ee8817d
+- http://bl.ocks.org/d3noob/c37cb8e630aaef7df30d
+- https://stackoverflow.com/questions/11903709/adding-drop-down-menu-using-d3-js
+- https://bl.ocks.org/alanvillalobos/14e9f0d80ea6b0d8083ba95a9d571d13
+
+*/
+
+class TimeBarChart extends Component {
   // Called because we use .bind
   constructor(props) {
     super(props);
     // Set the function to have access to `this` so it can access the node reference and modify D3 elements.
-    this.createBarChart = this.createBarChart.bind(this);
+    this.createTimeBarChart = this.createTimeBarChart.bind(this);
     // This function removes the old SVG when transitioning from one chart to another
     this.removeOldSvg = this.removeOldSvg.bind(this);
     // These functions update the data based on score or data
@@ -26,24 +36,23 @@ class BarChart extends Component {
   /* Ref forwarding adapted from: https://github.com/kriasoft/react-starter-kit/issues/909#issuecomment-252969542 */
   componentDidMount() {
     this.props.onRef(this);
-    this.createBarChart();
   }
 
   componentWillUpdate() {
     this.removeOldSvg();
-    this.createBarChart();
+    this.createTimeBarChart();
   }
 
   componentWillUnmount() {
     this.props.onRef(undefined);
   }
 
-  createBarChart() {
+  createTimeBarChart() {
     // Bar chart design adapted from: https://bl.ocks.org/zigahertz/1ee4965ff76514517bb7ce6af21e5d44 and https://bl.ocks.org/d3noob/0e276dc70bb9184727ee47d6dd06e915
     // Define the dimensions and margins of the graph
     let margin = { top: 20, right: 20, bottom: 70, left: 70 };
     let width = this.props.width - margin.left - margin.right;
-    let height = 300 - margin.top - margin.bottom;
+    let height = this.props.height - margin.top - margin.bottom;
     // Padding to align axes, answer adapted from: https://stackoverflow.com/a/40754024
     const axisPadding = 30;
 
@@ -66,13 +75,6 @@ class BarChart extends Component {
       .scale(yScale)
       .ticks(10);
 
-    // Set the dimensions of the graph
-    select(node)
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
     // Format the date so that it can be displayed properly
     this.props.data.forEach(d => {
       d.date = isoParse(d.date);
@@ -91,6 +93,13 @@ class BarChart extends Component {
         return d.score;
       })
     ]);
+
+    // Set the dimensions of the graph
+    select(node)
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     // Add the X axis
     select(node)
@@ -195,7 +204,7 @@ class BarChart extends Component {
       return a.score > b.score ? 1 : -1;
     });
     this.removeOldSvg();
-    this.createBarChart();
+    this.createTimeBarChart();
   }
 
   sortByDescendingScore() {
@@ -203,7 +212,7 @@ class BarChart extends Component {
       return a.score < b.score ? 1 : -1;
     });
     this.removeOldSvg();
-    this.createBarChart();
+    this.createTimeBarChart();
   }
 
   sortByAscendingDate() {
@@ -211,7 +220,7 @@ class BarChart extends Component {
       return a.date > b.date ? 1 : -1;
     });
     this.removeOldSvg();
-    this.createBarChart();
+    this.createTimeBarChart();
   }
 
   sortByDescendingDate() {
@@ -219,7 +228,7 @@ class BarChart extends Component {
       return a.date < b.date ? 1 : -1;
     });
     this.removeOldSvg();
-    this.createBarChart();
+    this.createTimeBarChart();
   }
 
   render() {
@@ -234,4 +243,4 @@ class BarChart extends Component {
     );
   }
 }
-export default withRouter(BarChart);
+export default withRouter(TimeBarChart);
