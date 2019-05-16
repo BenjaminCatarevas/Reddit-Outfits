@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import UserComment from "./UserComment";
-import TimeChart from "./TimeChart";
+import TimeBarChart from "./TimeBarChart";
 import PropTypes from "prop-types";
 
 export class UserComments extends Component {
@@ -88,12 +88,20 @@ export class UserComments extends Component {
         <button onClick={this.sortByAscendingDate}>Date ↑</button>
         <button onClick={this.sortByDescendingDate}>Date ↓</button>
         <div id="user-barchart-container" style={svgStyle}>
-          <TimeChart
+          <TimeBarChart
             /* Ref forwarding adapted from: https://github.com/kriasoft/react-starter-kit/issues/909#issuecomment-252969542 */
+            /*
+            We forward a ref because we want to add buttons at the UserComments level.
+            This is because if we append buttons at the TimeBarChart level, the buttons will move if the SVG moves.
+            We want the buttons to remain in the same place, but be able to call functions defined in the TimeBarChart.
+            Specifically, we want the buttons to sort the data as it's displayed in the TimeBarChart SVG as well as sorting the comments of each user in the same manner.
+            To meet all of these prerequisites requires forwarding a ref in order to call child component methods from parent components.
+            */
+
             onRef={ref => (this.child = ref)}
             data={scoreAndDateData}
             width={1000}
-            height={1000}
+            height={300}
             xAxisLabel={"Date posted"}
             yAxisLabel={"Score"}
           />
