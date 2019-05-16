@@ -113,8 +113,19 @@ function Routing({
                   </div>
                 )}
               />
+              <Route
+                path="/stats"
+                render={props => (
+                  <div>
+                    <Stats
+                      getAllThreads={getAllThreads}
+                      allThreads={allThreads}
+                      {...props}
+                    />
+                  </div>
+                )}
+              />
               <Route path="/about" component={About} />
-              <Route path="/stats" component={Stats} />
               <Route component={Error} />
             </Switch>
           </section>
