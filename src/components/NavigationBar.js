@@ -9,8 +9,11 @@ import {
 } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
 import Select from "react-select";
+
 //TODO: Embed react-select in navbar?: https://react-select.com/components
 // https://github.com/JedWatson/react-select
+// https://www.youtube.com/watch?v=1iysNUrI3lw
+
 import { LinkContainer } from "react-router-bootstrap";
 
 export class NavigationBar extends Component {
