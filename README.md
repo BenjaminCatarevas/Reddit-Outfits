@@ -8,6 +8,10 @@ Reddit Outfits is a web application to view outfits of users from reddit's fashi
 
 - [Streetwear](https://reddit.com/r/streetwear)
 
+- [GoodyearWelt](https://reddit.com/r/goodyearwelt) [To be implemented]
+
+- [RawDenim](https://reddit.com/r/rawdenim) [To be implemented]
+
 Up until now, there has not been a way to view outfits of a user in a condensed fashion. Previously, in order to do so, one would have had to go through a user's comment history and identify comments of their outfits. Now, however, with the advent of Reddit Outfits, one can now view outfits of any user. Reddit Outfits also offers the ability to view all outfits of a given thread, and the ability to sort outfits by score and date posted. There are also statistics pertaining to a given user, thread, and subreddit as a whole.
 
 ## Getting Started
