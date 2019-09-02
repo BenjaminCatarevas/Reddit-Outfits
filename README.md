@@ -18,31 +18,21 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+- [Imgur API key](https://api.imgur.com/)
+- [reddit API key](https://www.reddit.com/wiki/api)
+- [PostgreSQL database viewer (optional but recommended)](https://www.pgadmin.org/)
 
-```
-Give examples
-```
+Run `npm install` upon acquiring the repo to install any dependencies for Node.
 
-<TBD>
+Run `pip freeze requirements.txt` upon acquiring the repo to install any dependencies for Python 3.
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running
+1. Open up a Terminal window at the top level of the repository.
 
-Say what the step will be
+2. Run `npm start` to spin up a hot-reload development server.
 
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-<TBD>
+3. In a separate Terminal window, run `npm run serverstart` to run the Express.JS server, which will get data from the database.
 
 ## Built With
 
