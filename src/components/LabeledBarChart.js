@@ -25,12 +25,17 @@ class LabeledBarChart extends Component {
   }
 
   componentDidMount() {
+    this.removeOldSvg();
     this.createLabeledBarChart("numThreads", "Number of threads");
   }
 
   componentWillUpdate() {
+    /*
+    We call createdLabeledBarChart() because the only way the component technically updates
+    is when it is accessed by the Stats routerLink.
+    */
     this.removeOldSvg();
-    this.createLabeledBarChart();
+    this.createLabeledBarChart("numThreads", "Number of threads");
   }
 
   createLabeledBarChart(sortedProperty, yAxisLabel) {
@@ -150,15 +155,6 @@ class LabeledBarChart extends Component {
   updateData = event => {
     // Approach adapted from: https://stackoverflow.com/a/28868135
     let selection = event.target.value;
-    /*
-    numThreads: 0,
-        numTotalComments: 0,
-        numTopLevelComments: 0,
-        totalScore: 0,
-        averageThreadScore: 0,
-        averageNumTotalComments: 0,
-        averageNumTopLevelComments: 0,
-    */
     switch (selection) {
       case "0":
         this.updateBarChart("numThreads", "Total threads");
