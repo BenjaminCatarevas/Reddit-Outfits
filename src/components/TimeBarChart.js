@@ -36,6 +36,8 @@ class TimeBarChart extends Component {
   /* Ref forwarding adapted from: https://github.com/kriasoft/react-starter-kit/issues/909#issuecomment-252969542 */
   componentDidMount() {
     this.props.onRef(this);
+    this.removeOldSvg();
+    this.createTimeBarChart();
   }
 
   componentWillUpdate() {
