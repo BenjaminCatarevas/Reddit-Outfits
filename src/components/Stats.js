@@ -99,6 +99,7 @@ export class Stats extends Component {
         );
         chartData.push(dataCounters[key]);
       }
+      return true;
     });
 
     return allThreads ? (
