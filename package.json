@@ -1,7 +1,9 @@
 {
   "name": "reddit-outfits",
   "version": "0.1.0",
+  "license": "MIT",
   "dependencies": {
+    "@material-ui/core": "^4.4.0",
     "axios": "^0.18.1",
     "bluebird": "^3.5.3",
     "bootstrap": "^4.3.1",
@@ -22,7 +24,8 @@
     "react-router-dom": "^4.3.1",
     "react-scripts": "^3.0.0",
     "react-select": "^2.4.2",
-    "react-transition-group": "^2.7.0"
+    "react-transition-group": "^2.7.0",
+    "typescript": "^3.6.2"
   },
   "scripts": {
     "start": "react-scripts start",
