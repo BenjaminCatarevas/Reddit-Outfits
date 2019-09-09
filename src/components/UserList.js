@@ -18,7 +18,7 @@ export class UserList extends Component {
         title="Users"
         columns={[
           {
-            title: "Username",
+            title: "Reddit Outfits Profile Link",
             field: "author_name",
             render: rowData => (
               <Link to={`/u/${rowData.author_name}`}>
@@ -27,7 +27,20 @@ export class UserList extends Component {
             )
           },
           { title: "Number of comments", field: "num_comments" },
-          { title: "Number of outfits", field: "num_outfits" }
+          { title: "Number of outfits", field: "num_outfits" },
+          {
+            title: "Reddit Profile Link",
+            field: "author_name",
+            render: rowData => (
+              <a
+                rel="noopener noreferrer"
+                target="_blank"
+                href={rowData.author_name}
+              >
+                /u/{rowData.author_name}
+              </a>
+            )
+          }
         ]}
         data={allUsers}
         options={{ search: true }}

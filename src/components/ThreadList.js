@@ -34,7 +34,7 @@ export class ThreadList extends Component {
         }
         columns={[
           {
-            title: "Thread",
+            title: "Reddit Outfits Thread Link",
             field: "thread_timestamp",
             render: rowData => {
               let threadDate = new Date(rowData.thread_timestamp * 1000);
