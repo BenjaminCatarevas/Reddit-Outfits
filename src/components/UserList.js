@@ -35,7 +35,7 @@ export class UserList extends Component {
               <a
                 rel="noopener noreferrer"
                 target="_blank"
-                href={rowData.author_name}
+                href={"https://reddit.com/u/" + rowData.author_name}
               >
                 /u/{rowData.author_name}
               </a>
