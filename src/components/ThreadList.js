@@ -19,6 +19,25 @@ export class ThreadList extends Component {
     this.setState({ displayedSubreddit: params.subreddit });
   }
 
+  capitalize(word) {
+    return word.charAt(0).toUpperCase + word.slice(1);
+  }
+
+  createHumanDate(date) {
+    return new Date(date).toDateString();
+  }
+
+  getYearMonthDay(date) {
+    let year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+    return {
+      year,
+      month,
+      day
+    };
+  }
+
   render() {
     const { allThreads } = this.props;
 
@@ -27,9 +46,7 @@ export class ThreadList extends Component {
       <MaterialTable
         title={
           this.state.displayedSubreddit
-            ? this.state.displayedSubreddit.charAt(0).toUpperCase() +
-              this.state.displayedSubreddit.slice(1) +
-              " Threads"
+            ? this.capitalize(this.state.displayedSubreddit) + " Threads"
             : "Threads"
         }
         columns={[
@@ -38,15 +55,14 @@ export class ThreadList extends Component {
             field: "thread_timestamp",
             render: rowData => {
               let threadDate = new Date(rowData.thread_timestamp * 1000);
-              let humanDate = threadDate.toDateString();
 
-              let year = threadDate.getFullYear();
-              let month = threadDate.getMonth() + 1;
-              let day = threadDate.getDate();
+              let year,
+                month,
+                day = this.getYearMonthDay(threadDate);
 
               return (
                 <Link to={`/r/${rowData.subreddit}/${year}/${month}/${day}`}>
-                  {humanDate}
+                  {this.createHumanDate(threadDate)}
                 </Link>
               );
             }
