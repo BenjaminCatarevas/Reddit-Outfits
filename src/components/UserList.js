@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import MaterialTable from "material-table";
-import { Link } from "react-router-dom";
 
 export class UserList extends Component {
   // Add function for end-user specifying a username and act accordingly (redirect)
