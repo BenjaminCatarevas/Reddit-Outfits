@@ -56,12 +56,14 @@ export class ThreadList extends Component {
             render: rowData => {
               let threadDate = new Date(rowData.thread_timestamp * 1000);
 
-              let year,
-                month,
-                day = this.getYearMonthDay(threadDate);
+              let dateInfo = this.getYearMonthDay(threadDate);
 
               return (
-                <Link to={`/r/${rowData.subreddit}/${year}/${month}/${day}`}>
+                <Link
+                  to={`/r/${rowData.subreddit}/${dateInfo.year}/${
+                    dateInfo.month
+                  }/${dateInfo.day}`}
+                >
                   {this.createHumanDate(threadDate)}
                 </Link>
               );
