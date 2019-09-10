@@ -3,6 +3,10 @@ import { withRouter } from "react-router-dom";
 import UserComment from "./UserComment";
 import TimeBarChart from "./TimeBarChart";
 import PropTypes from "prop-types";
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 export class UserComments extends Component {
   componentDidMount() {
@@ -108,11 +112,34 @@ export class UserComments extends Component {
         </div>
         {Object.keys(commentsFromSpecificUser).map(key => {
           // The key defaults to the comment ID, since that's the key to index into a given object.
+          const topOfWindowRef = React.createRef();
+
           return (
-            <UserComment
-              key={key}
-              userInformation={commentsFromSpecificUser[key]}
-            />
+            <ExpansionPanel defaultExpanded={true} ref={topOfWindowRef}>
+              <ExpansionPanelSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                Posted by{" "}
+                <a
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  href={`https://reddit.com/u/${
+                    commentsFromSpecificUser[key].authorName
+                  }`}
+                >
+                  /u/{commentsFromSpecificUser[key].authorName}
+                </a>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <UserComment
+                  key={key}
+                  userInformation={commentsFromSpecificUser[key]}
+                  topOfWindowRef={topOfWindowRef}
+                />
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
           );
         })}
       </div>

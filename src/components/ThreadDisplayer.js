@@ -32,8 +32,13 @@ export class ThreadDisplayer extends Component {
         let threadDate = new Date(userInfo.commentTimestamp * 1000);
         let humanDate = threadDate.toDateString();
 
+        /* TODO: Figure out why there's no space around the Link element. */
+        /*
+       TODO: Figure out why text is not aligned properly in UserComment of UserComments but is aligned in ThreadDisplayer
+       */
+        const topOfWindowRef = React.createRef();
         return (
-          <ExpansionPanel defaultExpanded={true}>
+          <ExpansionPanel defaultExpanded={true} ref={topOfWindowRef}>
             <ExpansionPanelSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1a-content"
@@ -47,7 +52,11 @@ export class ThreadDisplayer extends Component {
               score of {userInfo.commentScore}
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-              <UserComment key={key} userInformation={userInfo} />
+              <UserComment
+                key={key}
+                userInformation={userInfo}
+                topOfWindowRef={topOfWindowRef}
+              />
             </ExpansionPanelDetails>
           </ExpansionPanel>
         );

@@ -25,7 +25,6 @@ export class UserComment extends Component {
         className="container"
         id="user-comment-displayer"
         style={commentContainerStyle}
-        ref={this.topOfWindowRef}
       >
         <h6 style={textDisplayStyle}>
           <a
@@ -44,7 +43,7 @@ export class UserComment extends Component {
           bigImageToDisplay={this.state.bigImageToDisplay}
           outfits={userInformation.outfits}
           setBigImageToDisplay={this.setBigImageToDisplay}
-          topOfWindowRef={this.topOfWindowRef}
+          topOfWindowRef={this.props.topOfWindowRef}
         />
       </div>
     );
