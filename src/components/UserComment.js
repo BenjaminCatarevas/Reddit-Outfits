@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { ImageSelector } from "./ImageSelector";
 import { BigImageDisplay } from "./BigImageDisplay";
 import PropTypes from "prop-types";
+import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 
 export class UserComment extends Component {
   state = {
@@ -19,9 +20,6 @@ export class UserComment extends Component {
   render() {
     const { userInformation } = this.props;
 
-    let threadDate = new Date(userInformation.commentTimestamp * 1000);
-    let humanDate = threadDate.toDateString();
-
     return (
       <div
         className="container"
@@ -35,13 +33,8 @@ export class UserComment extends Component {
             target="_blank"
             href={userInformation.commentPermalink}
           >
-            Permalink
-          </a>{" "}
-          | Score: {userInformation.commentScore} | Posted: {humanDate} at{" "}
-          {threadDate.toLocaleTimeString("en-US")} by{" "}
-          <Link to={`/u/${userInformation.authorName}`}>
-            {userInformation.authorName}
-          </Link>
+            <OpenInNewIcon />
+          </a>
         </h6>
         <BigImageDisplay
           bigImageToDisplay={this.state.bigImageToDisplay}
@@ -67,7 +60,8 @@ const commentContainerStyle = {
 
 const textDisplayStyle = {
   textAlign: "center",
-  marginTop: "7.5px"
+  marginTop: "7.5px",
+  float: "right"
 };
 
 UserComment.propTypes = {
