@@ -44,7 +44,7 @@ export class UserComments extends Component {
   };
 
   createChartData(data) {
-    // Convert user data into x/y data for data visualization:
+    // Convert user data into x/y data for data visualization
     let scoreAndDateData = [];
     for (const comment of data) {
       // Extract score, timestamp, and comment permalink
