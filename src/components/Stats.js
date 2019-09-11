@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import LabeledBarChart from "./LabeledBarChart";
+import PropTypes from "prop-types";
 
 export class Stats extends Component {
   componentDidMount() {
@@ -126,6 +127,11 @@ const svgStyle = {
   width: "900",
   height: "900",
   overflow: "auto"
+};
+
+Stats.propTypes = {
+  getAllThreads: PropTypes.func.isRequired,
+  allThreads: PropTypes.array.isRequired
 };
 
 export default Stats;

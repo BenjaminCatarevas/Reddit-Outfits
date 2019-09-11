@@ -7,10 +7,10 @@ import Routing from "./components/Routing";
 
 class App extends Component {
   state = {
-    allUsers: null,
-    allThreads: null,
-    commentsFromSpecificUser: null,
-    commentsFromSpecificThread: null,
+    allUsers: [],
+    allThreads: [],
+    commentsFromSpecificUser: [],
+    commentsFromSpecificThread: [],
     currentlyDisplayedUser: null
   };
 

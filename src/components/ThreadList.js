@@ -96,7 +96,8 @@ export class ThreadList extends Component {
 
 ThreadList.propTypes = {
   getThreadsBySubreddit: PropTypes.func.isRequired,
-  getAllThreads: PropTypes.func.isRequired
+  getAllThreads: PropTypes.func.isRequired,
+  allThreads: PropTypes.array.isRequired
 };
 
 export default withRouter(ThreadList);

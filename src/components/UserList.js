@@ -52,7 +52,8 @@ export class UserList extends Component {
 }
 
 UserList.propTypes = {
-  getAllUsers: PropTypes.func.isRequired
+  getAllUsers: PropTypes.func.isRequired,
+  allUsers: PropTypes.array.isRequired
 };
 
 export default withRouter(UserList);

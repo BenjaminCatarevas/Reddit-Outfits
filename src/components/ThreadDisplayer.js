@@ -5,6 +5,7 @@ import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 
 export class ThreadDisplayer extends Component {
   componentDidMount() {
@@ -22,7 +23,7 @@ export class ThreadDisplayer extends Component {
 
   render() {
     let { commentsFromSpecificThread } = this.props;
-    // Object mapping approach adapted from: https://stackoverflow.com/a/39965962
+
     // If the commentsFromSpecificThread is null, just return an empty div. Otherwise, create a UserComment component for each comment.
     return commentsFromSpecificThread ? (
       commentsFromSpecificThread.map(comment => {
@@ -63,5 +64,10 @@ export class ThreadDisplayer extends Component {
     );
   }
 }
+
+ThreadDisplayer.propTypes = {
+  getCommentsOfThreadByThreadDate: PropTypes.func.isRequired,
+  commentsFromSpecificThread: PropTypes.array.isRequired
+};
 
 export default ThreadDisplayer;

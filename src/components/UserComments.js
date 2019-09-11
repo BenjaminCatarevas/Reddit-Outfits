@@ -162,7 +162,12 @@ const svgStyle = {
 };
 
 UserComments.propTypes = {
-  getCommentsFromSpecificUser: PropTypes.func.isRequired
+  getCommentsFromSpecificUser: PropTypes.func.isRequired,
+  commentsFromSpecificUser: PropTypes.array.isRequired,
+  sortCommentsFromSpecificUserByAscendingScore: PropTypes.func.isRequired,
+  sortCommentsFromSpecificUserByDescendingScore: PropTypes.func.isRequired,
+  sortCommentsFromSpecificUserByAscendingDate: PropTypes.func.isRequired,
+  sortCommentsFromSpecificUserByDescendingDate: PropTypes.func.isRequired
 };
 
 export default withRouter(UserComments);
