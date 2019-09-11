@@ -25,11 +25,10 @@ export class ThreadDisplayer extends Component {
     // Object mapping approach adapted from: https://stackoverflow.com/a/39965962
     // If the commentsFromSpecificThread is null, just return an empty div. Otherwise, create a UserComment component for each comment.
     return commentsFromSpecificThread ? (
-      Object.keys(commentsFromSpecificThread).map(key => {
+      commentsFromSpecificThread.map(comment => {
         // The key defaults to the comment ID, since that's the key to index into a given object.
 
-        const userInfo = commentsFromSpecificThread[key];
-        let threadDate = new Date(userInfo.commentTimestamp * 1000);
+        let threadDate = new Date(comment.commentTimestamp * 1000);
         let humanDate = threadDate.toDateString();
 
         /* TODO: Figure out why there's no space around the Link element. */
@@ -45,16 +44,14 @@ export class ThreadDisplayer extends Component {
               id="panel1a-header"
             >
               Posted by
-              <Link to={`/u/${userInfo.authorName}`}>
-                {userInfo.authorName}
-              </Link>
+              <Link to={`/u/${comment.authorName}`}>{comment.authorName}</Link>
               on {humanDate} at {threadDate.toLocaleTimeString("en-US")} with a
-              score of {userInfo.commentScore}
+              score of {comment.commentScore}
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               <UserComment
-                key={key}
-                userInformation={userInfo}
+                key={comment.commentId}
+                userInformation={comment}
                 topOfWindowRef={topOfWindowRef}
               />
             </ExpansionPanelDetails>

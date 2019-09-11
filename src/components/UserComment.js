@@ -64,7 +64,11 @@ const textDisplayStyle = {
 };
 
 UserComment.propTypes = {
-  userInformation: PropTypes.object.isRequired
+  userInformation: PropTypes.object.isRequired,
+  topOfWindowRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({ current: PropTypes.any })
+  ])
 };
 
 export default withRouter(UserComment);

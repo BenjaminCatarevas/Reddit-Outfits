@@ -33,7 +33,7 @@ async function sortCommentsByCommentId(data, res) {
     // Create a JSON object to organize outfits by their comment ID.
     // We do this because outfits are stored as individual URLs, and are not inherently grouped by a comment.
     let commentsByCommentId = {};
-    // Go through each comment of the user.
+    // Go through each comment of the user and organize the outfits by comment.
     for (let currentOutfitRecord of data) {
       // Obtain the comment ID so we can make a new entry in the JSON object to be returned.
       let currentCommentId = currentOutfitRecord.comment_id;
@@ -60,7 +60,23 @@ async function sortCommentsByCommentId(data, res) {
         };
       }
     }
-    return commentsByCommentId;
+    // We now convert the object of comments to an array.
+    // We do this because having an array of objects is easier to sort, manage, and access than an object.
+    const commentObjectArray = Object.keys(commentsByCommentId).map(key => {
+      const currentComment = commentsByCommentId[key];
+      const commentObj = {
+        authorName: currentComment.authorName,
+        outfits: currentComment.outfits,
+        commentBody: currentComment.commentBody,
+        commentPermalink: currentComment.commentPermalink,
+        commentScore: currentComment.commentScore,
+        commentTimestamp: currentComment.commentTimestamp,
+        commentId: key
+      };
+      return commentObj;
+    });
+
+    return commentObjectArray;
   } catch (err) {
     res.json({
       success: false,

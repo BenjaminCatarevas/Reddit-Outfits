@@ -43,16 +43,14 @@ export class UserComments extends Component {
     this.props.sortCommentsFromSpecificUserByDescendingDate();
   };
 
-  render() {
-    const { commentsFromSpecificUser } = this.props;
+  createChartData(data) {
     // Convert user data into x/y data for data visualization:
     let scoreAndDateData = [];
-    for (let commentId in commentsFromSpecificUser) {
+    for (const comment of data) {
       // Extract score, timestamp, and comment permalink
-      let score = commentsFromSpecificUser[commentId].commentScore;
-      let timestamp = commentsFromSpecificUser[commentId].commentTimestamp;
-      let commentPermalink =
-        commentsFromSpecificUser[commentId].commentPermalink;
+      let score = comment.commentScore;
+      let timestamp = comment.commentTimestamp;
+      let commentPermalink = comment.commentPermalink;
       // Create formatted date
       let d = new Date(timestamp * 1000);
       let formattedDate =
@@ -73,9 +71,12 @@ export class UserComments extends Component {
       let bDate = Date.parse(b.date);
       return aDate > bDate ? 1 : -1;
     });
+    return scoreAndDateData;
+  }
 
+  render() {
     // Object mapping approach adapted from: https://stackoverflow.com/a/39965962
-    return commentsFromSpecificUser ? (
+    return this.props.commentsFromSpecificUser ? (
       <div>
         <h6>
           Posts by{" "}
@@ -103,14 +104,14 @@ export class UserComments extends Component {
             */
 
             onRef={ref => (this.child = ref)}
-            data={scoreAndDateData}
+            data={this.createChartData(this.props.commentsFromSpecificUser)}
             width={1000}
             height={300}
             xAxisLabel={"Date posted"}
             yAxisLabel={"Score"}
           />
         </div>
-        {Object.keys(commentsFromSpecificUser).map(key => {
+        {this.props.commentsFromSpecificUser.map(comment => {
           // The key defaults to the comment ID, since that's the key to index into a given object.
           const topOfWindowRef = React.createRef();
 
@@ -125,17 +126,15 @@ export class UserComments extends Component {
                 <a
                   rel="noopener noreferrer"
                   target="_blank"
-                  href={`https://reddit.com/u/${
-                    commentsFromSpecificUser[key].authorName
-                  }`}
+                  href={`https://reddit.com/u/${comment.authorName}`}
                 >
-                  /u/{commentsFromSpecificUser[key].authorName}
+                  {comment.authorName} with a score of {comment.commentScore}
                 </a>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <UserComment
-                  key={key}
-                  userInformation={commentsFromSpecificUser[key]}
+                  key={comment.commentId}
+                  userInformation={comment}
                   topOfWindowRef={topOfWindowRef}
                 />
               </ExpansionPanelDetails>
