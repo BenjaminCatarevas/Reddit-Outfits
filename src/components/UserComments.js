@@ -115,6 +115,9 @@ export class UserComments extends Component {
           // The key defaults to the comment ID, since that's the key to index into a given object.
           const topOfWindowRef = React.createRef();
 
+          let threadDate = new Date(comment.commentTimestamp * 1000);
+          let humanDate = threadDate.toDateString();
+
           return (
             <ExpansionPanel defaultExpanded={true} ref={topOfWindowRef}>
               <ExpansionPanelSummary
@@ -128,8 +131,10 @@ export class UserComments extends Component {
                   target="_blank"
                   href={`https://reddit.com/u/${comment.authorName}`}
                 >
-                  {comment.authorName} with a score of {comment.commentScore}
+                  {comment.authorName}
                 </a>
+                with a score of {comment.commentScore} on {humanDate} at{" "}
+                {threadDate.toLocaleTimeString("en-US")}
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <UserComment
