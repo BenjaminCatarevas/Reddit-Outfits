@@ -62,9 +62,6 @@ export class NavigationBar extends Component {
               <LinkContainer to="/stats">
                 <Nav.Link>Stats</Nav.Link>
               </LinkContainer>
-              <LinkContainer to="/github">
-                <Nav.Link>Github</Nav.Link>
-              </LinkContainer>
             </Nav>
             <Form onSubmit={this.onSearchUserBarSubmit} inline>
               <FormControl
