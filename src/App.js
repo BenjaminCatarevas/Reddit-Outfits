@@ -80,7 +80,6 @@ class App extends Component {
   };
 
   sortCommentsFromSpecificUserByAscendingScore = () => {
-    //TODO: Find way to sort object of objects and maintain the same structure
     this.setState({
       commentsFromSpecificUser: this.state.commentsFromSpecificUser.sort(
         (a, b) => (a.commentScore > b.commentScore ? 1 : -1)
@@ -89,15 +88,27 @@ class App extends Component {
   };
 
   sortCommentsFromSpecificUserByDescendingScore = () => {
-    //TODO: Find way to sort object of objects and maintain the same structure
+    this.setState({
+      commentsFromSpecificUser: this.state.commentsFromSpecificUser.sort(
+        (a, b) => (a.commentScore < b.commentScore ? 1 : -1)
+      )
+    });
   };
 
   sortCommentsFromSpecificUserByAscendingDate = () => {
-    //TODO: Find way to sort object of objects and maintain the same structure
+    this.setState({
+      commentsFromSpecificUser: this.state.commentsFromSpecificUser.sort(
+        (a, b) => (a.commentTimestamp > b.commentTimestamp ? 1 : -1)
+      )
+    });
   };
 
   sortCommentsFromSpecificUserByDescendingDate = () => {
-    //TODO: Find way to sort object of objects and maintain the same structure
+    this.setState({
+      commentsFromSpecificUser: this.state.commentsFromSpecificUser.sort(
+        (a, b) => (a.commentTimestamp < b.commentTimestamp ? 1 : -1)
+      )
+    });
   };
 
   render() {
