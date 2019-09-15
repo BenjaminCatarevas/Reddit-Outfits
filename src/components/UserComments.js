@@ -119,31 +119,33 @@ export class UserComments extends Component {
           let humanDate = threadDate.toDateString();
 
           return (
-            <ExpansionPanel defaultExpanded={true} ref={topOfWindowRef}>
-              <ExpansionPanelSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                Posted by{" "}
-                <a
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  href={`https://reddit.com/u/${comment.authorName}`}
+            <div key={comment.commentId}>
+              <ExpansionPanel defaultExpanded={true} ref={topOfWindowRef}>
+                <ExpansionPanelSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
                 >
-                  {comment.authorName}
-                </a>
-                with a score of {comment.commentScore} on {humanDate} at{" "}
-                {threadDate.toLocaleTimeString("en-US")}
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
-                <UserComment
-                  key={comment.commentId}
-                  userInformation={comment}
-                  topOfWindowRef={topOfWindowRef}
-                />
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
+                  Posted by{" "}
+                  <a
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    href={`https://reddit.com/u/${comment.authorName}`}
+                  >
+                    {comment.authorName}
+                  </a>
+                  with a score of {comment.commentScore} on {humanDate} at{" "}
+                  {threadDate.toLocaleTimeString("en-US")}
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                  <UserComment
+                    key={comment.commentId}
+                    userInformation={comment}
+                    topOfWindowRef={topOfWindowRef}
+                  />
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
+            </div>
           );
         })}
       </div>

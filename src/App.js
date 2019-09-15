@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import "./styles/App.css";
 import axios from "axios";
-import Header from "./components/Header";
 import Routing from "./components/Routing";
+import NavigationBar from "./components/NavigationBar";
 
 class App extends Component {
   state = {
@@ -115,9 +115,8 @@ class App extends Component {
     return (
       <div className="App">
         <div className="container" id="app-container">
-          <Header
+          <NavigationBar
             getCommentsFromSpecificUser={this.getCommentsFromSpecificUser}
-            commentsFromSpecificUser={this.state.commentsFromSpecificUser}
           />
           <Routing
             getCommentsFromSpecificUser={this.getCommentsFromSpecificUser}

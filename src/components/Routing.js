@@ -8,6 +8,7 @@ import ThreadDisplayer from "./ThreadDisplayer";
 import Error from "./Error";
 import { Switch, withRouter, Route } from "react-router-dom";
 import Stats from "./Stats";
+import Home from "./Home";
 import "../styles/Routing.css";
 
 function Routing({
@@ -40,7 +41,7 @@ function Routing({
         >
           <section className="route-selection" style={sectionStyle}>
             <Switch location={location}>
-              <Route exact path="/" />
+              <Route exact path="/" render={props => <Home />} />
               <Route
                 path="/u/:username"
                 render={props => (
