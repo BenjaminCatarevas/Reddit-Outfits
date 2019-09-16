@@ -34,9 +34,13 @@ Run `pip freeze requirements.txt` upon acquiring the repo to install any depende
 
 1. Open up a Terminal window at the top level of the repository.
 
-2. Run `npm start` to spin up a hot-reload development server.
+2. Create a database like the one below:
 
-3. In a separate Terminal window, run `npm run serverstart` to run the Express.JS server, which will get data from the database.
+![Entity Relationship Diagram](./erd.png)
+
+3. Run `npm start` to spin up a hot-reload development server.
+
+4. In a separate Terminal window, run `npm run serverstart` to run the Express.JS server, which will get data from the database.
 
 ## Built With
 
