@@ -22,6 +22,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import InputBase from "@material-ui/core/InputBase";
 import Collapse from "@material-ui/core/Collapse";
 import IconButton from "@material-ui/core/IconButton";
+import Button from "@material-ui/core/Button";
 
 import SearchIcon from "@material-ui/icons/Search";
 import ExpandLess from "@material-ui/icons/ExpandLess";
@@ -62,11 +63,9 @@ export class NavigationBar extends Component {
     e.preventDefault();
     // Only submit if non-empty username.
     if (this.state.user) {
-      const user = this.state.user;
-      this.setState({ user: "test" });
-      console.log(this.state);
-      this.props.history.push(`/u/${user}`);
-      this.props.getCommentsFromSpecificUser(user);
+      this.props.history.push(`/u/${this.state.user}`);
+      this.props.getCommentsFromSpecificUser(this.state.user);
+      this.setState({ user: "" });
     }
   };
 
@@ -97,7 +96,6 @@ export class NavigationBar extends Component {
               <div className={this.props.classes.searchIcon}>
                 <SearchIcon />
               </div>
-              {/* TODO: Figure out why search bar is not cleared upon submission */}
               <form
                 value={this.state.user}
                 onChange={this.onSearchUserBarChange.bind(this)}
@@ -110,7 +108,16 @@ export class NavigationBar extends Component {
                     input: this.props.classes.inputInput
                   }}
                   inputProps={{ "aria-label": "search" }}
+                  value={this.state.user}
                 />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                  className={this.props.classes.button}
+                >
+                  Primary
+                </Button>
               </form>
             </div>
           </Toolbar>
@@ -352,6 +359,9 @@ const classes = theme => ({
   },
   nested: {
     paddingLeft: theme.spacing(4)
+  },
+  button: {
+    margin: theme.spacing(1)
   }
 });
 
