@@ -1,6 +1,8 @@
 import json
 import re
 import urllib.request
+import requests
+import json
 from urllib.parse import urlparse
 import praw
 import config
@@ -16,7 +18,7 @@ from util_url import is_cdninstagram_url
 from util_url import is_cdndiscordapp_url
 
 
-def generate_thread_ids(query: str, author_name: str, subreddit: str, size: int = 25) -> set:
+def generate_thread_ids(query: str, subreddit: str, size: int = 25, author_name: str = '', before: int = '') -> set:
     '''
     JSON reading adapted from: https://stackoverflow.com/questions/12965203/how-to-get-json-from-webpage-into-python-script
     Produces thread IDs for a given query with a specified author on a given subreddit, with a given size (default 25)
@@ -27,8 +29,9 @@ def generate_thread_ids(query: str, author_name: str, subreddit: str, size: int 
     thread_ids = set()
 
     # Query API for historical thread data.
-    with urllib.request.urlopen(F"https://api.pushshift.io/reddit/search/submission/?title={query}&author={author_name}&subreddit={subreddit}&size={size}") as url:
-        thread_data = json.loads(url.read().decode())
+    url = F"https://api.pushshift.io/reddit/search/submission/?title={query}&author={author_name}&subreddit={subreddit}&size={size}&before={before}"
+    r = requests.get(url=url)
+    thread_data = r.json()
 
     # Traverse each thread in the values part of the decoded JSON dictionary and add the ID of each thread to the set.
     # We can't use the thread itself or use the Pushshift API to analyze comments because they are not updated as often (but worth exploring in the future for updating purposes).
