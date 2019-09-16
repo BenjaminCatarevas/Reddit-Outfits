@@ -21,6 +21,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import InputBase from "@material-ui/core/InputBase";
 import Collapse from "@material-ui/core/Collapse";
+import IconButton from "@material-ui/core/IconButton";
 
 import SearchIcon from "@material-ui/icons/Search";
 import ExpandLess from "@material-ui/icons/ExpandLess";
@@ -31,7 +32,7 @@ import CommentIcon from "@material-ui/icons/Comment";
 import InfoIcon from "@material-ui/icons/Info";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import MenuIcon from "@material-ui/icons/Menu";
-import IconButton from "@material-ui/core/IconButton";
+import CodeIcon from "@material-ui/icons/Code";
 
 export class NavigationBar extends Component {
   state = {
@@ -215,6 +216,19 @@ export class NavigationBar extends Component {
                 <BarChartIcon />
               </ListItemIcon>
               <ListItemText primary="Stats" />
+            </ListItem>
+            <ListItem
+              button
+              key="github"
+              component="a"
+              href="https://www.github.com/BenjaminCatarevas/reddit-outfits"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <ListItemIcon>
+                <CodeIcon />
+              </ListItemIcon>
+              <ListItemText primary="GitHub" />
             </ListItem>
           </List>
           <Divider />
