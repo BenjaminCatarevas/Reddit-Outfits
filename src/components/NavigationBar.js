@@ -109,7 +109,6 @@ export class NavigationBar extends Component {
                   }}
                   inputProps={{ "aria-label": "search" }}
                   value={this.state.user}
-                  autoFocus
                 />
                 <Button
                   variant="contained"
