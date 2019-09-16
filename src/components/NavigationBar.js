@@ -109,6 +109,7 @@ export class NavigationBar extends Component {
                   }}
                   inputProps={{ "aria-label": "search" }}
                   value={this.state.user}
+                  autoFocus
                 />
                 <Button
                   variant="contained"
@@ -116,7 +117,7 @@ export class NavigationBar extends Component {
                   type="submit"
                   className={this.props.classes.button}
                 >
-                  Primary
+                  Search
                 </Button>
               </form>
             </div>
