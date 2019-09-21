@@ -43,6 +43,21 @@ export class NavigationBar extends Component {
     user: ""
   };
 
+  threads = [
+    {
+      display: "MaleFashionAdvice",
+      link: "malefashionadvice"
+    },
+    {
+      display: "FemaleFashionAdvie",
+      link: "femalefashionadvice"
+    },
+    {
+      display: "Streetwear",
+      link: "streetwear"
+    }
+  ];
+
   setMenuOpen() {
     this.setState({ menuOpen: true });
   }
@@ -189,33 +204,18 @@ export class NavigationBar extends Component {
               </ListItem>
               <Collapse in={this.state.threadsDropdownOpen} timeout="auto">
                 <List component="div" disablePadding>
-                  <ListItem
-                    button
-                    className={this.props.classes.nested}
-                    component={Link}
-                    to="/r/malefashionadvice"
-                    onClick={this.setMenuClosed.bind(this)}
-                  >
-                    <ListItemText primary="MaleFashionAdvice" />
-                  </ListItem>
-                  <ListItem
-                    button
-                    className={this.props.classes.nested}
-                    component={Link}
-                    to="/r/femalefashionadvice"
-                    onClick={this.setMenuClosed.bind(this)}
-                  >
-                    <ListItemText primary="FemaleFashionAdvice" />
-                  </ListItem>
-                  <ListItem
-                    button
-                    className={this.props.classes.nested}
-                    component={Link}
-                    to="/r/streetwear"
-                    onClick={this.setMenuClosed.bind(this)}
-                  >
-                    <ListItemText primary="Streetwear" />
-                  </ListItem>
+                  {this.threads.map(thread => (
+                    <ListItem
+                      key={thread.display}
+                      button
+                      className={this.props.classes.nested}
+                      component={Link}
+                      to={"/r/" + thread.link}
+                      onClick={this.setMenuClosed.bind(this)}
+                    >
+                      <ListItemText primary={thread.display} />
+                    </ListItem>
+                  ))}
                 </List>
               </Collapse>
               <ListItem
