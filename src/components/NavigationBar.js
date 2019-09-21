@@ -23,6 +23,7 @@ import InputBase from "@material-ui/core/InputBase";
 import Collapse from "@material-ui/core/Collapse";
 import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 
 import SearchIcon from "@material-ui/icons/Search";
 import ExpandLess from "@material-ui/icons/ExpandLess";
@@ -122,124 +123,142 @@ export class NavigationBar extends Component {
             </div>
           </Toolbar>
         </AppBar>
-        <Drawer
-          className={this.props.classes.drawer}
-          variant="persistent"
-          anchor="left"
-          open={this.state.menuOpen}
-          classes={{
-            paper: this.props.classes.drawerPaper
-          }}
+        {/* 
+        We use a ternary operator to determine the mouseEvent because it defaults to "onClick."
+        The drawer is always "present," it just is invisible when closed. So if we keep the default props for the
+        clickAwayListener, it will detect clickAway regardless of if the drawer is open.
+        So we use a ternary operator to determine if it should detect clickAway based on if the menu is open.
+        */}
+        <ClickAwayListener
+          mouseEvent={this.state.menuOpen ? "onClick" : false}
+          onClickAway={this.setMenuClosed.bind(this)}
         >
-          <div>
-            <IconButton onClick={this.setMenuClosed.bind(this)}>
-              <MenuIcon />
-            </IconButton>
-          </div>
-          <Divider />
-          <List>
-            <ListItem
-              button
-              key="home"
-              component={Link}
-              to="/"
-              onClick={this.setMenuClosed.bind(this)}
-            >
-              <ListItemIcon>
-                <HomeIcon />
-              </ListItemIcon>
-              <ListItemText primary="Home" />
-            </ListItem>
-            <ListItem
-              button
-              key="users"
-              component={Link}
-              to="/users"
-              onClick={this.setMenuClosed.bind(this)}
-            >
-              <ListItemIcon>
-                <PersonIcon />
-              </ListItemIcon>
-              <ListItemText primary="Users" />
-            </ListItem>
-            <ListItem button onClick={this.setThreadDropDown.bind(this)}>
-              <ListItemIcon>
-                <CommentIcon />
-              </ListItemIcon>
-              <ListItemText primary="Threads" />
-              {this.state.threadsDropdownOpen ? <ExpandLess /> : <ExpandMore />}
-            </ListItem>
-            <Collapse in={this.state.threadsDropdownOpen} timeout="auto">
-              <List component="div" disablePadding>
-                <ListItem
-                  button
-                  className={this.props.classes.nested}
-                  component={Link}
-                  to="/r/malefashionadvice"
-                  onClick={this.setMenuClosed.bind(this)}
-                >
-                  <ListItemText primary="MaleFashionAdvice" />
-                </ListItem>
-                <ListItem
-                  button
-                  className={this.props.classes.nested}
-                  component={Link}
-                  to="/r/femalefashionadvice"
-                  onClick={this.setMenuClosed.bind(this)}
-                >
-                  <ListItemText primary="FemaleFashionAdvice" />
-                </ListItem>
-                <ListItem
-                  button
-                  className={this.props.classes.nested}
-                  component={Link}
-                  to="/r/streetwear"
-                  onClick={this.setMenuClosed.bind(this)}
-                >
-                  <ListItemText primary="Streetwear" />
-                </ListItem>
-              </List>
-            </Collapse>
-            <ListItem
-              button
-              key="about"
-              component={Link}
-              to="/about"
-              onClick={this.setMenuClosed.bind(this)}
-            >
-              <ListItemIcon>
-                <InfoIcon />
-              </ListItemIcon>
-              <ListItemText primary="About" />
-            </ListItem>
-            <ListItem
-              button
-              key="stats"
-              component={Link}
-              to="/stats"
-              onClick={this.setMenuClosed.bind(this)}
-            >
-              <ListItemIcon>
-                <BarChartIcon />
-              </ListItemIcon>
-              <ListItemText primary="Stats" />
-            </ListItem>
-            <ListItem
-              button
-              key="github"
-              component="a"
-              href="https://www.github.com/BenjaminCatarevas/reddit-outfits"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <ListItemIcon>
-                <CodeIcon />
-              </ListItemIcon>
-              <ListItemText primary="GitHub" />
-            </ListItem>
-          </List>
-          <Divider />
-        </Drawer>
+          <Drawer
+            className={this.props.classes.drawer}
+            variant="persistent"
+            anchor="left"
+            open={this.state.menuOpen}
+            classes={{
+              paper: this.props.classes.drawerPaper
+            }}
+          >
+            <div>
+              <IconButton onClick={this.setMenuClosed.bind(this)}>
+                <MenuIcon />
+              </IconButton>
+              <Typography display="inline" variant="h6" component="p">
+                Navigation
+              </Typography>
+            </div>
+            <Divider />
+            <List>
+              <ListItem
+                button
+                key="home"
+                component={Link}
+                to="/"
+                onClick={this.setMenuClosed.bind(this)}
+              >
+                <ListItemIcon>
+                  <HomeIcon />
+                </ListItemIcon>
+                <ListItemText primary="Home" />
+              </ListItem>
+              <ListItem
+                button
+                key="users"
+                component={Link}
+                to="/users"
+                onClick={this.setMenuClosed.bind(this)}
+              >
+                <ListItemIcon>
+                  <PersonIcon />
+                </ListItemIcon>
+                <ListItemText primary="Users" />
+              </ListItem>
+              <ListItem button onClick={this.setThreadDropDown.bind(this)}>
+                <ListItemIcon>
+                  <CommentIcon />
+                </ListItemIcon>
+                <ListItemText primary="Threads" />
+                {this.state.threadsDropdownOpen ? (
+                  <ExpandLess />
+                ) : (
+                  <ExpandMore />
+                )}
+              </ListItem>
+              <Collapse in={this.state.threadsDropdownOpen} timeout="auto">
+                <List component="div" disablePadding>
+                  <ListItem
+                    button
+                    className={this.props.classes.nested}
+                    component={Link}
+                    to="/r/malefashionadvice"
+                    onClick={this.setMenuClosed.bind(this)}
+                  >
+                    <ListItemText primary="MaleFashionAdvice" />
+                  </ListItem>
+                  <ListItem
+                    button
+                    className={this.props.classes.nested}
+                    component={Link}
+                    to="/r/femalefashionadvice"
+                    onClick={this.setMenuClosed.bind(this)}
+                  >
+                    <ListItemText primary="FemaleFashionAdvice" />
+                  </ListItem>
+                  <ListItem
+                    button
+                    className={this.props.classes.nested}
+                    component={Link}
+                    to="/r/streetwear"
+                    onClick={this.setMenuClosed.bind(this)}
+                  >
+                    <ListItemText primary="Streetwear" />
+                  </ListItem>
+                </List>
+              </Collapse>
+              <ListItem
+                button
+                key="about"
+                component={Link}
+                to="/about"
+                onClick={this.setMenuClosed.bind(this)}
+              >
+                <ListItemIcon>
+                  <InfoIcon />
+                </ListItemIcon>
+                <ListItemText primary="About" />
+              </ListItem>
+              <ListItem
+                button
+                key="stats"
+                component={Link}
+                to="/stats"
+                onClick={this.setMenuClosed.bind(this)}
+              >
+                <ListItemIcon>
+                  <BarChartIcon />
+                </ListItemIcon>
+                <ListItemText primary="Stats" />
+              </ListItem>
+              <ListItem
+                button
+                key="github"
+                component="a"
+                href="https://www.github.com/BenjaminCatarevas/reddit-outfits"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <ListItemIcon>
+                  <CodeIcon />
+                </ListItemIcon>
+                <ListItemText primary="GitHub" />
+              </ListItem>
+            </List>
+            <Divider />
+          </Drawer>
+        </ClickAwayListener>
         <main
           className={clsx(this.props.classes.content, {
             [this.props.classes.contentShift]: this.state.menuOpen
