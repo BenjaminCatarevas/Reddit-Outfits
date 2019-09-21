@@ -13,7 +13,7 @@ export class UserList extends Component {
   render() {
     const { allUsers } = this.props;
     // If the users state is null, return an empty div, else display tabularized users.
-    return allUsers ? (
+    return allUsers.length !== 0 ? (
       <MaterialTable
         title="Users"
         columns={[

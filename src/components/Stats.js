@@ -103,7 +103,7 @@ export class Stats extends Component {
       return true;
     });
 
-    return allThreads ? (
+    return allThreads.length !== 0 ? (
       <div>
         <div style={svgStyle}>
           <LabeledBarChart

@@ -25,7 +25,7 @@ export class ThreadDisplayer extends Component {
     let { commentsFromSpecificThread } = this.props;
 
     // If the commentsFromSpecificThread is null, just return an empty div. Otherwise, create a UserComment component for each comment.
-    return commentsFromSpecificThread ? (
+    return commentsFromSpecificThread.length !== 0 ? (
       commentsFromSpecificThread.map(comment => {
         // The key defaults to the comment ID, since that's the key to index into a given object.
 

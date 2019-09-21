@@ -76,7 +76,7 @@ export class UserComments extends Component {
 
   render() {
     // Object mapping approach adapted from: https://stackoverflow.com/a/39965962
-    return this.props.commentsFromSpecificUser ? (
+    return this.props.commentsFromSpecificUser.length !== 0 ? (
       <div>
         <h6>
           Posts by{" "}

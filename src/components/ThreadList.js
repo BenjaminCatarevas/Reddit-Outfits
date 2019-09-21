@@ -42,7 +42,7 @@ export class ThreadList extends Component {
     const { allThreads } = this.props;
 
     // If the threads state is null, return an empty div, else return Thread components for each thread.
-    return allThreads ? (
+    return allThreads.length !== 0 ? (
       <MaterialTable
         title={
           this.state.displayedSubreddit
