@@ -84,6 +84,17 @@ def is_cdndiscordapp_url(url: str) -> bool:
     return host == 'cdn.discordapp.com'
 
 
+def is_nsa40casimages_url(url: str) -> bool:
+    '''
+    Determines if a given URL is a direct-link nsa40.casimages.com image using urlparse.
+    Returns True if so, False otherwise.
+    '''
+
+    parsed_url = urlparse(url)
+    host = parsed_url.netloc
+    return host == 'nsa40.casimages.com'
+
+
 def extract_image_urls_from_imgur_url(imgur_url: str, imgur_hash: str, url_type: str) -> list:
     '''
     Extracts image URLs from either an Imgur album, image, or gallery, depending on url_type.

@@ -7,6 +7,7 @@ from util_url import is_twimg_url
 from util_url import is_ibbco_url
 from util_url import is_cdninstagram_url
 from util_url import is_cdndiscordapp_url
+from util_url import is_nsa40casimages_url
 
 
 class TestIsImgurURL(unittest.TestCase):
@@ -25,7 +26,7 @@ class TestIsImgurURL(unittest.TestCase):
 
     # Returns False if the URL is not an Imgur or Dressed.so link.
     def test_is_imgur_url_other(self):
-        url = 'https://instagram.com/wfn39qt4wg9ejqr3w'
+        url = 'https://i.imgurrrr.com/rj3926tj0ef.jpg'
         self.assertEqual(is_imgur_url(url), False)
 
 
@@ -45,7 +46,7 @@ class TestIsDressedSoUrl(unittest.TestCase):
 
     # Returns False if the URL is not an Imgur or Dressed.so link.
     def test_is_dressed_so_url_other(self):
-        url = 'https://instagram.com/4jy50t3efjw'
+        url = 'http://cdn.dressedddd.so/i/3j953296tj30g.png'
         self.assertEqual(is_dressed_so_url(url), False)
 
 
@@ -60,7 +61,7 @@ class TestIsRedditUrl(unittest.TestCase):
 
     # Returns False if the URL is not an i.redd.it URL.
     def test_is_reddit_url_other(self):
-        url = 'https://instagram.com/fgjefw0'
+        url = 'https://i.redddd.it/3tw9fh3t94ge.jpg'
         self.assertEqual(is_reddit_url(url), False)
 
 
@@ -80,7 +81,7 @@ class TestIsTwimgUrl(unittest.TestCase):
 
     # Returns False if the URL is not a pbs.twimg URL.
     def test_is_twimg_url_other(self):
-        url = 'https://imgur.com/t3tweF'
+        url = 'https://pbs.twimgggg.com/media/D1eNtYoUcAUQ0Hg.jpg'
         self.assertEqual(is_twimg_url(url), False)
 
 
@@ -95,7 +96,7 @@ class TestIsIbbcoUrl(unittest.TestCase):
 
     # Returns False if the URL is not a i.ibb.co URL.
     def test_is_ibbco_url_other(self):
-        url = 'https://imgur.com/r34yeragsd'
+        url = 'https://i.ibbbb.co/L5J9Thc/IMG-20190410-163127.jpg'
         self.assertEqual(is_ibbco_url(url), False)
 
 
@@ -110,7 +111,7 @@ class TestIsCdnInstagramUrl(unittest.TestCase):
 
     # Returns False if the URL is not a i.ibb.co URL.
     def test_is_cdninstagram_url_other(self):
-        url = 'https://imgur.com/r34yeragsd'
+        url = 'https://scontent-lax3-2.cdninstagrammm.com/vp/5e2594dfd58514670647d5233a6206e7/5D49890A/t51.2885-15/e35/54512090_173076057012116_1781387478764732544_n.jpg?_nc_ht=scontent-lax3-2.cdninstagram.com'
         self.assertEqual(is_cdninstagram_url(url), False)
 
 
@@ -125,7 +126,22 @@ class TestIsCdnDiscordAppUrl(unittest.TestCase):
 
     # Returns False if the URL is not a i.ibb.co URL.
     def test_is_cdndiscordapp_url_other(self):
-        url = 'https://imgur.com/r34yeragsd'
+        url = 'https://cdn.discordappp.com/attachments/373487679515525120/564852781715030027/image0.jpg'
+        self.assertEqual(is_cdndiscordapp_url(url), False)
+
+
+class TestIsNsa40CasImagesUrl(unittest.TestCase):
+    def setUp(self):
+        pass
+
+    # Returns True if the URL is a direct-link Instagram URL.
+    def is_nsa40casimages_url(self):
+        url = 'https://nsa40.casimages.com/img/2019/10/02/191002081437363893.jpg'
+        self.assertEqual(is_cdndiscordapp_url(url), True)
+
+    # Returns False if the URL is not a i.ibb.co URL.
+    def is_nsa40casimages_url_other(self):
+        url = 'https://nsa4000.casimages.com/img/2019/10/02/191002081437363893.jpg'
         self.assertEqual(is_cdndiscordapp_url(url), False)
 
 

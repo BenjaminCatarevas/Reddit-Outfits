@@ -16,6 +16,7 @@ from util_url import is_twimg_url
 from util_url import is_ibbco_url
 from util_url import is_cdninstagram_url
 from util_url import is_cdndiscordapp_url
+from util_url import is_nsa40casimages_url
 
 
 def generate_thread_ids(query: str, subreddit: str, size: int = 25, author_name: str = '', before: int = '') -> set:
@@ -142,6 +143,13 @@ def create_outfit_urls(comment_body: str, permalink: str) -> set:
         elif is_cdndiscordapp_url(raw_outfit_url):
             # cdndiscordapp.com URL, links directly to an image, so we can add it.
             outfit_urls.append(raw_outfit_url)
+        elif is_nsa40casimages_url(raw_outfit_url):
+            # Auxiliary check to ensure it's an image
+            # We check the last four characters to chekc if it's a JPG or PNG.
+            # Since this URL does not start with cdn, a user could mislink their outfit with the base URL instead.
+            if raw_outfit_url[-4:] == '.jpg' or raw_outfit_url[-4:] == '.png':
+                # nsa40.casimages.com URL, links directly to an image, so we can add it.
+                outfit_urls.append(raw_outfit_url)
         else:
             # Invalid outfit URL.
             print('-------------------------')
