@@ -17,7 +17,7 @@ def save_threads_to_file(filename: str, thread_ids: list):
     '''
     Helper function to save threads to a given file.
     '''
-    with open(filename, 'a+') as f:
+    with open(filename, 'w+') as f:
         # Move to beginning of file.
         f.seek(0)
         # Get the lines of the file and split them to remove \n.
@@ -97,7 +97,9 @@ def insert_threads_into_database(filename: str, database):
                 '%Y-%m-%d %H:%M:%S', time.localtime(int(client_json['UserReset'])))
             print('-------------------------')
             print(F"Has reached limit, try again at: {time_to_try}")
+            print("Saving threads.")
             print('-------------------------')
+            # Overwrite the file to now be the list of threads we still need to process.
             save_threads_to_file(filename, thread_ids)
             break
 
@@ -111,6 +113,10 @@ database = RedditOutfitsDatabase(
 
 def job():
     insert_threads_into_database('mfa_threads.txt', database)
+    # insert_threads_into_database('ffa_threads.txt', database)
+    # insert_threads_into_database('goodyearwelt_threads.txt', database)
+    # insert_threads_into_database('rawdenim_threads.txt', database)
+    # insert_threads_into_database('streetwear_threads.txt', database)
 
 
 schedule.every(10).minutes.do(job)
