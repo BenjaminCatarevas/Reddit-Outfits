@@ -48,11 +48,11 @@ add_threads_to_file('WAYWT',
                     'femalefashionadvice', 500, 'ffa_threads.txt', 'AutoModerator', '')
 add_threads_to_file('WDYWT', 'streetwear',
                     500, 'streetwear_threads.txt', 'AutoModerator', '')
+add_threads_to_file('WAYFT', 'rawdenim',
+                    500, 'rawdenim_threads.txt', 'AutoModerator', '')
 # add_threads_to_file('WAYFT', 'rawdenim',
 #                     500, 'rawdenim_threads.txt', 'Raw_Denim_Mod_Bot', '1359575335')
 # add_threads_to_file('WAYFT', 'rawdenim',
 #                     500, 'rawdenim_threads.txt', 'RawDenimAutoMod', '1390327507')
-add_threads_to_file('WAYFT', 'rawdenim',
-                    500, 'rawdenim_threads.txt', 'AutoModerator', '')
 add_threads_to_file('WSAYWT', 'goodyearwelt',
                     500, 'goodyearwelt_threads.txt' '', '')
