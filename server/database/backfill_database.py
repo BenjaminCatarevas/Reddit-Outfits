@@ -1,6 +1,7 @@
 import config
 from database import RedditOutfitsDatabase
 from util_reddit import generate_thread_ids, generate_thread_information_from_thread
+from count_thread_ids import count
 import requests
 import json
 import config
@@ -65,6 +66,9 @@ def insert_threads_into_database(filename: str, database):
 
     # Go through remaining thread IDs.
     for thread_id in thread_ids:
+        print('-------------------------')
+        print(F"Number of threads remaining: {len(thread_ids)}")
+        print('-------------------------')
         # Check with Imgur API to see if we can process the given thread with sufficient requests.
         client_json = can_process_images()
 
@@ -101,6 +105,7 @@ def insert_threads_into_database(filename: str, database):
             print('-------------------------')
             # Overwrite the file to now be the list of threads we still need to process.
             save_threads_to_file(filename, thread_ids)
+            print(F"Number of threads remaining: {count()}")
             break
 
 
