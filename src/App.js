@@ -1,9 +1,15 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
+import { Route, BrowserRouter } from "react-router-dom";
 import "./styles/App.css";
 import axios from "axios";
-import Routing from "./components/Routing";
 import NavigationBar from "./components/NavigationBar";
+import Home from "./components/Home";
+import UserComments from "./components/UserComments";
+import ThreadList from "./components/ThreadList";
+import ThreadDisplayer from "./components/ThreadDisplayer";
+import Stats from "./components/Stats";
+import About from "./components/About";
+import UserList from "./components/UserList";
 
 class App extends Component {
   state = {
@@ -113,40 +119,105 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <div className="container" id="app-container">
+      <BrowserRouter>
+        <div className="app">
           <NavigationBar
             getCommentsFromSpecificUser={this.getCommentsFromSpecificUser}
           />
-          <Routing
-            getCommentsFromSpecificUser={this.getCommentsFromSpecificUser}
-            commentsFromSpecificUser={this.state.commentsFromSpecificUser}
-            getThreadsBySubreddit={this.getThreadsBySubreddit}
-            getAllThreads={this.getAllThreads}
-            getAllUsers={this.getAllUsers}
-            allUsers={this.state.allUsers}
-            commentsFromSpecificThread={this.state.commentsFromSpecificThread}
-            allThreads={this.state.allThreads}
-            getCommentsOfThreadByThreadDate={
-              this.getCommentsOfThreadByThreadDate
-            }
-            sortCommentsFromSpecificUserByAscendingScore={
-              this.sortCommentsFromSpecificUserByAscendingScore
-            }
-            sortCommentsFromSpecificUserByDescendingScore={
-              this.sortCommentsFromSpecificUserByDescendingScore
-            }
-            sortCommentsFromSpecificUserByAscendingDate={
-              this.sortCommentsFromSpecificUserByAscendingDate
-            }
-            sortCommentsFromSpecificUserByDescendingDate={
-              this.sortCommentsFromSpecificUserByDescendingDate
-            }
+          <Route exact path="/" render={props => <Home {...props} />} />
+          <Route
+            path="/u/:username"
+            render={props => (
+              <div
+                className="text-center"
+                id="username-displayer"
+                style={{ paddingTop: "7.5px" }}
+              >
+                <div className="container" id="user-comments-container">
+                  <UserComments
+                    getCommentsFromSpecificUser={
+                      this.getCommentsFromSpecificUser
+                    }
+                    commentsFromSpecificUser={
+                      this.state.commentsFromSpecificUser
+                    }
+                    sortCommentsFromSpecificUserByAscendingScore={
+                      this.sortCommentsFromSpecificUserByAscendingScore
+                    }
+                    sortCommentsFromSpecificUserByDescendingScore={
+                      this.sortCommentsFromSpecificUserByDescendingScore
+                    }
+                    sortCommentsFromSpecificUserByAscendingDate={
+                      this.sortCommentsFromSpecificUserByAscendingDate
+                    }
+                    sortCommentsFromSpecificUserByDescendingDate={
+                      this.sortCommentsFromSpecificUserByDescendingDate
+                    }
+                    {...props}
+                  />{" "}
+                </div>
+              </div>
+            )}
           />
+          <Route
+            exact
+            path="/r/:subreddit"
+            render={props => (
+              <div className="container" id="thread-list-container">
+                <ThreadList
+                  getThreadsBySubreddit={this.getThreadsBySubreddit}
+                  getAllThreads={this.getAllThreads}
+                  allThreads={this.state.allThreads}
+                  {...props}
+                />{" "}
+              </div>
+            )}
+          />
+          <Route
+            path="/users"
+            render={props => (
+              <div className="container" id="user-list-container">
+                <UserList
+                  getAllUsers={this.getAllUsers}
+                  allUsers={this.state.allUsers}
+                  {...props}
+                />{" "}
+              </div>
+            )}
+          />
+          <Route
+            path="/r/:subreddit/:year/:month/:day"
+            render={props => (
+              <div className="container" id="thread-displayer-container">
+                <ThreadDisplayer
+                  getCommentsOfThreadByThreadDate={
+                    this.getCommentsOfThreadByThreadDate
+                  }
+                  commentsFromSpecificThread={
+                    this.state.commentsFromSpecificThread
+                  }
+                  {...props}
+                />
+              </div>
+            )}
+          />
+          <Route
+            path="/stats"
+            render={props => (
+              <div>
+                <Stats
+                  getAllThreads={this.getAllThreads}
+                  allThreads={this.state.allThreads}
+                  {...props}
+                />
+              </div>
+            )}
+          />
+          <Route path="/about" component={About} />
         </div>
-      </div>
+      </BrowserRouter>
     );
   }
 }
 
-export default withRouter(App);
+export default App;
