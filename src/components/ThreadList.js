@@ -60,9 +60,7 @@ export class ThreadList extends Component {
 
               return (
                 <Link
-                  to={`/r/${rowData.subreddit}/${dateInfo.year}/${
-                    dateInfo.month
-                  }/${dateInfo.day}`}
+                  to={`/r/${rowData.subreddit}/${dateInfo.year}/${dateInfo.month}/${dateInfo.day}`}
                 >
                   {this.createHumanDate(threadDate)}
                 </Link>
