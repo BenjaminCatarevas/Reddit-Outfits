@@ -96,10 +96,7 @@ export class NavigationBar extends Component {
               aria-label="open drawer"
               onClick={this.setMenuOpen.bind(this)}
               edge="start"
-              className={clsx(
-                this.props.classes.menuButton,
-                this.state.menuOpen && this.props.classes.hide
-              )}
+              className={clsx(this.props.classes.menuButton)}
             >
               <MenuIcon />
             </IconButton>
