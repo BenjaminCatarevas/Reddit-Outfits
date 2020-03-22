@@ -86,7 +86,7 @@ export class Home extends Component {
               color="primary"
               className={this.props.classes.button}
             >
-              Stats
+              Stats [WIP]
             </Button>
           </Link>
         </div>

@@ -237,7 +237,7 @@ export class NavigationBar extends Component {
                 <ListItemIcon>
                   <BarChartIcon />
                 </ListItemIcon>
-                <ListItemText primary="Stats" />
+                <ListItemText primary="Stats [WIP]" />
               </ListItem>
               <ListItem
                 button
