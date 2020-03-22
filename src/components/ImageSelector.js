@@ -31,8 +31,10 @@ export class ImageSelector extends Component {
 
 const imageStyle = {
   height: "100%",
-  padding: "5px 5px 5px 5px",
-  width: "auto"
+  width: "auto",
+  marginLeft: "5px",
+  marginTop: "-5px",
+  boxShadow: "3px 3px 10px gray"
 };
 
 ImageSelector.propTypes = {
