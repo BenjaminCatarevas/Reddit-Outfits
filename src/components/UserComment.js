@@ -54,7 +54,8 @@ const commentContainerStyle = {
   border: "2px solid #8B8C89",
   marginTop: "10px",
   marginBottom: "10px",
-  background: "#eee"
+  background: "#eee",
+  width: "75%"
 };
 
 const textDisplayStyle = {
