@@ -7,7 +7,6 @@ import Home from "./components/Home";
 import UserComments from "./components/UserComments";
 import ThreadList from "./components/ThreadList";
 import ThreadDisplayer from "./components/ThreadDisplayer";
-import Stats from "./components/Stats";
 import About from "./components/About";
 import UserList from "./components/UserList";
 
@@ -126,6 +125,7 @@ class App extends Component {
           />
           <Route exact path="/" render={props => <Home {...props} />} />
           <Route
+            exact
             path="/u/:username"
             render={props => (
               <div
@@ -196,18 +196,6 @@ class App extends Component {
                   commentsFromSpecificThread={
                     this.state.commentsFromSpecificThread
                   }
-                  {...props}
-                />
-              </div>
-            )}
-          />
-          <Route
-            path="/stats"
-            render={props => (
-              <div>
-                <Stats
-                  getAllThreads={this.getAllThreads}
-                  allThreads={this.state.allThreads}
                   {...props}
                 />
               </div>
