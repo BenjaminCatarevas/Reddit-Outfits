@@ -27,7 +27,7 @@ export class UserList extends Component {
             )
           },
           { title: "Number of comments", field: "num_comments" },
-          { title: "Number of outfits", field: "num_outfits" },
+          { title: "Number of outfit images", field: "num_outfits" },
           {
             title: "Reddit Profile Link",
             field: "author_name",
