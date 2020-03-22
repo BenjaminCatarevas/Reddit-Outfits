@@ -72,7 +72,7 @@ export class UserComments extends Component {
                   aria-controls="panel1a-content"
                   id="panel1a-header"
                 >
-                  Posted by{" "}
+                  Posted by&nbsp;
                   <a
                     rel="noopener noreferrer"
                     target="_blank"
@@ -80,8 +80,8 @@ export class UserComments extends Component {
                   >
                     {comment.authorName}
                   </a>
-                  with a score of {comment.commentScore} on {humanDate} at{" "}
-                  {threadDate.toLocaleTimeString("en-US")}
+                  &nbsp;with a score of {comment.commentScore} on {humanDate}
+                  &nbsp;at {threadDate.toLocaleTimeString("en-US")}
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
                   <UserComment
