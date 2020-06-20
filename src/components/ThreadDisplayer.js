@@ -120,7 +120,11 @@ export class ThreadDisplayer extends Component {
 
 ThreadDisplayer.propTypes = {
   getCommentsOfThreadByThreadDate: PropTypes.func.isRequired,
-  commentsFromSpecificThread: PropTypes.array.isRequired
+  commentsFromSpecificThread: PropTypes.array.isRequired,
+  sortCommentsFromSpecificThreadByAscendingScore: PropTypes.func.isRequired,
+  sortCommentsFromSpecificThreadByDescendingScore: PropTypes.func.isRequired,
+  sortCommentsFromSpecificThreadByAscendingDate: PropTypes.func.isRequired,
+  sortCommentsFromSpecificThreadByDescendingDate: PropTypes.func.isRequired
 };
 
 export default withRouter(ThreadDisplayer);
