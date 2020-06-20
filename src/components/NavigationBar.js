@@ -49,12 +49,20 @@ export class NavigationBar extends Component {
       link: "malefashionadvice"
     },
     {
-      display: "FemaleFashionAdvie",
+      display: "FemaleFashionAdvice",
       link: "femalefashionadvice"
     },
     {
       display: "Streetwear",
       link: "streetwear"
+    },
+    {
+      display: "RawDenim",
+      link: "rawdenim"
+    },
+    {
+      display: "GoodYearWelt",
+      link: "goodyearwelt"
     }
   ];
 
@@ -206,8 +214,9 @@ export class NavigationBar extends Component {
                       key={thread.display}
                       button
                       className={this.props.classes.nested}
-                      component={Link}
-                      to={"/r/" + thread.link}
+                      component={"a"}
+                      //to={"/r/" + thread.link}
+                      href={"/r/" + thread.link}
                       onClick={this.setMenuClosed.bind(this)}
                     >
                       <ListItemText primary={thread.display} />
