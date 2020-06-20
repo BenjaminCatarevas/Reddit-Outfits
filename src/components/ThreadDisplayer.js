@@ -83,6 +83,7 @@ export class ThreadDisplayer extends Component {
        */
           return (
             <ExpansionPanel
+              style={{ margin: "16px" }}
               defaultExpanded={true}
               ref={topOfWindowRef}
               key={comment.commentId}
