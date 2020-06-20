@@ -220,28 +220,34 @@ class App extends Component {
           <Route
             path="/r/:subreddit/:year/:month/:day"
             render={props => (
-              <div className="container" id="thread-displayer-container">
-                <ThreadDisplayer
-                  getCommentsOfThreadByThreadDate={
-                    this.getCommentsOfThreadByThreadDate
-                  }
-                  commentsFromSpecificThread={
-                    this.state.commentsFromSpecificThread
-                  }
-                  sortCommentsFromSpecificThreadByAscendingScore={
-                    this.sortCommentsFromSpecificThreadByAscendingScore
-                  }
-                  sortCommentsFromSpecificThreadByDescendingScore={
-                    this.sortCommentsFromSpecificThreadByDescendingScore
-                  }
-                  sortCommentsFromSpecificThreadByAscendingDate={
-                    this.sortCommentsFromSpecificThreadByAscendingDate
-                  }
-                  sortCommentsFromSpecificThreadByDescendingDate={
-                    this.sortCommentsFromSpecificThreadByDescendingDate
-                  }
-                  {...props}
-                />
+              <div
+                className="text-center"
+                id="username-displayer"
+                style={{ paddingTop: "7.5px" }}
+              >
+                <div className="container" id="thread-displayer-container">
+                  <ThreadDisplayer
+                    getCommentsOfThreadByThreadDate={
+                      this.getCommentsOfThreadByThreadDate
+                    }
+                    commentsFromSpecificThread={
+                      this.state.commentsFromSpecificThread
+                    }
+                    sortCommentsFromSpecificThreadByAscendingScore={
+                      this.sortCommentsFromSpecificThreadByAscendingScore
+                    }
+                    sortCommentsFromSpecificThreadByDescendingScore={
+                      this.sortCommentsFromSpecificThreadByDescendingScore
+                    }
+                    sortCommentsFromSpecificThreadByAscendingDate={
+                      this.sortCommentsFromSpecificThreadByAscendingDate
+                    }
+                    sortCommentsFromSpecificThreadByDescendingDate={
+                      this.sortCommentsFromSpecificThreadByDescendingDate
+                    }
+                    {...props}
+                  />
+                </div>
               </div>
             )}
           />
