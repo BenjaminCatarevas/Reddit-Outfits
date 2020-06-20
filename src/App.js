@@ -13,6 +13,10 @@ import UserList from "./components/UserList";
 class App extends Component {
   state = {
     allUsers: [],
+    // For filtering purposes, we use a separate variable to keep track of the currently filtered users.
+    // And we keep allUsers as the "master list" for future filtering purposes.
+    filteredUsers: [],
+    bucketedUsers: {},
     allThreads: [],
     commentsFromSpecificUser: [],
     commentsFromSpecificThread: [],
@@ -44,7 +48,13 @@ class App extends Component {
     axios
       .get("http://localhost:3001/users")
       .then(res => {
-        this.setState({ allUsers: res.data.allUsers });
+        this.setState({
+          allUsers: res.data.allUsers.sort((a, b) =>
+            a.author_name > b.author_name ? 1 : -1
+          ),
+          filteredUsers: res.data.allUsers
+        });
+        this.bucketUsersByName();
       })
       .catch(err => console.log("Error: ", err.message));
   };
@@ -148,6 +158,72 @@ class App extends Component {
     });
   };
 
+  bucketUsersByName = () => {
+    let bucketedUsers = {
+      a: [],
+      b: [],
+      c: [],
+      d: [],
+      e: [],
+      f: [],
+      g: [],
+      h: [],
+      i: [],
+      j: [],
+      k: [],
+      l: [],
+      m: [],
+      n: [],
+      o: [],
+      p: [],
+      q: [],
+      r: [],
+      s: [],
+      t: [],
+      u: [],
+      v: [],
+      w: [],
+      x: [],
+      y: [],
+      z: [],
+      0: [],
+      1: [],
+      2: [],
+      3: [],
+      4: [],
+      5: [],
+      6: [],
+      7: [],
+      8: [],
+      9: [],
+      "-": [],
+      _: []
+    };
+    for (const user of this.state.allUsers) {
+      const firstLetter = user.author_name[0].toLowerCase();
+      bucketedUsers[firstLetter].push(user);
+    }
+    this.setState({ bucketedUsers });
+  };
+
+  filterAllUsers = letterFilters => {
+    // If the user de-selects every filter, display all of the usersnames.
+    if (letterFilters.length === 0) {
+      this.setState({ filteredUsers: this.state.allUsers });
+    } else {
+      // Else, combine each selected letter into a filtered array and replace that as the current list of filtered users.
+      let currentlyFilteredUsers = [];
+      for (const letterFilter of letterFilters) {
+        currentlyFilteredUsers.push(this.state.bucketedUsers[letterFilter]);
+      }
+      this.setState({
+        filteredUsers: currentlyFilteredUsers
+          .flat()
+          .sort((a, b) => (a.author_name > b.author_name ? 1 : -1))
+      });
+    }
+  };
+
   render() {
     return (
       <BrowserRouter>
@@ -211,7 +287,8 @@ class App extends Component {
               <div className="container" id="user-list-container">
                 <UserList
                   getAllUsers={this.getAllUsers}
-                  allUsers={this.state.allUsers}
+                  filteredUsers={this.state.filteredUsers}
+                  filterAllUsers={this.filterAllUsers}
                   {...props}
                 />{" "}
               </div>
