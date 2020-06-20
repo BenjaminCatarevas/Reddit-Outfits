@@ -42,19 +42,28 @@ export class ThreadDisplayer extends Component {
     this.props.sortCommentsFromSpecificThreadByDescendingDate();
   };
 
+  timestampToDate(timestamp) {
+    // Multiply by 1000 because the timestamp is in miliseconds.
+    let date = new Date(timestamp * 1000);
+    return date.toDateString();
+  }
+
   render() {
     // If the commentsFromSpecificThread is null, just return an empty div. Otherwise, create a UserComment component for each comment.
     return this.props.commentsFromSpecificThread.length !== 0 ? (
       <div>
         {console.log(this.props.commentsFromSpecificThread)}
         <h6>
-          Posts from
+          Posts from&nbsp;
           <a
             rel="noopener noreferrer"
             target="_blank"
-            href={`https://reddit.com/u/${this.props.match.params.username}`}
+            href={`https://reddit.com/r/malefashionadvice/comments/${this.props.commentsFromSpecificThread[0].threadId}`}
           >
-            /u/{this.props.match.params.username}
+            WAYWT on{" "}
+            {this.timestampToDate(
+              this.props.commentsFromSpecificThread[0].commentTimestamp
+            )}
           </a>
         </h6>
         <button onClick={this.sortByAscendingScore}>Score ↑</button>
