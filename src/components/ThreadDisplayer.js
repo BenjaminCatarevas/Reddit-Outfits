@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
 import UserComment from "./UserComment";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
@@ -122,4 +123,4 @@ ThreadDisplayer.propTypes = {
   commentsFromSpecificThread: PropTypes.array.isRequired
 };
 
-export default ThreadDisplayer;
+export default withRouter(ThreadDisplayer);
