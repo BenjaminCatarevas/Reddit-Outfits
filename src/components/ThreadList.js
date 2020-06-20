@@ -78,7 +78,7 @@ export class ThreadList extends Component {
                 target="_blank"
                 href={rowData.thread_permalink}
               >
-                Thread Link
+                {`https://redd.it/${rowData.thread_id}`}
               </a>
             )
           }
