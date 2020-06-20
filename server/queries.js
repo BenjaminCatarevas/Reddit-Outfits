@@ -27,7 +27,7 @@ const mapIntToSubreddit = {
 
 const db = pgp(config);
 
-/* Heler functions */
+/* Helper functions */
 async function sortCommentsByCommentId(data, res) {
   try {
     // Create a JSON object to organize outfits by their comment ID.
