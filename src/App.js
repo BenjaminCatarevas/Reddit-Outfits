@@ -116,6 +116,38 @@ class App extends Component {
     });
   };
 
+  sortCommentsFromSpecificThreadByAscendingScore = () => {
+    this.setState({
+      commentsFromSpecificThread: this.state.commentsFromSpecificThread.sort(
+        (a, b) => (a.commentScore > b.commentScore ? 1 : -1)
+      )
+    });
+  };
+
+  sortCommentsFromSpecificThreadByDescendingScore = () => {
+    this.setState({
+      commentsFromSpecificThread: this.state.commentsFromSpecificThread.sort(
+        (a, b) => (a.commentScore < b.commentScore ? 1 : -1)
+      )
+    });
+  };
+
+  sortCommentsFromSpecificThreadByAscendingDate = () => {
+    this.setState({
+      commentsFromSpecificThread: this.state.commentsFromSpecificThread.sort(
+        (a, b) => (a.commentTimestamp > b.commentTimestamp ? 1 : -1)
+      )
+    });
+  };
+
+  sortCommentsFromSpecificThreadByDescendingDate = () => {
+    this.setState({
+      commentsFromSpecificThread: this.state.commentsFromSpecificThread.sort(
+        (a, b) => (a.commentTimestamp < b.commentTimestamp ? 1 : -1)
+      )
+    });
+  };
+
   render() {
     return (
       <BrowserRouter>
@@ -195,6 +227,18 @@ class App extends Component {
                   }
                   commentsFromSpecificThread={
                     this.state.commentsFromSpecificThread
+                  }
+                  sortCommentsFromSpecificThreadByAscendingScore={
+                    this.sortCommentsFromSpecificThreadByAscendingScore
+                  }
+                  sortCommentsFromSpecificThreadByDescendingScore={
+                    this.sortCommentsFromSpecificThreadByDescendingScore
+                  }
+                  sortCommentsFromSpecificThreadByAscendingDate={
+                    this.sortCommentsFromSpecificThreadByAscendingDate
+                  }
+                  sortCommentsFromSpecificThreadByDescendingDate={
+                    this.sortCommentsFromSpecificThreadByDescendingDate
                   }
                   {...props}
                 />
