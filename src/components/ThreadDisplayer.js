@@ -49,7 +49,9 @@ export class ThreadDisplayer extends Component {
               id="panel1a-header"
             >
               Posted by
-              <Link to={`/u/${comment.authorName}`}>{comment.authorName}</Link>
+              <Link to={`/u/${comment.authorName}`}>
+                &nbsp;{comment.authorName}&nbsp;
+              </Link>
               on {humanDate} at {threadDate.toLocaleTimeString("en-US")} with a
               score of {comment.commentScore}
             </ExpansionPanelSummary>
