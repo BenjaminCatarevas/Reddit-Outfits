@@ -56,7 +56,8 @@ async function sortCommentsByCommentId(data, res) {
           commentBody: commentData[0].body,
           commentPermalink: commentData[0].comment_permalink,
           commentScore: commentData[0].comment_score,
-          commentTimestamp: commentData[0].comment_timestamp
+          commentTimestamp: commentData[0].comment_timestamp,
+          threadId: commentData[0].thread_id
         };
       }
     }
@@ -71,7 +72,8 @@ async function sortCommentsByCommentId(data, res) {
         commentPermalink: currentComment.commentPermalink,
         commentScore: currentComment.commentScore,
         commentTimestamp: currentComment.commentTimestamp,
-        commentId: key
+        commentId: key,
+        threadId: currentComment.threadId
       };
       return commentObj;
     });
