@@ -65,7 +65,11 @@ export class UserComments extends Component {
           let humanDate = threadDate.toDateString();
 
           return (
-            <ExpansionPanel defaultExpanded={true} ref={topOfWindowRef}>
+            <ExpansionPanel
+              defaultExpanded={true}
+              ref={topOfWindowRef}
+              key={comment.commentId}
+            >
               <ExpansionPanelSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
