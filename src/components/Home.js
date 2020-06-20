@@ -16,12 +16,20 @@ export class Home extends Component {
       link: "malefashionadvice"
     },
     {
-      display: "FemaleFashionAdvie",
+      display: "FemaleFashionAdvice",
       link: "femalefashionadvice"
     },
     {
       display: "Streetwear",
       link: "streetwear"
+    },
+    {
+      display: "RawDenim",
+      link: "rawdenim"
+    },
+    {
+      display: "GoodYearWelt",
+      link: "goodyearwelt"
     }
   ];
 
