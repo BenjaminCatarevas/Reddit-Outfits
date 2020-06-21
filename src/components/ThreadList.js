@@ -115,32 +115,48 @@ export class ThreadList extends Component {
           options={{ search: true }}
         />
 
-        <div style={{ display: "inline-block", margin: "10px" }}>
-          <p>Start Date</p>
-          <DatePicker selected={startDate} onChange={this.changeStartDate} />
-        </div>
-        <div style={{ display: "inline-block", margin: "10px" }}>
-          <p>End Date</p>
-          <DatePicker selected={endDate} onChange={this.changeEndDate} />
-        </div>
+        <div
+          style={{
+            height: "100%",
+            padding: "0",
+            margin: "0",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+        >
+          <div style={{ width: "auto" }}>
+            <div style={{ display: "inline-block", margin: "10px" }}>
+              <p>Start Date</p>
+              <DatePicker
+                selected={startDate}
+                onChange={this.changeStartDate}
+              />
+            </div>
+            <div style={{ display: "inline-block", margin: "10px" }}>
+              <p>End Date</p>
+              <DatePicker selected={endDate} onChange={this.changeEndDate} />
+            </div>
 
-        <div style={{ display: "inline-block, flex" }}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={this.filterThreads}
-            style={{ margin: "8px" }}
-          >
-            Filter
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={this.resetData}
-            style={{ margin: "8px" }}
-          >
-            Reset Data
-          </Button>
+            <div style={{ display: "inline-block, flex" }}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={this.filterThreads}
+                style={{ margin: "8px" }}
+              >
+                Filter
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={this.resetData}
+                style={{ margin: "8px", position: "absolute" }}
+              >
+                Reset Data
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     ) : (
