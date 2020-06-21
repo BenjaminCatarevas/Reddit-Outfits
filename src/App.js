@@ -18,6 +18,8 @@ class App extends Component {
     filteredUsers: [],
     bucketedUsers: {},
     allThreads: [],
+    // For the same reasoning as above, we use a separate variable to keep track of the currently filtered threads.
+    filteredThreads: [],
     commentsFromSpecificUser: [],
     commentsFromSpecificThread: [],
     currentlyDisplayedUser: null
@@ -59,21 +61,15 @@ class App extends Component {
       .catch(err => console.log("Error: ", err.message));
   };
 
-  getAllThreads = () => {
-    axios
-      .get("http://localhost:3001/threads")
-      .then(res => {
-        this.setState({ allThreads: res.data.allThreads });
-      })
-      .catch(err => console.log("Error: ", err.message));
-  };
-
   getThreadsBySubreddit = subreddit => {
     let subredditToInt = this.mapSubredditToInt[subreddit];
     axios
       .get(`http://localhost:3001/r/${subredditToInt}`)
       .then(res => {
-        this.setState({ allThreads: res.data.subredditThreads });
+        this.setState({
+          allThreads: res.data.subredditThreads,
+          filteredThreads: res.data.subredditThreads
+        });
       })
       .catch(err => console.log("Error: ", err.message));
   };
@@ -224,6 +220,20 @@ class App extends Component {
     }
   };
 
+  filterThreads = (startDate, endDate) => {
+    this.setState({
+      filteredThreads: this.state.allThreads.filter(
+        thread =>
+          thread.thread_timestamp >= startDate / 1000 &&
+          thread.thread_timestamp <= endDate / 1000
+      )
+    });
+  };
+
+  resetFilteredThreads = () => {
+    this.setState({ filteredThreads: this.state.allThreads });
+  };
+
   render() {
     return (
       <BrowserRouter>
@@ -274,7 +284,9 @@ class App extends Component {
               <div className="container" id="thread-list-container">
                 <ThreadList
                   getThreadsBySubreddit={this.getThreadsBySubreddit}
-                  getAllThreads={this.getAllThreads}
+                  filteredThreads={this.state.filteredThreads}
+                  filterThreads={this.filterThreads}
+                  resetFilteredThreads={this.resetFilteredThreads}
                   allThreads={this.state.allThreads}
                   {...props}
                 />{" "}
