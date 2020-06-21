@@ -18,14 +18,14 @@ export class BigImageDisplay extends Component {
 
     return (
       <div className="row">
-        <div className="col-xs-6 float-left" style={bigImageStyle}>
+        <div className="float-left" style={bigImageStyle}>
           <img
             style={{ width: "100%" }}
             src={bigImageToDisplay}
             alt={bigImageToDisplay}
           />
         </div>
-        <div style={commentStyle} className="col-xs-6">
+        <div style={commentStyle} className="">
           <ReactMarkdown
             escapeHtml={true}
             source={comment}
@@ -41,12 +41,15 @@ const bigImageStyle = {
   width: "25%",
   height: "25%",
   marginLeft: "5px",
-  marginBottom: "10px"
+  marginBottom: "10px",
+  display: "flex",
+  flex: "2"
 };
 
 const commentStyle = {
   marginLeft: "5px",
-  float: "right"
+  float: "right",
+  flex: "2"
 };
 
 BigImageDisplay.propTypes = {
