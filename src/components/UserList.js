@@ -19,7 +19,7 @@ export class UserList extends Component {
   handleFormat = (event, newLetterFilters) => {
     console.log(newLetterFilters);
     this.setState({ letterFilters: newLetterFilters });
-    this.props.filterAllUsers(newLetterFilters);
+    this.props.filterUsers(newLetterFilters);
   };
 
   render() {
@@ -125,7 +125,8 @@ export class UserList extends Component {
 
 UserList.propTypes = {
   getAllUsers: PropTypes.func.isRequired,
-  filteredUsers: PropTypes.array.isRequired
+  filteredUsers: PropTypes.array.isRequired,
+  filterUsers: PropTypes.func.isRequired
 };
 
 export default withRouter(UserList);

@@ -202,7 +202,7 @@ class App extends Component {
     this.setState({ bucketedUsers });
   };
 
-  filterAllUsers = letterFilters => {
+  filterUsers = letterFilters => {
     // If the user de-selects every filter, display all of the usersnames.
     if (letterFilters.length === 0) {
       this.setState({ filteredUsers: this.state.allUsers });
@@ -300,7 +300,7 @@ class App extends Component {
                 <UserList
                   getAllUsers={this.getAllUsers}
                   filteredUsers={this.state.filteredUsers}
-                  filterAllUsers={this.filterAllUsers}
+                  filterUsers={this.filterUsers}
                   {...props}
                 />{" "}
               </div>
