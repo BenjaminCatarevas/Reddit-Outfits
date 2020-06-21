@@ -51,7 +51,7 @@ export class ThreadList extends Component {
     this.setState({ endDate });
   };
 
-  filterThreads = (startDate, endDate) => {
+  filterThreads = () => {
     this.props.filterThreads(this.state.startDate, this.state.endDate);
   };
 
