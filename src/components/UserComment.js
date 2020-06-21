@@ -13,6 +13,10 @@ export class UserComment extends Component {
   // Reference to give to ImageSelector
   topOfWindowRef = React.createRef();
 
+  /**
+   * This function sets the state of the big image to display to be the one passed in.
+   * @param {string} imageUrl URL of image to display in larger format.
+   */
   setBigImageToDisplay = imageUrl => {
     this.setState({ bigImageToDisplay: imageUrl });
   };

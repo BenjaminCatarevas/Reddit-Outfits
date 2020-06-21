@@ -4,11 +4,19 @@ import PropTypes from "prop-types";
 export class ImageSelector extends Component {
   state = {
     imageHovered: false,
-    // We use this to keep track of the individual outfit that should be transformed.
-    // Without this, each set of images would hover at the same time.
+    /**
+     * We use this to keep track of the individual outfit that should be transformed.
+     * Without this, each set of images would hover at the same time.
+     * When setting the style of the image, we use both of these variables to determine if a single image should hover.
+     */
     currentHoveredImage: null
   };
 
+  /**
+   * This function receives an image clicked on by the end user and sets the BigImageDisplay component to this image.
+   * It also resets the window to the top of the parent component.
+   * @param {string} imageUrl Image URL of the image ot be displayed in the BigImageDisplay component.
+   */
   onClick(imageUrl) {
     this.props.setBigImageToDisplay(imageUrl);
     window.scrollTo(0, this.props.topOfWindowRef.current.offsetTop);

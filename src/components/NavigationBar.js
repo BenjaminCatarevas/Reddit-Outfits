@@ -1,9 +1,3 @@
-/* 
-Adapted from: 
-- https://material-ui.com/components/drawers/#persistent-drawer
-- https://material-ui.com/components/lists/#nested-list
-*/
-
 import React, { Component } from "react";
 import { withRouter, Link } from "react-router-dom";
 
@@ -66,22 +60,45 @@ export class NavigationBar extends Component {
     }
   ];
 
+  /* 
+  Menu functionality adapted from: 
+  - https://material-ui.com/components/drawers/#persistent-drawer
+  - https://material-ui.com/components/lists/#nested-list
+  */
+
+  /**
+   * This function sets the state of the menu to be open.
+   */
   setMenuOpen() {
     this.setState({ menuOpen: true });
   }
 
+  /**
+   * This function sets the state of the menu to be closed.
+   */
   setMenuClosed() {
     this.setState({ menuOpen: false });
   }
 
+  /**
+   * This function toggles the Threads menu in the side menu to be open or closed depending on the previous state.
+   */
   setThreadDropDown() {
     this.setState({ threadsDropdownOpen: !this.state.threadsDropdownOpen });
   }
 
+  /**
+   * This function sets state to contain the search term typed in by the end user.
+   * @param {object} e Event object representing what the end user types into the search bar.
+   */
   onSearchUserBarChange = e => {
     this.setState({ user: e.target.value });
   };
 
+  /**
+   * This function redirects the end user to a user's page based on the end user's search.
+   * @param {object} e Event object representing the time in which the end user submits their search in the search bar.
+   */
   onSearchUserBarSubmit = e => {
     // So it doesn't submit right away.
     e.preventDefault();

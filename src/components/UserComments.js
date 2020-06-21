@@ -19,21 +19,33 @@ export class UserComments extends Component {
     this.props.getCommentsFromSpecificUser(params.username);
   }
 
+  /**
+   * This function invokes the App.js-level function to sort the user comments in increasing order of score.
+   */
   sortByAscendingScore = () => {
     // Set state of App to sort comments by ascending score
     this.props.sortCommentsFromSpecificUserByAscendingScore();
   };
 
+  /**
+   * This function invokes the App.js-level function to sort the user comments in decreasing order of score.
+   */
   sortByDescendingScore = () => {
     // Set state of App to sort comments by descending score
     this.props.sortCommentsFromSpecificUserByDescendingScore();
   };
 
+  /**
+   * This function invokes the App.js-level function to sort the user comments from newest to oldest date.
+   */
   sortByAscendingDate = () => {
     // Set state of App to sort comments by ascending date
     this.props.sortCommentsFromSpecificUserByAscendingDate();
   };
 
+  /**
+   * This function invokes the App.js-level function to sort the user comments from oldest to newest date.
+   */
   sortByDescendingDate = () => {
     // Set state of App to sort comments by descending date
     this.props.sortCommentsFromSpecificUserByDescendingDate();

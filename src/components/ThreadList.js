@@ -12,9 +12,7 @@ export class ThreadList extends Component {
     startDate: new Date(),
     endDate: new Date()
   };
-  // Big link that goes to thread display page on reddit outfits
-  // Subtext that has # comments and # outfits
-  // 4 random outfits
+
   componentDidMount() {
     const {
       match: { params }
@@ -24,14 +22,28 @@ export class ThreadList extends Component {
     this.setState({ displayedSubreddit: params.subreddit });
   }
 
+  /**
+   * This function capitalizes the given word.
+   * The reason this function exists is because the current subreddit is retrieved via the URL.
+   * Thus, it is all lowercase, when it looks much nicer to have the first letter capitalized when presented.
+   * @param {string} word Word to be capitalized.
+   */
   capitalize(word) {
     return word.charAt(0).toUpperCase() + word.slice(1);
   }
 
+  /**
+   * This function converts a Unix timestamp to a human-readable date.
+   * @param {Number} date Unix timestamp.
+   */
   createHumanDate(date) {
     return new Date(date).toDateString();
   }
 
+  /**
+   * This function retrieves the year, month, and day of a Date object for future usability.
+   * @param {object} date Date object.
+   */
   getYearMonthDay(date) {
     let year = date.getFullYear();
     let month = date.getMonth() + 1;
@@ -43,18 +55,32 @@ export class ThreadList extends Component {
     };
   }
 
+  /**
+   * This function sets the state to be the start date chosen by the end user.
+   * @param {object} startDate Date object representing the starting date for the date-picker.
+   */
   changeStartDate = startDate => {
     this.setState({ startDate });
   };
 
+  /**
+   * This function sets the state to be the end date chosen by the end user.
+   * @param {object} endDate Date object representing the ending date for the date-picker.
+   */
   changeEndDate = endDate => {
     this.setState({ endDate });
   };
 
+  /**
+   * This function calls the App.js-level function to filter the list of all threads to only contain those in the specified date range.
+   */
   filterThreads = () => {
     this.props.filterThreads(this.state.startDate, this.state.endDate);
   };
 
+  /**
+   * This function calls the App.js-level function to reset the currently filtered threads to instead be all threads.
+   */
   resetData = () => {
     this.props.resetFilteredThreads();
   };
@@ -64,7 +90,7 @@ export class ThreadList extends Component {
     const { startDate, endDate } = this.state;
 
     /**
-     * If the threads state is null (meaning no data is loaded), return an empty div.
+     * If the list of thredas is empty, return a loading bar.
      * Else return Thread components for each thread.
      * However, we check for the existence of data using the allThreads variable.
      * This is to prevent the disappearence of the component if the user filters down to 0 results via the filteredThreads variable.

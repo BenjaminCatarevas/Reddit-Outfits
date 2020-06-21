@@ -23,34 +23,46 @@ export class ThreadDisplayer extends Component {
     );
   }
 
+  /**
+   * This function invokes the App.js-level function to sort the thread comments in increasing order of score.
+   */
   sortByAscendingScore = () => {
-    // Set state of App to sort comments by ascending score
     this.props.sortCommentsFromSpecificThreadByAscendingScore();
   };
 
+  /**
+   * This function invokes the App.js-level function to sort the thread comments in decreasing order of score.
+   */
   sortByDescendingScore = () => {
-    // Set state of App to sort comments by descending score
     this.props.sortCommentsFromSpecificThreadByDescendingScore();
   };
 
+  /**
+   * This function invokes the App.js-level function to sort the thread comments from newest to oldest date.
+   */
   sortByAscendingDate = () => {
-    // Set state of App to sort comments by ascending date
     this.props.sortCommentsFromSpecificThreadByAscendingDate();
   };
 
+  /**
+   * This function invokes the App.js-level function to sort the thread comments from oldest to newest date.
+   */
   sortByDescendingDate = () => {
-    // Set state of App to sort comments by descending date
     this.props.sortCommentsFromSpecificThreadByDescendingDate();
   };
 
+  /**
+   * This function converts a Unix timestamp in miliseconds from a user comment into a human-readable date.
+   * @param {Number} timestamp Unix timestamp in miliseconds.
+   */
   timestampToDate(timestamp) {
-    // Multiply by 1000 because the timestamp is in miliseconds.
+    // Multiply by 1000 because the comment timestamp is in miliseconds.
     let date = new Date(timestamp * 1000);
     return date.toDateString();
   }
 
   render() {
-    // If the commentsFromSpecificThread is null, just return an empty div. Otherwise, create a UserComment component for each comment.
+    // If the list of comments from a speciic thread is empty, return a loading bar. Otherwise, create a UserComment component for each comment.
     return this.props.commentsFromSpecificThread.length !== 0 ? (
       <div>
         {console.log(this.props.commentsFromSpecificThread)}
@@ -78,9 +90,6 @@ export class ThreadDisplayer extends Component {
           let threadDate = new Date(comment.commentTimestamp * 1000);
           let humanDate = threadDate.toDateString();
 
-          /*
-       TODO: Figure out why text is not aligned properly in UserComment of UserComments but is aligned in ThreadDisplayer
-       */
           return (
             <ExpansionPanel
               style={{ margin: "16px" }}

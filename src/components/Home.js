@@ -33,10 +33,18 @@ export class Home extends Component {
     }
   ];
 
+  /**
+   * This function sets the state of the menu to be closed.
+   * Adatped from: https://material-ui.com/components/menus/
+   */
   closeThreadsMenu() {
     this.setState({ threadsMenuAnchorEl: null });
   }
 
+  /**
+   * This function sets the state of the subreddit chosen from the Threads menu on the landing page.
+   * @param {object} e Event object representing the element clicked on the landing page Threads menu.
+   */
   handleThreadsMenuClick(e) {
     this.setState({ threadsMenuAnchorEl: e.currentTarget });
   }

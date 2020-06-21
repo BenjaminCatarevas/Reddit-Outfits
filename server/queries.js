@@ -3,7 +3,7 @@ const configInfo = require("./config");
 
 // pg-promise initialization options;
 const initOptions = {
-  // bluebird promise library instead of default ES6 Promise;
+  // bluebird promise library instead of default ES6 Promise for optimization.
   promiseLib: promise
 };
 
@@ -28,8 +28,34 @@ const mapIntToSubreddit = {
 const db = pgp(config);
 
 /* Helper functions */
+/**
+ * This function converts the raw comment data from the database and converts it into a more manageable and expanded format.
+ * Specifically, it converts an array of objects in the form of:
+ * {
+ * author_name: '...',
+ * comment_id: '...',
+ * outfit_url: '...',
+ * thread_id: '...',
+ * subreddit: '...'
+ * }
+ *
+ * To an array of objects in the form of:
+ * {
+ * authorName: '...',
+ * outfits: [ '...', '...' ],
+ * commentBody: '...',
+ * commentPermalink: '...',
+ * commentScore: ...,
+ * commentTimestamp: ...,
+ * commentId: '...',
+ * threadId: '...'
+ * }
+ * @param {object} data Comment data retrieved from database.
+ * @param {object} res Middleware response object.
+ */
 async function sortCommentsByCommentId(data, res) {
   try {
+    console.log(data);
     // Create a JSON object to organize outfits by their comment ID.
     // We do this because outfits are stored as individual URLs, and are not inherently grouped by a comment.
     let commentsByCommentId = {};
@@ -61,8 +87,8 @@ async function sortCommentsByCommentId(data, res) {
         };
       }
     }
-    // We now convert the object of comments to an array.
-    // We do this because having an array of objects is easier to sort, manage, and access than an object.
+    // We now convert the object of comments to an array of comments, each comment represented as an object.
+    // We do this because having an array of objects is easier to sort, manage, and access than an object for our purposes.
     const commentObjectArray = Object.keys(commentsByCommentId).map(key => {
       const currentComment = commentsByCommentId[key];
       const commentObj = {
@@ -88,8 +114,16 @@ async function sortCommentsByCommentId(data, res) {
 }
 
 /* Query functions */
+/**
+ * This function retrieves all comments from a specific user based on the params from the backend endpoint.
+ * Argument explanations adapted from: https://expressjs.com/en/guide/writing-middleware.html
+ * @param {object} req HTTP request argument to the middleware function.
+ * @param {object} res HTTP response argument to the middleware function.
+ * @param {object} next Callback argument to the middleware function.
+ */
 async function getCommentsFromSpecificUser(req, res, next) {
   let authorName = req.params.author_name;
+
   try {
     // Extract all outfit data.
     const outfitData = await db.any(
@@ -97,10 +131,12 @@ async function getCommentsFromSpecificUser(req, res, next) {
       [authorName]
     );
 
+    // Bucket the comments/outfits by comment ID.
     const commentsFromSpecificUser = await sortCommentsByCommentId(
       outfitData,
       res
     );
+
     return await res.status(200).json({
       success: true,
       commentsFromSpecificUser: commentsFromSpecificUser,
@@ -114,21 +150,31 @@ async function getCommentsFromSpecificUser(req, res, next) {
   }
 }
 
+/**
+ * This function retrieves all comments from a specific thread based on the params from the backend endpoint.
+ * Argument explanations adapted from: https://expressjs.com/en/guide/writing-middleware.html
+ * @param {object} req HTTP request argument to the middleware function.
+ * @param {object} res HTTP response argument to the middleware function.
+ * @param {object} next Callback argument to the middleware function.
+ */
 async function getCommentsOfThreadByThreadId(req, res, next) {
   // The subreddit comes in as an int from the React frontend, so convert it from an int to a subreddit.
   let { subredditAsInt } = req.params;
   let intToSubreddit = mapIntToSubreddit[Number(subredditAsInt)];
   let threadId = req.params.threadId;
+
   try {
     const threadData = await db.any(
       "SELECT * FROM outfit WHERE subreddit = $1 AND thread_id = $2",
       [intToSubreddit, threadId]
     );
 
+    // Bucket the comments/outfits by comment ID.
     const commentsOfThreadByCommentId = await sortCommentsByCommentId(
       threadData,
       res
     );
+
     return await res.status(200).json({
       success: true,
       commentsOfThreadByCommentId: commentsOfThreadByCommentId,
@@ -142,14 +188,23 @@ async function getCommentsOfThreadByThreadId(req, res, next) {
   }
 }
 
+/**
+ * This function retrieves all threads from a specific subreddit based on the params from the backend endpoint.
+ * Argument explanations adapted from: https://expressjs.com/en/guide/writing-middleware.html
+ * @param {object} req HTTP request argument to the middleware function.
+ * @param {object} res HTTP response argument to the middleware function.
+ * @param {object} next Callback argument to the middleware function.
+ */
 async function getThreadsBySubreddit(req, res, next) {
   // The subreddit comes in as an int from the React frontend, so convert it from an int to a subreddit.
   let { subredditAsInt } = req.params;
   let intToSubreddit = mapIntToSubreddit[Number(subredditAsInt)];
+
   try {
     const data = await db.any("SELECT * FROM thread WHERE subreddit = $1", [
       intToSubreddit
     ]);
+
     return await res.status(200).json({
       success: true,
       subredditThreads: data,
@@ -163,9 +218,17 @@ async function getThreadsBySubreddit(req, res, next) {
   }
 }
 
+/**
+ * This function retrieves all users.
+ * Argument explanations adapted from: https://expressjs.com/en/guide/writing-middleware.html
+ * @param {object} req HTTP request argument to the middleware function.
+ * @param {object} res HTTP response argument to the middleware function.
+ * @param {object} next Callback argument to the middleware function.
+ */
 async function getAllUsers(req, res, next) {
   try {
     const data = await db.any("SELECT * FROM author");
+
     return await res.status(200).json({
       success: true,
       allUsers: data,
@@ -179,9 +242,17 @@ async function getAllUsers(req, res, next) {
   }
 }
 
+/**
+ * This function retrieves all threads.
+ * Argument explanations adapted from: https://expressjs.com/en/guide/writing-middleware.html
+ * @param {object} req HTTP request argument to the middleware function.
+ * @param {object} res HTTP response argument to the middleware function.
+ * @param {object} next Callback argument to the middleware function.
+ */
 async function getAllThreads(req, res, next) {
   try {
     const data = await db.any("SELECT * FROM thread");
+
     return await res.status(200).json({
       success: true,
       allThreads: data,
@@ -195,6 +266,13 @@ async function getAllThreads(req, res, next) {
   }
 }
 
+/**
+ * This function retrieves all threads on a specific timestamp/date based on the params from the backend endpoint.
+ * Argument explanations adapted from: https://expressjs.com/en/guide/writing-middleware.html
+ * @param {object} req HTTP request argument to the middleware function.
+ * @param {object} res HTTP response argument to the middleware function.
+ * @param {object} next Callback argument to the middleware function.
+ */
 async function getThreadByTimestamp(req, res, next) {
   let { year, month, day, subredditAsInt } = req.params;
   // Convert the year, month, and day into a formatted date.
@@ -203,6 +281,7 @@ async function getThreadByTimestamp(req, res, next) {
   let specifiedTimestamp = new Date(formattedDate).getTime() / 1000;
   // The subreddit comes in as an int from the React frontend, so convert it from an int to a subreddit.
   let intToSubreddit = mapIntToSubreddit[Number(subredditAsInt)];
+
   try {
     // Check if any portion of the specified timestamp is not a number. If so, return nothing.
     if (isNaN(Number(day)) || isNaN(Number(month)) || isNaN(Number(year))) {
@@ -211,6 +290,8 @@ async function getThreadByTimestamp(req, res, next) {
         error: "Invalid day, month, or year."
       });
     }
+
+    // Retrieve threads that occur on the given timestamp +/- one day.
     // Query adapted from: https://stackoverflow.com/a/18270068 and https://stackoverflow.com/a/16610459
     const threadInformation = await db.any(
       `SELECT * 
@@ -236,10 +317,12 @@ async function getThreadByTimestamp(req, res, next) {
         [threadInformation[0].thread_id]
       );
 
+      // Bucket the comments/outfits by comment ID.
       const commentsOfThreadByCommentId = await sortCommentsByCommentId(
         outfitsOfThread,
         res
       );
+
       return await res.status(200).json({
         success: true,
         commentsOfThreadByCommentId: commentsOfThreadByCommentId,

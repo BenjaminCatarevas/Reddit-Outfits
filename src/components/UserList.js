@@ -5,6 +5,7 @@ import MaterialTable from "material-table";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 export class UserList extends Component {
   // Add function for end-user specifying a username and act accordingly (redirect)
@@ -17,12 +18,21 @@ export class UserList extends Component {
     letterFilters: []
   };
 
+  /**
+   * This function takes in an array of letter filters chosen by the end user and updates the state with this selection.
+   * This function then calls the App.js-level function to filter the users based on this selection.
+   * @param {object} event Event object.
+   * @param {array} newLetterFilters Array of letter filters selected by end user.
+   */
   handleFormat = (event, newLetterFilters) => {
-    console.log(newLetterFilters);
     this.setState({ letterFilters: newLetterFilters });
     this.props.filterUsers(newLetterFilters);
   };
 
+  /**
+   * This function resets the letter filters to be an empty array, thus indicating no filters are selected.
+   * This function then calls the App.js-level function to reset the currently filtered users to instead be all users.
+   */
   resetFilters = () => {
     this.setState({ letterFilters: [] });
     this.props.resetFilteredUsers();
@@ -70,7 +80,7 @@ export class UserList extends Component {
       "-",
       "_"
     ];
-    // If the users state is null, return an empty div, else display tabularized users.
+    // If the list of users available is empty, return a loading bar, else display tabularized users.
     return filteredUsers.length !== 0 ? (
       <div>
         <MaterialTable
@@ -133,7 +143,7 @@ export class UserList extends Component {
         </ToggleButtonGroup>
       </div>
     ) : (
-      <div />
+      <CircularProgress />
     );
   }
 }
