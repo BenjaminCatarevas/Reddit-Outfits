@@ -220,6 +220,10 @@ class App extends Component {
     }
   };
 
+  resetFilteredUsers = () => {
+    this.setState({ filteredUsers: this.state.allUsers });
+  };
+
   filterThreads = (startDate, endDate) => {
     this.setState({
       filteredThreads: this.state.allThreads.filter(
@@ -301,6 +305,7 @@ class App extends Component {
                   getAllUsers={this.getAllUsers}
                   filteredUsers={this.state.filteredUsers}
                   filterUsers={this.filterUsers}
+                  resetFilteredUsers={this.resetFilteredUsers}
                   {...props}
                 />{" "}
               </div>

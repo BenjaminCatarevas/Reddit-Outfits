@@ -4,6 +4,7 @@ import { Link, withRouter } from "react-router-dom";
 import MaterialTable from "material-table";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
+import Button from "@material-ui/core/Button";
 
 export class UserList extends Component {
   // Add function for end-user specifying a username and act accordingly (redirect)
@@ -20,6 +21,11 @@ export class UserList extends Component {
     console.log(newLetterFilters);
     this.setState({ letterFilters: newLetterFilters });
     this.props.filterUsers(newLetterFilters);
+  };
+
+  resetFilters = () => {
+    this.setState({ letterFilters: [] });
+    this.props.resetFilteredUsers();
   };
 
   render() {
@@ -110,11 +116,20 @@ export class UserList extends Component {
                 value={character}
                 aria-label={character}
                 key={character}
+                style={{ margin: "2px" }}
               >
                 <b>{character.toUpperCase()}</b>
               </ToggleButton>
             );
           })}
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={this.resetFilters}
+            style={{ margin: "2px" }}
+          >
+            Reset
+          </Button>
         </ToggleButtonGroup>
       </div>
     ) : (
