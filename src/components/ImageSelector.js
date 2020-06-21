@@ -41,8 +41,6 @@ ImageSelector.propTypes = {
   outfits: PropTypes.array.isRequired
 };
 
-//export default ImageSelector;
-
 export default React.forwardRef((props, ref) => {
   return <ImageSelector {...props} topOfWindowRef={ref} />;
 });
