@@ -28,12 +28,12 @@ export class ImageSelector extends Component {
       <div className="row center-block" style={{ justifyContent: "center" }}>
         {outfits.map((outfit, key) => {
           return (
-            <div key={key} style={{ height: "20vh" }} className="col-xs-1">
+            <div key={outfit} style={{ height: "20vh" }} className="col-xs-1">
               <img
-                onClick={this.onClick.bind(this, outfits[key])}
+                onClick={this.onClick.bind(this, outfit)}
                 style={
                   this.state.imageHovered &&
-                  this.state.currentHoveredImage === outfits[key]
+                  this.state.currentHoveredImage === outfit
                     ? hoverImageStyle
                     : noHoverImageStyle
                 }
@@ -47,7 +47,7 @@ export class ImageSelector extends Component {
                 onMouseOver={() =>
                   this.setState({
                     imageHovered: true,
-                    currentHoveredImage: outfits[key]
+                    currentHoveredImage: outfit
                   })
                 }
                 src={outfit}
