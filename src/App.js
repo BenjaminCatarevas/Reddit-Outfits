@@ -9,6 +9,7 @@ import ThreadList from "./components/ThreadList";
 import ThreadDisplayer from "./components/ThreadDisplayer";
 import About from "./components/About";
 import UserList from "./components/UserList";
+import SearchTermComments from "./components/SearchTermComments";
 
 class App extends Component {
   state = {
@@ -22,7 +23,8 @@ class App extends Component {
     filteredThreads: [],
     commentsFromSpecificUser: [],
     commentsFromSpecificThread: [],
-    currentlyDisplayedUser: null
+    currentlyDisplayedUser: null,
+    commentsFromSearchTerm: []
   };
 
   mapSubredditToInt = {
@@ -102,7 +104,19 @@ class App extends Component {
       .get(`http://localhost:3001/r/${subredditToInt}/${year}/${month}/${day}`)
       .then(res => {
         this.setState({
-          commentsFromSpecificThread: res.data.commentsOfThreadByCommentId
+          commentsFromSpecificThread: res.data.commentsOfThreadByTimestamp
+        });
+      })
+      .catch(err => console.log("Error: ", err.message));
+  };
+
+  getCommentsFromSearchTerm = searchTerm => {
+    axios
+      .get(`http://localhost:3001/comments/${searchTerm}`)
+      .then(res => {
+        console.log("App print", res.data);
+        this.setState({
+          commentsFromSearchTerm: res.data.commentsFromSearchTerm
         });
       })
       .catch(err => console.log("Error: ", err.message));
@@ -309,6 +323,7 @@ class App extends Component {
         <div className="app">
           <NavigationBar
             getCommentsFromSpecificUser={this.getCommentsFromSpecificUser}
+            getCommentsFromSearchTerm={this.getCommentsFromSearchTerm}
           />
           <Route exact path="/" render={props => <Home {...props} />} />
           <Route
@@ -406,6 +421,37 @@ class App extends Component {
                     }
                     {...props}
                   />
+                </div>
+              </div>
+            )}
+          />
+          <Route
+            exact
+            path="/comments/:searchTerm"
+            render={props => (
+              <div
+                className="text-center"
+                id="username-displayer"
+                style={{ paddingTop: "7.5px" }}
+              >
+                <div className="container" id="user-comments-container">
+                  <SearchTermComments
+                    getCommentsFromSearchTerm={this.getCommentsFromSearchTerm}
+                    commentsFromSpecificUser={this.state.commentsFromSearchTerm}
+                    sortCommentsFromSpecificUserByAscendingScore={
+                      this.sortCommentsFromSpecificUserByAscendingScore
+                    }
+                    sortCommentsFromSpecificUserByDescendingScore={
+                      this.sortCommentsFromSpecificUserByDescendingScore
+                    }
+                    sortCommentsFromSpecificUserByAscendingDate={
+                      this.sortCommentsFromSpecificUserByAscendingDate
+                    }
+                    sortCommentsFromSpecificUserByDescendingDate={
+                      this.sortCommentsFromSpecificUserByDescendingDate
+                    }
+                    {...props}
+                  />{" "}
                 </div>
               </div>
             )}

@@ -18,6 +18,9 @@ import Collapse from "@material-ui/core/Collapse";
 import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
 
 import SearchIcon from "@material-ui/icons/Search";
 import ExpandLess from "@material-ui/icons/ExpandLess";
@@ -34,7 +37,8 @@ export class NavigationBar extends Component {
   state = {
     menuOpen: false,
     threadsDropdownOpen: false,
-    user: ""
+    searchTerm: "",
+    searchMenuSelection: "users"
   };
 
   threads = [
@@ -91,23 +95,34 @@ export class NavigationBar extends Component {
    * This function sets state to contain the search term typed in by the end user.
    * @param {object} e Event object representing what the end user types into the search bar.
    */
-  onSearchUserBarChange = e => {
-    this.setState({ user: e.target.value });
+  onSearchBarChange = e => {
+    this.setState({ searchTerm: e.target.value });
   };
 
   /**
-   * This function redirects the end user to a user's page based on the end user's search.
+   * This function redirects the end user to a user or comment page based on the end user's search.
    * @param {object} e Event object representing the time in which the end user submits their search in the search bar.
    */
-  onSearchUserBarSubmit = e => {
+  onSearchBarSubmit = e => {
     // So it doesn't submit right away.
     e.preventDefault();
-    // Only submit if non-empty username.
-    if (this.state.user) {
-      this.props.history.push(`/u/${this.state.user}`);
-      this.props.getCommentsFromSpecificUser(this.state.user);
-      this.setState({ user: "" });
+    // Only submit if non-empty search term.
+    if (this.state.searchTerm) {
+      if (this.state.searchMenuSelection === "users") {
+        this.props.history.push(`/u/${this.state.searchTerm}`);
+        this.props.getCommentsFromSpecificUser(this.state.searchTerm);
+        this.setState({ searchTerm: "" });
+      } else {
+        // Search term is for comments.
+        this.props.history.push(`/comments/${this.state.searchTerm}`);
+        this.props.getCommentsFromSearchTerm(this.state.searchTerm);
+        this.setState({ searchTerm: "" });
+      }
     }
+  };
+
+  setSearchDropdown = e => {
+    this.setState({ searchMenuSelection: e.target.value });
   };
 
   render() {
@@ -135,19 +150,31 @@ export class NavigationBar extends Component {
                 <SearchIcon />
               </div>
               <form
-                value={this.state.user}
-                onChange={this.onSearchUserBarChange.bind(this)}
-                onSubmit={this.onSearchUserBarSubmit.bind(this)}
+                value={this.state.searchTerm}
+                onChange={this.onSearchBarChange.bind(this)}
+                onSubmit={this.onSearchBarSubmit.bind(this)}
               >
                 <InputBase
-                  placeholder="Enter user..."
+                  placeholder="Enter..."
                   classes={{
                     root: this.props.classes.inputRoot,
                     input: this.props.classes.inputInput
                   }}
                   inputProps={{ "aria-label": "search" }}
-                  value={this.state.user}
+                  value={this.state.searchTerm}
                 />
+                <FormControl className={classes.formControl} variant="outlined">
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={this.state.searchMenuSelection}
+                    onChange={this.setSearchDropdown.bind(this)}
+                    style={{ color: "white" }}
+                  >
+                    <MenuItem value="users">Users</MenuItem>
+                    <MenuItem value="comments">Comments</MenuItem>
+                  </Select>
+                </FormControl>
                 <Button
                   variant="contained"
                   color="primary"
@@ -407,6 +434,11 @@ const classes = theme => ({
   },
   button: {
     margin: theme.spacing(1)
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+    color: "white"
   }
 });
 
