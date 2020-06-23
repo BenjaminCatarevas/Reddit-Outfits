@@ -30,32 +30,15 @@ const db = pgp(config);
 /* Helper functions */
 /**
  * This function converts the raw comment data from the database and converts it into a more manageable and expanded format.
- * Specifically, it converts an array of objects in the form of:
- * {
- * author_name: '...',
- * comment_id: '...',
- * outfit_url: '...',
- * thread_id: '...',
- * subreddit: '...'
- * }
- *
- * To an array of objects in the form of:
- * {
- * authorName: '...',
- * outfits: [ '...', '...' ],
- * commentBody: '...',
- * commentPermalink: '...',
- * commentScore: ...,
- * commentTimestamp: ...,
- * commentId: '...',
- * threadId: '...'
- * }
+ * Specifically, it converts raw database entries (where each entry has a single outfit) into a dictionary with the following format:
+ * commentID:commentInformation
+ * The commentInformation value is an object containing the information for the comment ID. Notably, it contains an array of every outfit associated with that comment.
+ * This is compared to the original format where each entry had a singular outfit.
  * @param {object} data Comment data retrieved from database.
  * @param {object} res Middleware response object.
  */
 async function sortCommentsByCommentId(data, res) {
   try {
-    console.log(data);
     // Create a JSON object to organize outfits by their comment ID.
     // We do this because outfits are stored as individual URLs, and are not inherently grouped by a comment.
     let commentsByCommentId = {};
@@ -71,19 +54,15 @@ async function sortCommentsByCommentId(data, res) {
         );
       } else {
         // Otherwise, the current outfit is from a comment we haven't processed yet.
-        // So we find the comment that has the outfit, and construct a new entry in the object based on the comment.
-        const commentData = await db.any(
-          "SELECT * FROM comment WHERE comment_id = $1",
-          [currentCommentId]
-        );
+        // So we construct a new entry in the object based on the comment.
         commentsByCommentId[currentCommentId] = {
-          authorName: commentData[0].author_name,
+          authorName: currentOutfitRecord.author_name,
           outfits: [currentOutfitRecord.outfit_url],
-          commentBody: commentData[0].body,
-          commentPermalink: commentData[0].comment_permalink,
-          commentScore: commentData[0].comment_score,
-          commentTimestamp: commentData[0].comment_timestamp,
-          threadId: commentData[0].thread_id
+          commentBody: currentOutfitRecord.body,
+          commentPermalink: currentOutfitRecord.comment_permalink,
+          commentScore: currentOutfitRecord.comment_score,
+          commentTimestamp: currentOutfitRecord.comment_timestamp,
+          threadId: currentOutfitRecord.thread_id
         };
       }
     }
@@ -125,15 +104,15 @@ async function getCommentsFromSpecificUser(req, res, next) {
   let authorName = req.params.author_name;
 
   try {
-    // Extract all outfit data.
-    const outfitData = await db.any(
-      "SELECT * FROM outfit WHERE author_name = $1",
+    // Extract all comment data.
+    const commentData = await db.any(
+      "SELECT * FROM outfit JOIN comment ON outfit.comment_id = comment.comment_id WHERE outfit.author_name = $1",
       [authorName]
     );
 
-    // Bucket the comments/outfits by comment ID.
+    // Bucket the comments by comment ID.
     const commentsFromSpecificUser = await sortCommentsByCommentId(
-      outfitData,
+      commentData,
       res
     );
 
@@ -165,7 +144,9 @@ async function getCommentsOfThreadByThreadId(req, res, next) {
 
   try {
     const threadData = await db.any(
-      "SELECT * FROM outfit WHERE subreddit = $1 AND thread_id = $2",
+      `SELECT * 
+      FROM outfit JOIN comment ON outfit.comment_id = comment.comment_id 
+      WHERE outfit.subreddit = $1 AND outfit.thread_id = $2`,
       [intToSubreddit, threadId]
     );
 
@@ -313,7 +294,9 @@ async function getThreadByTimestamp(req, res, next) {
       // We have the thread ID of the thread with the specified date.
       // So now we want to get the outfits from that thread, organize them, and return them.
       const outfitsOfThread = await db.any(
-        "SELECT * FROM outfit WHERE thread_id = $1",
+        `SELECT * 
+        FROM outfit JOIN comment ON outfit.comment_id = comment.comment_id 
+        WHERE outfit.thread_id = $1`,
         [threadInformation[0].thread_id]
       );
 
