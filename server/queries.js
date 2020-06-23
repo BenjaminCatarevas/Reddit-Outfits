@@ -104,21 +104,23 @@ async function getCommentsFromSpecificUser(req, res, next) {
   let authorName = req.params.author_name;
 
   try {
-    // Extract all comment data.
-    const commentData = await db.any(
-      "SELECT * FROM outfit JOIN comment ON outfit.comment_id = comment.comment_id WHERE outfit.author_name = $1",
+    // Extract all comment data from specific user.
+    const rawSpecificUserComments = await db.any(
+      `SELECT * 
+      FROM outfit JOIN comment ON outfit.comment_id = comment.comment_id 
+      WHERE outfit.author_name = $1`,
       [authorName]
     );
 
     // Bucket the comments by comment ID.
-    const commentsFromSpecificUser = await sortCommentsByCommentId(
-      commentData,
+    const sortedCommentsFromSpecificUser = await sortCommentsByCommentId(
+      rawSpecificUserComments,
       res
     );
 
     return await res.status(200).json({
       success: true,
-      commentsFromSpecificUser: commentsFromSpecificUser,
+      commentsFromSpecificUser: sortedCommentsFromSpecificUser,
       message: `Retrieved all outfits of user ${authorName}`
     });
   } catch (err) {
@@ -143,7 +145,7 @@ async function getCommentsOfThreadByThreadId(req, res, next) {
   let threadId = req.params.threadId;
 
   try {
-    const threadData = await db.any(
+    const rawCommentsOfThreadByThreadId = await db.any(
       `SELECT * 
       FROM outfit JOIN comment ON outfit.comment_id = comment.comment_id 
       WHERE outfit.subreddit = $1 AND outfit.thread_id = $2`,
@@ -151,14 +153,14 @@ async function getCommentsOfThreadByThreadId(req, res, next) {
     );
 
     // Bucket the comments/outfits by comment ID.
-    const commentsOfThreadByCommentId = await sortCommentsByCommentId(
-      threadData,
+    const sortedCommentsOfThreadByThreadId = await sortCommentsByCommentId(
+      rawCommentsOfThreadByThreadId,
       res
     );
 
     return await res.status(200).json({
       success: true,
-      commentsOfThreadByCommentId: commentsOfThreadByCommentId,
+      commentsOfThreadByThreadId: sortedCommentsOfThreadByThreadId,
       message: `Retrieved all outfits from thread ${threadId} of subreddit ${intToSubreddit}`
     });
   } catch (err) {
@@ -182,13 +184,16 @@ async function getThreadsBySubreddit(req, res, next) {
   let intToSubreddit = mapIntToSubreddit[Number(subredditAsInt)];
 
   try {
-    const data = await db.any("SELECT * FROM thread WHERE subreddit = $1", [
-      intToSubreddit
-    ]);
+    const subredditThreads = await db.any(
+      `SELECT * 
+      FROM thread 
+      WHERE subreddit = $1`,
+      [intToSubreddit]
+    );
 
     return await res.status(200).json({
       success: true,
-      subredditThreads: data,
+      subredditThreads: subredditThreads,
       message: `Retrieved all threads from ${intToSubreddit}`
     });
   } catch (err) {
@@ -208,11 +213,11 @@ async function getThreadsBySubreddit(req, res, next) {
  */
 async function getAllUsers(req, res, next) {
   try {
-    const data = await db.any("SELECT * FROM author");
+    const allUsers = await db.any("SELECT * FROM author");
 
     return await res.status(200).json({
       success: true,
-      allUsers: data,
+      allUsers: allUsers,
       message: "Retrieved all users."
     });
   } catch (err) {
@@ -232,11 +237,11 @@ async function getAllUsers(req, res, next) {
  */
 async function getAllThreads(req, res, next) {
   try {
-    const data = await db.any("SELECT * FROM thread");
+    const allThreads = await db.any("SELECT * FROM thread");
 
     return await res.status(200).json({
       success: true,
-      allThreads: data,
+      allThreads: allThreads,
       message: "Retrieved all threads."
     });
   } catch (err) {
@@ -272,9 +277,9 @@ async function getThreadByTimestamp(req, res, next) {
       });
     }
 
-    // Retrieve threads that occur on the given timestamp +/- one day.
+    // Retrieve thread for specified timestamp +/- one day to be within the range.
     // Query adapted from: https://stackoverflow.com/a/18270068 and https://stackoverflow.com/a/16610459
-    const threadInformation = await db.any(
+    const threadSpecifiedByTimestamp = await db.any(
       `SELECT * 
       FROM thread 
       WHERE subreddit = $1
@@ -284,7 +289,7 @@ async function getThreadByTimestamp(req, res, next) {
     );
 
     // We want to stop if the query yielded 0 results (and avoid sorting effectively nothing).
-    if (threadInformation.length === 0) {
+    if (threadSpecifiedByTimestamp.length === 0) {
       return await res.status(200).json({
         success: true,
         specifiedThreadByTimestamp: [],
@@ -293,25 +298,62 @@ async function getThreadByTimestamp(req, res, next) {
     } else {
       // We have the thread ID of the thread with the specified date.
       // So now we want to get the outfits from that thread, organize them, and return them.
-      const outfitsOfThread = await db.any(
+      const rawOutfitsOfThreadByTimestamp = await db.any(
         `SELECT * 
         FROM outfit JOIN comment ON outfit.comment_id = comment.comment_id 
         WHERE outfit.thread_id = $1`,
-        [threadInformation[0].thread_id]
+        [threadSpecifiedByTimestamp[0].thread_id]
       );
 
-      // Bucket the comments/outfits by comment ID.
-      const commentsOfThreadByCommentId = await sortCommentsByCommentId(
-        outfitsOfThread,
+      // Bucket the comments by comment ID.
+      const sortedOutfitsOfThreadByTimestamp = await sortCommentsByCommentId(
+        rawOutfitsOfThreadByTimestamp,
         res
       );
 
       return await res.status(200).json({
         success: true,
-        commentsOfThreadByCommentId: commentsOfThreadByCommentId,
+        commentsOfThreadByTimestamp: sortedOutfitsOfThreadByTimestamp,
         message: `Retrieved thread with given date ${formattedDate}`
       });
     }
+  } catch (err) {
+    return await res.json({
+      success: false,
+      error: err.message || err
+    });
+  }
+}
+
+async function getCommentsFromSearchTerm(req, res, next) {
+  try {
+    let { searchTerm } = req.params;
+
+    /**
+     * NOTE: To prevent SQL injections, we invoke the pgp helper function pgp.as.value() to dispose of any malicious preceding or trailing quotation marks.
+     * For more information, see the following:
+     * https://github.com/vitaly-t/pg-promise#open-values
+     * https://vitaly-t.github.io/pg-promise/formatting.html#.value
+     * https://vitaly-t.github.io/pg-promise/formatting.js.html#line540
+     */
+    const rawCommentsFromSearchTerm = await db.any(
+      `SELECT * 
+      FROM comment JOIN outfit ON comment.comment_id = outfit.comment_id
+      WHERE comment.body LIKE '%$1:value%'`,
+      [pgp.as.value(searchTerm)]
+    );
+
+    // Bucket the comments by comment ID.
+    const sortedCommentsFromSearchTerm = await sortCommentsByCommentId(
+      rawCommentsFromSearchTerm,
+      res
+    );
+
+    return await res.status(200).json({
+      success: true,
+      commentsFromSearchTerm: sortedCommentsFromSearchTerm,
+      message: `Retrieved thread with search term ${searchTerm}`
+    });
   } catch (err) {
     return await res.json({
       success: false,
@@ -326,5 +368,6 @@ module.exports = {
   getCommentsOfThreadByThreadId: getCommentsOfThreadByThreadId,
   getAllUsers: getAllUsers,
   getAllThreads: getAllThreads,
-  getThreadByTimestamp: getThreadByTimestamp
+  getThreadByTimestamp: getThreadByTimestamp,
+  getCommentsFromSearchTerm: getCommentsFromSearchTerm
 };
