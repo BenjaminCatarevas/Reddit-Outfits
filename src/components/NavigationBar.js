@@ -181,10 +181,14 @@ export class NavigationBar extends Component {
           >
             <div>
               <IconButton onClick={this.setMenuClosed.bind(this)}>
-                <MenuIcon />
+                <MenuIcon style={{ margin: "5 5 5 7" }} />
               </IconButton>
-              <Typography display="inline" variant="h6" component="p">
-                Navigation
+              <Typography
+                display="inline"
+                component="p"
+                style={{ padding: "12px" }}
+              >
+                <b>Navigation</b>
               </Typography>
             </div>
             <Divider />
