@@ -143,7 +143,9 @@ export class UserList extends Component {
         </ToggleButtonGroup>
       </div>
     ) : (
-      <CircularProgress />
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <CircularProgress />
+      </div>
     );
   }
 }

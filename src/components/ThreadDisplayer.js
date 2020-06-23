@@ -120,7 +120,7 @@ export class ThreadDisplayer extends Component {
         })}
       </div>
     ) : (
-      <div>
+      <div style={{ display: "flex", justifyContent: "center" }}>
         <CircularProgress />
       </div>
     );

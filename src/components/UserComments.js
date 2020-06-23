@@ -111,7 +111,7 @@ export class UserComments extends Component {
         })}
       </div>
     ) : (
-      <div>
+      <div style={{ display: "flex", justifyContent: "center" }}>
         <CircularProgress />
       </div>
     );
