@@ -236,7 +236,6 @@ export class NavigationBar extends Component {
                       button
                       className={this.props.classes.nested}
                       component={"a"}
-                      //to={"/r/" + thread.link}
                       href={"/r/" + thread.link}
                       onClick={this.setMenuClosed.bind(this)}
                     >
