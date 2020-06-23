@@ -65,7 +65,6 @@ export class ThreadDisplayer extends Component {
     // If the list of comments from a speciic thread is empty, return a loading bar. Otherwise, create a UserComment component for each comment.
     return this.props.commentsFromSpecificThread.length !== 0 ? (
       <div>
-        {console.log(this.props.commentsFromSpecificThread)}
         <h6>
           Posts from&nbsp;
           <a
