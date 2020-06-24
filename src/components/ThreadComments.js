@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-export class ThreadDisplayer extends Component {
+export class ThreadComments extends Component {
   componentDidMount() {
     const {
       match: { params }
@@ -127,7 +127,7 @@ export class ThreadDisplayer extends Component {
   }
 }
 
-ThreadDisplayer.propTypes = {
+ThreadComments.propTypes = {
   getCommentsOfThreadByThreadDate: PropTypes.func.isRequired,
   commentsFromSpecificThread: PropTypes.array.isRequired,
   sortDataByAscendingScore: PropTypes.func.isRequired,
@@ -136,4 +136,4 @@ ThreadDisplayer.propTypes = {
   sortDataByDescendingDate: PropTypes.func.isRequired
 };
 
-export default withRouter(ThreadDisplayer);
+export default withRouter(ThreadComments);
