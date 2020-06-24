@@ -6,7 +6,7 @@ import NavigationBar from "./components/NavigationBar";
 import Home from "./components/Home";
 import UserComments from "./components/UserComments";
 import ThreadList from "./components/ThreadList";
-import ThreadDisplayer from "./components/ThreadDisplayer";
+import ThreadComments from "./components/ThreadComments";
 import About from "./components/About";
 import UserList from "./components/UserList";
 import SearchTermComments from "./components/SearchTermComments";
@@ -397,7 +397,7 @@ class App extends Component {
                 style={{ paddingTop: "7.5px" }}
               >
                 <div className="container" id="thread-displayer-container">
-                  <ThreadDisplayer
+                  <ThreadComments
                     getCommentsOfThreadByThreadDate={
                       this.getCommentsOfThreadByThreadDate
                     }
