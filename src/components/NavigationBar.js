@@ -11,7 +11,6 @@ import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import InputBase from "@material-ui/core/InputBase";
 import Collapse from "@material-ui/core/Collapse";
@@ -32,6 +31,7 @@ import InfoIcon from "@material-ui/icons/Info";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import MenuIcon from "@material-ui/icons/Menu";
 import CodeIcon from "@material-ui/icons/Code";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
 
 export class NavigationBar extends Component {
   state = {
@@ -162,14 +162,15 @@ export class NavigationBar extends Component {
                   }}
                   inputProps={{ "aria-label": "search" }}
                   value={this.state.searchTerm}
+                  style={{ paddingTop: "10px" }}
                 />
-                <FormControl className={classes.formControl} variant="outlined">
+                <FormControl className={classes.formControl} variant="standard">
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     value={this.state.searchMenuSelection}
                     onChange={this.setSearchDropdown.bind(this)}
-                    style={{ color: "white" }}
+                    style={{ color: "white", paddingTop: "12px" }}
                   >
                     <MenuItem value="users">Users</MenuItem>
                     <MenuItem value="comments">Comments</MenuItem>
