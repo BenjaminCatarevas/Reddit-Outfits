@@ -16,45 +16,44 @@ export class SearchTermComments extends Component {
     } = this.props;
     // Once the component mounts, grab the comments of the given user.
     // TODO: Add check to see if 0 results. If so, redirect to error page.
-    console.log(params);
     this.props.getCommentsFromSearchTerm(params.searchTerm);
   }
 
   /**
-   * This function invokes the App.js-level function to sort the user comments in increasing order of score.
+   * This function invokes the App.js-level function to sort the search term comments in increasing order of score.
    */
   sortByAscendingScore = () => {
     // Set state of App to sort comments by ascending score
-    this.props.sortCommentsFromSpecificUserByAscendingScore();
+    this.props.sortDataByAscendingScore("searchTermComments");
   };
 
   /**
-   * This function invokes the App.js-level function to sort the user comments in decreasing order of score.
+   * This function invokes the App.js-level function to sort the search term comments in decreasing order of score.
    */
   sortByDescendingScore = () => {
     // Set state of App to sort comments by descending score
-    this.props.sortCommentsFromSpecificUserByDescendingScore();
+    this.props.sortDataByDescendingScore("searchTermComments");
   };
 
   /**
-   * This function invokes the App.js-level function to sort the user comments from newest to oldest date.
+   * This function invokes the App.js-level function to sort the search term comments from newest to oldest date.
    */
   sortByAscendingDate = () => {
     // Set state of App to sort comments by ascending date
-    this.props.sortCommentsFromSpecificUserByAscendingDate();
+    this.props.sortDataByAscendingDate("searchTermComments");
   };
 
   /**
-   * This function invokes the App.js-level function to sort the user comments from oldest to newest date.
+   * This function invokes the App.js-level function to sort the search term comments from oldest to newest date.
    */
   sortByDescendingDate = () => {
     // Set state of App to sort comments by descending date
-    this.props.sortCommentsFromSpecificUserByDescendingDate();
+    this.props.sortDataByDescendingDate("searchTermComments");
   };
 
   render() {
     // Object mapping approach adapted from: https://stackoverflow.com/a/39965962
-    return this.props.commentsFromSpecificUser.length !== 0 ? (
+    return this.props.commentsFromSearchTerm.length !== 0 ? (
       <div>
         <h6>
           {`Posts containing term '${this.props.match.params.searchTerm}'`}
@@ -63,7 +62,7 @@ export class SearchTermComments extends Component {
         <button onClick={this.sortByDescendingScore}>Score ↓</button>
         <button onClick={this.sortByAscendingDate}>Date ↑</button>
         <button onClick={this.sortByDescendingDate}>Date ↓</button>
-        {this.props.commentsFromSpecificUser.map(comment => {
+        {this.props.commentsFromSearchTerm.map(comment => {
           // The key defaults to the comment ID, since that's the key to index into a given object.
           const topOfWindowRef = React.createRef();
 
@@ -112,13 +111,13 @@ export class SearchTermComments extends Component {
   }
 }
 
-// SearchTermComments.propTypes = {
-//   getCommentsFromSearchTerm: PropTypes.func.isRequired,
-//   getCommentsFromSearchTerm: PropTypes.array.isRequired,
-//   sortCommentsFromSpecificUserByAscendingScore: PropTypes.func.isRequired,
-//   sortCommentsFromSpecificUserByDescendingScore: PropTypes.func.isRequired,
-//   sortCommentsFromSpecificUserByAscendingDate: PropTypes.func.isRequired,
-//   sortCommentsFromSpecificUserByDescendingDate: PropTypes.func.isRequired
-// };
+SearchTermComments.propTypes = {
+  getCommentsFromSearchTerm: PropTypes.func.isRequired,
+  commentsFromSearchTerm: PropTypes.array.isRequired,
+  sortDataByAscendingScore: PropTypes.func.isRequired,
+  sortDataByDescendingScore: PropTypes.func.isRequired,
+  sortDataByAscendingDate: PropTypes.func.isRequired,
+  sortDataByDescendingDate: PropTypes.func.isRequired
+};
 
 export default withRouter(SearchTermComments);

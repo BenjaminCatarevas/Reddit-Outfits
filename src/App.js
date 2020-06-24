@@ -17,14 +17,14 @@ class App extends Component {
     // For filtering purposes, we use a separate variable to keep track of the currently filtered users.
     // And we keep allUsers as the "master list" for future filtering purposes.
     filteredUsers: [],
-    bucketedUsers: {},
-    allThreads: [],
     // For the same reasoning as above, we use a separate variable to keep track of the currently filtered threads.
     filteredThreads: [],
-    commentsFromSpecificUser: [],
+    bucketedUsers: {},
+    allThreads: [],
+    commentsFromSearchTerm: [],
     commentsFromSpecificThread: [],
-    currentlyDisplayedUser: null,
-    commentsFromSearchTerm: []
+    commentsFromSpecificUser: [],
+    currentlyDisplayedUser: null
   };
 
   mapSubredditToInt = {
@@ -35,7 +35,8 @@ class App extends Component {
     rawdenim: 4
   };
 
-  // NOTE: These functions will replace the axios URL with a server.
+  // NOTE: These functions will replace the axios URL with a server when deployed.
+  /* QUERY FUNCTIONS */
   /**
    * This function retrieves comments for a given user from the database.
    * @param {string} user The username to look up comments for.
@@ -110,11 +111,14 @@ class App extends Component {
       .catch(err => console.log("Error: ", err.message));
   };
 
+  /**
+   * This function retrieves the comments that contain the search term specified by the end user.
+   * @param {string} searchTerm String to index comment table for comments containing specified search term.
+   */
   getCommentsFromSearchTerm = searchTerm => {
     axios
       .get(`http://localhost:3001/comments/${searchTerm}`)
       .then(res => {
-        console.log("App print", res.data);
         this.setState({
           commentsFromSearchTerm: res.data.commentsFromSearchTerm
         });
@@ -122,92 +126,93 @@ class App extends Component {
       .catch(err => console.log("Error: ", err.message));
   };
 
-  /**
-   * This function sorts the currently displayed comments of a user in increasing order of score.
-   */
-  sortCommentsFromSpecificUserByAscendingScore = () => {
-    this.setState({
-      commentsFromSpecificUser: this.state.commentsFromSpecificUser.sort(
-        (a, b) => (a.commentScore > b.commentScore ? 1 : -1)
-      )
-    });
+  /* HELPER FUNCTIONS */
+  sortDataByAscendingScore = nameOfData => {
+    if (nameOfData === "userComments") {
+      this.setState({
+        commentsFromSpecificUser: this.state.commentsFromSpecificUser.sort(
+          (a, b) => (a.commentScore > b.commentScore ? 1 : -1)
+        )
+      });
+    } else if (nameOfData === "threadComments") {
+      this.setState({
+        commentsFromSpecificThread: this.state.commentsFromSpecificThread.sort(
+          (a, b) => (a.commentScore > b.commentScore ? 1 : -1)
+        )
+      });
+    } else if (nameOfData === "searchTermComments") {
+      this.setState({
+        commentsFromSearchTerm: this.state.commentsFromSearchTerm.sort((a, b) =>
+          a.commentScore > b.commentScore ? 1 : -1
+        )
+      });
+    }
   };
 
-  /**
-   * This function sorts the currently displayed comments of a user in decreasing order of score.
-   */
-  sortCommentsFromSpecificUserByDescendingScore = () => {
-    this.setState({
-      commentsFromSpecificUser: this.state.commentsFromSpecificUser.sort(
-        (a, b) => (a.commentScore < b.commentScore ? 1 : -1)
-      )
-    });
+  sortDataByDescendingScore = nameOfData => {
+    if (nameOfData === "userComments") {
+      this.setState({
+        commentsFromSpecificUser: this.state.commentsFromSpecificUser.sort(
+          (a, b) => (a.commentScore < b.commentScore ? 1 : -1)
+        )
+      });
+    } else if (nameOfData === "threadComments") {
+      this.setState({
+        commentsFromSpecificThread: this.state.commentsFromSpecificThread.sort(
+          (a, b) => (a.commentScore < b.commentScore ? 1 : -1)
+        )
+      });
+    } else if (nameOfData === "searchTermComments") {
+      this.setState({
+        commentsFromSearchTerm: this.state.commentsFromSearchTerm.sort((a, b) =>
+          a.commentScore < b.commentScore ? 1 : -1
+        )
+      });
+    }
   };
 
-  /**
-   * This function sorts the currently displayed comments of a user from newest to oldest posting date.
-   */
-  sortCommentsFromSpecificUserByAscendingDate = () => {
-    this.setState({
-      commentsFromSpecificUser: this.state.commentsFromSpecificUser.sort(
-        (a, b) => (a.commentTimestamp > b.commentTimestamp ? 1 : -1)
-      )
-    });
+  sortDataByAscendingDate = nameOfData => {
+    if (nameOfData === "userComments") {
+      this.setState({
+        commentsFromSpecificUser: this.state.commentsFromSpecificUser.sort(
+          (a, b) => (a.commentTimestamp > b.commentTimestamp ? 1 : -1)
+        )
+      });
+    } else if (nameOfData === "threadComments") {
+      this.setState({
+        commentsFromSpecificThread: this.state.commentsFromSpecificThread.sort(
+          (a, b) => (a.commentTimestamp > b.commentTimestamp ? 1 : -1)
+        )
+      });
+    } else if (nameOfData === "searchTermComments") {
+      this.setState({
+        commentsFromSearchTerm: this.state.commentsFromSearchTerm.sort((a, b) =>
+          a.commentTimestamp > b.commentTimestamp ? 1 : -1
+        )
+      });
+    }
   };
 
-  /**
-   * This function sorts the currently displayed comments of a user from oldest to newest posting date.
-   */
-  sortCommentsFromSpecificUserByDescendingDate = () => {
-    this.setState({
-      commentsFromSpecificUser: this.state.commentsFromSpecificUser.sort(
-        (a, b) => (a.commentTimestamp < b.commentTimestamp ? 1 : -1)
-      )
-    });
-  };
-
-  /**
-   * This function sorts the currently displayed comments of a thread in increasing order of score.
-   */
-  sortCommentsFromSpecificThreadByAscendingScore = () => {
-    this.setState({
-      commentsFromSpecificThread: this.state.commentsFromSpecificThread.sort(
-        (a, b) => (a.commentScore > b.commentScore ? 1 : -1)
-      )
-    });
-  };
-
-  /**
-   * This function sorts the currently displayed comments of a thread in decreasing order of score.
-   */
-  sortCommentsFromSpecificThreadByDescendingScore = () => {
-    this.setState({
-      commentsFromSpecificThread: this.state.commentsFromSpecificThread.sort(
-        (a, b) => (a.commentScore < b.commentScore ? 1 : -1)
-      )
-    });
-  };
-
-  /**
-   * This function sorts the currently displayed comments of a thread from newest to oldest date.
-   */
-  sortCommentsFromSpecificThreadByAscendingDate = () => {
-    this.setState({
-      commentsFromSpecificThread: this.state.commentsFromSpecificThread.sort(
-        (a, b) => (a.commentTimestamp > b.commentTimestamp ? 1 : -1)
-      )
-    });
-  };
-
-  /**
-   * This function sorts the currently displayed comments of a thread from oldest to newest date.
-   */
-  sortCommentsFromSpecificThreadByDescendingDate = () => {
-    this.setState({
-      commentsFromSpecificThread: this.state.commentsFromSpecificThread.sort(
-        (a, b) => (a.commentTimestamp < b.commentTimestamp ? 1 : -1)
-      )
-    });
+  sortDataByDescendingDate = nameOfData => {
+    if (nameOfData === "userComments") {
+      this.setState({
+        commentsFromSpecificUser: this.state.commentsFromSpecificUser.sort(
+          (a, b) => (a.commentTimestamp < b.commentTimestamp ? 1 : -1)
+        )
+      });
+    } else if (nameOfData === "threadComments") {
+      this.setState({
+        commentsFromSpecificThread: this.state.commentsFromSpecificThread.sort(
+          (a, b) => (a.commentTimestamp < b.commentTimestamp ? 1 : -1)
+        )
+      });
+    } else if (nameOfData === "searchTermComments") {
+      this.setState({
+        commentsFromSearchTerm: this.state.commentsFromSearchTerm.sort((a, b) =>
+          a.commentTimestamp < b.commentTimestamp ? 1 : -1
+        )
+      });
+    }
   };
 
   /**
@@ -343,18 +348,10 @@ class App extends Component {
                     commentsFromSpecificUser={
                       this.state.commentsFromSpecificUser
                     }
-                    sortCommentsFromSpecificUserByAscendingScore={
-                      this.sortCommentsFromSpecificUserByAscendingScore
-                    }
-                    sortCommentsFromSpecificUserByDescendingScore={
-                      this.sortCommentsFromSpecificUserByDescendingScore
-                    }
-                    sortCommentsFromSpecificUserByAscendingDate={
-                      this.sortCommentsFromSpecificUserByAscendingDate
-                    }
-                    sortCommentsFromSpecificUserByDescendingDate={
-                      this.sortCommentsFromSpecificUserByDescendingDate
-                    }
+                    sortDataByAscendingScore={this.sortDataByAscendingScore}
+                    sortDataByDescendingScore={this.sortDataByDescendingScore}
+                    sortDataByAscendingDate={this.sortDataByAscendingDate}
+                    sortDataByDescendingDate={this.sortDataByDescendingDate}
                     {...props}
                   />{" "}
                 </div>
@@ -407,18 +404,10 @@ class App extends Component {
                     commentsFromSpecificThread={
                       this.state.commentsFromSpecificThread
                     }
-                    sortCommentsFromSpecificThreadByAscendingScore={
-                      this.sortCommentsFromSpecificThreadByAscendingScore
-                    }
-                    sortCommentsFromSpecificThreadByDescendingScore={
-                      this.sortCommentsFromSpecificThreadByDescendingScore
-                    }
-                    sortCommentsFromSpecificThreadByAscendingDate={
-                      this.sortCommentsFromSpecificThreadByAscendingDate
-                    }
-                    sortCommentsFromSpecificThreadByDescendingDate={
-                      this.sortCommentsFromSpecificThreadByDescendingDate
-                    }
+                    sortDataByAscendingScore={this.sortDataByAscendingScore}
+                    sortDataByDescendingScore={this.sortDataByDescendingScore}
+                    sortDataByAscendingDate={this.sortDataByAscendingDate}
+                    sortDataByDescendingDate={this.sortDataByDescendingDate}
                     {...props}
                   />
                 </div>
@@ -437,19 +426,11 @@ class App extends Component {
                 <div className="container" id="user-comments-container">
                   <SearchTermComments
                     getCommentsFromSearchTerm={this.getCommentsFromSearchTerm}
-                    commentsFromSpecificUser={this.state.commentsFromSearchTerm}
-                    sortCommentsFromSpecificUserByAscendingScore={
-                      this.sortCommentsFromSpecificUserByAscendingScore
-                    }
-                    sortCommentsFromSpecificUserByDescendingScore={
-                      this.sortCommentsFromSpecificUserByDescendingScore
-                    }
-                    sortCommentsFromSpecificUserByAscendingDate={
-                      this.sortCommentsFromSpecificUserByAscendingDate
-                    }
-                    sortCommentsFromSpecificUserByDescendingDate={
-                      this.sortCommentsFromSpecificUserByDescendingDate
-                    }
+                    commentsFromSearchTerm={this.state.commentsFromSearchTerm}
+                    sortDataByAscendingScore={this.sortDataByAscendingScore}
+                    sortDataByDescendingScore={this.sortDataByDescendingScore}
+                    sortDataByAscendingDate={this.sortDataByAscendingDate}
+                    sortDataByDescendingDate={this.sortDataByDescendingDate}
                     {...props}
                   />{" "}
                 </div>

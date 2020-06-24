@@ -24,7 +24,7 @@ export class UserComments extends Component {
    */
   sortByAscendingScore = () => {
     // Set state of App to sort comments by ascending score
-    this.props.sortCommentsFromSpecificUserByAscendingScore();
+    this.props.sortDataByAscendingScore("userComments");
   };
 
   /**
@@ -32,7 +32,7 @@ export class UserComments extends Component {
    */
   sortByDescendingScore = () => {
     // Set state of App to sort comments by descending score
-    this.props.sortCommentsFromSpecificUserByDescendingScore();
+    this.props.sortDataByDescendingScore("userComments");
   };
 
   /**
@@ -40,7 +40,7 @@ export class UserComments extends Component {
    */
   sortByAscendingDate = () => {
     // Set state of App to sort comments by ascending date
-    this.props.sortCommentsFromSpecificUserByAscendingDate();
+    this.props.sortDataByAscendingDate("userComments");
   };
 
   /**
@@ -48,7 +48,7 @@ export class UserComments extends Component {
    */
   sortByDescendingDate = () => {
     // Set state of App to sort comments by descending date
-    this.props.sortCommentsFromSpecificUserByDescendingDate();
+    this.props.sortDataByDescendingDate("userComments");
   };
 
   render() {
@@ -121,10 +121,10 @@ export class UserComments extends Component {
 UserComments.propTypes = {
   getCommentsFromSpecificUser: PropTypes.func.isRequired,
   commentsFromSpecificUser: PropTypes.array.isRequired,
-  sortCommentsFromSpecificUserByAscendingScore: PropTypes.func.isRequired,
-  sortCommentsFromSpecificUserByDescendingScore: PropTypes.func.isRequired,
-  sortCommentsFromSpecificUserByAscendingDate: PropTypes.func.isRequired,
-  sortCommentsFromSpecificUserByDescendingDate: PropTypes.func.isRequired
+  sortDataByAscendingScore: PropTypes.func.isRequired,
+  sortDataByDescendingScore: PropTypes.func.isRequired,
+  sortDataByAscendingDate: PropTypes.func.isRequired,
+  sortDataByDescendingDate: PropTypes.func.isRequired
 };
 
 export default withRouter(UserComments);

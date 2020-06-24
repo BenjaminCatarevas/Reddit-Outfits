@@ -27,28 +27,28 @@ export class ThreadDisplayer extends Component {
    * This function invokes the App.js-level function to sort the thread comments in increasing order of score.
    */
   sortByAscendingScore = () => {
-    this.props.sortCommentsFromSpecificThreadByAscendingScore();
+    this.props.sortDataByAscendingScore("threadComments");
   };
 
   /**
    * This function invokes the App.js-level function to sort the thread comments in decreasing order of score.
    */
   sortByDescendingScore = () => {
-    this.props.sortCommentsFromSpecificThreadByDescendingScore();
+    this.props.sortDataByDescendingScore("threadComments");
   };
 
   /**
    * This function invokes the App.js-level function to sort the thread comments from newest to oldest date.
    */
   sortByAscendingDate = () => {
-    this.props.sortCommentsFromSpecificThreadByAscendingDate();
+    this.props.sortDataByAscendingDate("threadComments");
   };
 
   /**
    * This function invokes the App.js-level function to sort the thread comments from oldest to newest date.
    */
   sortByDescendingDate = () => {
-    this.props.sortCommentsFromSpecificThreadByDescendingDate();
+    this.props.sortDataByDescendingDate("threadComments");
   };
 
   /**
@@ -130,10 +130,10 @@ export class ThreadDisplayer extends Component {
 ThreadDisplayer.propTypes = {
   getCommentsOfThreadByThreadDate: PropTypes.func.isRequired,
   commentsFromSpecificThread: PropTypes.array.isRequired,
-  sortCommentsFromSpecificThreadByAscendingScore: PropTypes.func.isRequired,
-  sortCommentsFromSpecificThreadByDescendingScore: PropTypes.func.isRequired,
-  sortCommentsFromSpecificThreadByAscendingDate: PropTypes.func.isRequired,
-  sortCommentsFromSpecificThreadByDescendingDate: PropTypes.func.isRequired
+  sortDataByAscendingScore: PropTypes.func.isRequired,
+  sortDataByDescendingScore: PropTypes.func.isRequired,
+  sortDataByAscendingDate: PropTypes.func.isRequired,
+  sortDataByDescendingDate: PropTypes.func.isRequired
 };
 
 export default withRouter(ThreadDisplayer);
