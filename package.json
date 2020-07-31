@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "license": "MIT",
   "dependencies": {
-    "@material-ui/icons": "^4.9.1",
     "@material-ui/core": "^4.9.10",
+    "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.49",
     "axios": "^0.18.1",
     "bluebird": "^3.7.2",
@@ -19,7 +19,7 @@
     "lodash.template": "^4.5.0",
     "material-table": "^1.57.2",
     "morgan": "^1.9.1",
-    "npm": "^6.14.4",
+    "npm": "^6.14.7",
     "pg-promise": "^8.7.5",
     "react": "^16.13.0",
     "react-datepicker": "^3.0.0",
